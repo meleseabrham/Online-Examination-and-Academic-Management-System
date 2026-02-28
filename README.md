@@ -151,15 +151,15 @@ The application client should now be locally hosted at `http://localhost:5173`.
 
 ---
 
-## � Platform Previews
+## 📸 Platform Previews
 
 | Director Analytics Dashboard | Live Teacher Proctoring |
 | :---: | :---: |
-| *(Insert Screenshot Here)* | *(Insert Screenshot Here)* |
+| ![Dashboard](assets/director_dashboard.png) | ![Live Proctoring](assets/live_proctoring.png) |
 
 | Secure Student Exam Room | PDF Transcript Generation |
 | :---: | :---: |
-| *(Insert Screenshot Here)* | *(Insert Screenshot Here)* |
+| ![Exam Room](assets/student_exam.png) | ![PDF Transcript](assets/transcript.png) |
 
 ---
 
