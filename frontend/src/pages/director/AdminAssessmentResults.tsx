@@ -70,11 +70,11 @@ const AdminAssessmentResults = () => {
                 const activeSem = sRes.data.find((s: Semester) => s.IsActive);
                 if (activeSem) setSelectedSemester(activeSem.Id.toString());
 
-                // Auto-load student from URL query params (coming from rankings page)
                 const urlStudentId = searchParams.get('studentId');
                 const urlStudentName = searchParams.get('studentName');
                 const urlGradeNumber = searchParams.get('gradeNumber');
                 const urlSectionName = searchParams.get('sectionName');
+                const urlSemesterId = searchParams.get('semesterId'); // Get the semester ID from URL if provided
 
                 if (urlStudentId && urlStudentName && !autoLoadedRef.current) {
                     autoLoadedRef.current = true;
@@ -87,7 +87,10 @@ const AdminAssessmentResults = () => {
                     };
                     setSelectedStudent(student);
                     setLoadingBreakdown(true);
-                    const semId = activeSem ? activeSem.Id.toString() : '';
+
+                    // Use URL semester ID if present, otherwise fallback to the active semester
+                    const semId = urlSemesterId ? urlSemesterId : (activeSem ? activeSem.Id.toString() : '');
+
                     try {
                         const res = await axios.get(`http://localhost:5000/api/director/student-course-breakdown?studentId=${urlStudentId}&semesterId=${semId}`, { headers });
                         setCourseBreakdown(res.data);
@@ -111,7 +114,15 @@ const AdminAssessmentResults = () => {
                 setSelectedSemester('');
             }
         }
-    }, [selectedYear, selectedSemester, semesters]);
+
+        // Ensure UI stays in sync with history view URL state
+        const urlSemesterId = searchParams.get('semesterId');
+        if (urlSemesterId && selectedSemester !== urlSemesterId && semesters.find(s => s.Id.toString() === urlSemesterId)) {
+            setSelectedSemester(urlSemesterId);
+            const semInfo = semesters.find(s => s.Id.toString() === urlSemesterId);
+            if (semInfo) setSelectedYear(semInfo.AcademicYearId.toString());
+        }
+    }, [selectedYear, selectedSemester, semesters, searchParams]);
 
     useEffect(() => {
         const fetchSections = async () => {

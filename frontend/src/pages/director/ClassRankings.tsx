@@ -497,8 +497,11 @@ const ClassRankings = () => {
                                                         </div>
                                                         <button
                                                             onClick={() => {
-                                                                const params = `studentId=${student.StudentId}&studentName=${encodeURIComponent(student.StudentName)}&gradeNumber=${student.GradeNumber}&sectionName=${encodeURIComponent(student.SectionName)}`;
-                                                                if (isAdmin) {
+                                                                const params = `studentId=${student.StudentId}&studentName=${encodeURIComponent(student.StudentName)}&gradeNumber=${student.GradeNumber}&sectionName=${encodeURIComponent(student.SectionName)}${selectedSemester && selectedSemester !== 'full-year' ? `&semesterId=${selectedSemester}` : ''}`;
+                                                                const role = user?.role?.toLowerCase();
+                                                                if (role === 'director') {
+                                                                    navigate(`/director/assessment-results?${params}`);
+                                                                } else if (isAdmin) {
                                                                     navigate(`/admin/assessment-results?${params}`);
                                                                 } else {
                                                                     navigate(`/teacher/assessment-results?${params}`);
