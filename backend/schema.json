@@ -1,0 +1,497 @@
+{
+  "TeacherAssignments": [
+    {
+      "COLUMN_NAME": "AssignmentId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "TeacherId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "ClassId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "CourseId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "Announcements": [
+    {
+      "COLUMN_NAME": "Id",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Title",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Content",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "TargetRole",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "Deadline",
+      "DATA_TYPE": "datetime",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "CreatedBy",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "CreatedAt",
+      "DATA_TYPE": "datetime",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "ClassId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "Exams": [
+    {
+      "COLUMN_NAME": "ExamId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Title",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Description",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "ExamType",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "ClassId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "CourseId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "TeacherId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "DurationMinutes",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "StartTime",
+      "DATA_TYPE": "datetime",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "EndTime",
+      "DATA_TYPE": "datetime",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "IsPublished",
+      "DATA_TYPE": "bit",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "CreatedAt",
+      "DATA_TYPE": "datetime",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "TotalMarks",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "Assignments": [
+    {
+      "COLUMN_NAME": "AssignmentId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Title",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Description",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "ClassId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "CourseId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "TeacherId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "FilePath",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "Deadline",
+      "DATA_TYPE": "datetime",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "Points",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "CreatedAt",
+      "DATA_TYPE": "datetime",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "AssignmentSubmissions": [
+    {
+      "COLUMN_NAME": "SubmissionId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "AssignmentId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "StudentId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "SubmissionFilePath",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "SubmissionDate",
+      "DATA_TYPE": "datetime",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "Score",
+      "DATA_TYPE": "decimal",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "Feedback",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "Status",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "Questions": [
+    {
+      "COLUMN_NAME": "QuestionId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "ExamId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "Text",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Type",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Points",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "Options": [
+    {
+      "COLUMN_NAME": "OptionId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "QuestionId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "Text",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "IsCorrect",
+      "DATA_TYPE": "bit",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "MatchingPairs": [
+    {
+      "COLUMN_NAME": "PairId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "QuestionId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "LeftText",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "RightText",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    }
+  ],
+  "StudentExams": [
+    {
+      "COLUMN_NAME": "AttemptId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "StudentId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "ExamId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "StartTime",
+      "DATA_TYPE": "datetime",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "EndTime",
+      "DATA_TYPE": "datetime",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "Score",
+      "DATA_TYPE": "decimal",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "Status",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "CorrectCount",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "StudentAnswers": [
+    {
+      "COLUMN_NAME": "AnswerId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "AttemptId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "QuestionId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "SelectedOptionId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "MatchingAnswer",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "IsCorrect",
+      "DATA_TYPE": "bit",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "sysdiagrams": [
+    {
+      "COLUMN_NAME": "name",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "principal_id",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "diagram_id",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "version",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "definition",
+      "DATA_TYPE": "varbinary",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "Users": [
+    {
+      "COLUMN_NAME": "UserId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "FullName",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Email",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Password",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Role",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Status",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "CreatedAt",
+      "DATA_TYPE": "datetime",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "ProfileImage",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "Classes": [
+    {
+      "COLUMN_NAME": "ClassId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "GradeName",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "Section",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    }
+  ],
+  "Courses": [
+    {
+      "COLUMN_NAME": "CourseId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "CourseName",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "CourseCode",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "Description",
+      "DATA_TYPE": "nvarchar",
+      "IS_NULLABLE": "YES"
+    }
+  ],
+  "StudentClasses": [
+    {
+      "COLUMN_NAME": "StudentClassId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO"
+    },
+    {
+      "COLUMN_NAME": "StudentId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    },
+    {
+      "COLUMN_NAME": "ClassId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "YES"
+    }
+  ]
+}
