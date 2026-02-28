@@ -100,7 +100,7 @@ Want to run NexExam locally? Follow these steps:
 ### 1. Database Configuration
 Ensure MS SQL Server is running and accessible. Create a blank database:
 ```sql
-CREATE DATABASE ExamDB;
+CREATE DATABASE OnlineExamDB;
 ```
 *(The backend is built with initialization scripts that will automatically seed your tables upon the first connection.)*
 
@@ -126,7 +126,7 @@ PORT=5000
 DB_USER=your_sql_username
 DB_PASSWORD=your_sql_password
 DB_SERVER=localhost
-DB_NAME=ExamDB
+DB_NAME=OnlineExamDB
 JWT_SECRET=super_secret_cryptographic_key
 ```
 Start the local server:
