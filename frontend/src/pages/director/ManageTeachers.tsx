@@ -208,13 +208,13 @@ const ManageTeachers = () => {
                                                 <div className="flex justify-end gap-2">
                                                     <button
                                                         onClick={() => handleShowProfile(teacher.UserId)}
-                                                        className="flex items-center gap-2 px-4 py-3 cursor-pointer bg-black text-white hover:bg-gray-700 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 group font-semibold text-xs tracking-wide"
+                                                        className="flex items-center gap-2 px-4 py-3 cursor-pointer bg-black text-white hover:bg-gray-700 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 "
                                                     >
                                                         <Info
                                                             size={14}
                                                             className="group-hover:rotate-12 transition-transform duration-200"
                                                         />
-                                                        VIEW PROFILE
+                                                        View Profile
                                                     </button>
                                                     <button
                                                         onClick={() =>
@@ -224,10 +224,10 @@ const ManageTeachers = () => {
                                                                 )}`
                                                             )
                                                         }
-                                                        className="flex items-center gap-2 px-5 py-2.5 cursor-pointer bg-black text-white hover:bg-gray-700 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-95"
+                                                        className="flex items-center gap-2 px-4 py-3 cursor-pointer bg-black text-white hover:bg-gray-700 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md active:scale-95"
                                                         title="View Assignments"
                                                     >
-                                                        <ExternalLink size={14} />
+                                                        <ExternalLink size={14} /> View Assignments
                                                     </button>
                                                 </div>
                                             </td>
