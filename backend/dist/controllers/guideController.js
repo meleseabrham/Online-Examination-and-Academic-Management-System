@@ -35,6 +35,9 @@ export const getGuides = async (req, res) => {
                 query += ` WHERE g.TargetRole = @targetRole OR g.TargetRole = 'All'`;
             }
         }
+        else if (role === 'Director' || role === 'director') {
+            query += ` WHERE g.TargetRole IN ('Director', 'All')`;
+        }
         else if (role === 'Teacher' || role === 'teacher') {
             query += ` WHERE g.TargetRole IN ('Teacher', 'All')`;
         }

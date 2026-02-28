@@ -1,9 +1,16 @@
 import bcrypt from 'bcryptjs';
 import { sql, poolPromise } from '../config/db.js';
 export const getUsers = async (req, res) => {
+    const { role } = req.query;
     try {
         const pool = await poolPromise;
-        const result = await pool.request().query('SELECT UserId, FullName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender FROM Users');
+        let query = 'SELECT UserId, FullName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender, Title FROM Users';
+        const request = pool.request();
+        if (role) {
+            query += ' WHERE Role = @role';
+            request.input('role', sql.NVarChar, role);
+        }
+        const result = await request.query(query);
         res.json(result.recordset);
     }
     catch (err) {
@@ -12,7 +19,7 @@ export const getUsers = async (req, res) => {
     }
 };
 export const createUser = async (req, res) => {
-    const { fullName, email, password, role, gender } = req.body;
+    const { fullName, email, password, role, gender, title } = req.body;
     let { dateOfBirth } = req.body;
     if (dateOfBirth) {
         const year = parseInt(dateOfBirth.split('-')[0]);
@@ -50,7 +57,8 @@ export const createUser = async (req, res) => {
             .input('gender', sql.VarChar, gender || null)
             .input('profileImage', sql.NVarChar, profileImage)
             .input('regNo', sql.NVarChar, registrationNumber)
-            .query('INSERT INTO Users (FullName, Email, Password, Role, Status, DateOfBirth, RegistrationNumber, Gender, ProfileImage) VALUES (@fullName, @email, @password, @role, \'Active\', @dob, @regNo, @gender, @profileImage)');
+            .input('title', sql.NVarChar, title || null)
+            .query('INSERT INTO Users (FullName, Email, Password, Role, Status, DateOfBirth, RegistrationNumber, Gender, ProfileImage, Title) VALUES (@fullName, @email, @password, @role, \'Active\', @dob, @regNo, @gender, @profileImage, @title)');
         res.status(201).json({ message: 'User created successfully', registrationNumber });
     }
     catch (err) {
@@ -77,9 +85,9 @@ export const updateUser = async (req, res) => {
     try {
         const pool = await poolPromise;
         const profileImage = req.file ? req.file.path.replace(/\\/g, '/') : null;
-        let query = 'UPDATE Users SET FullName = @fullName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender WHERE UserId = @id';
+        let query = 'UPDATE Users SET FullName = @fullName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, Title = @title WHERE UserId = @id';
         if (profileImage) {
-            query = 'UPDATE Users SET FullName = @fullName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, ProfileImage = @profileImage WHERE UserId = @id';
+            query = 'UPDATE Users SET FullName = @fullName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, ProfileImage = @profileImage, Title = @title WHERE UserId = @id';
         }
         const request = pool.request()
             .input('id', sql.Int, id)
@@ -88,7 +96,8 @@ export const updateUser = async (req, res) => {
             .input('role', sql.NVarChar, role)
             .input('status', sql.NVarChar, status)
             .input('gender', sql.VarChar, gender)
-            .input('dob', sql.Date, dateOfBirth);
+            .input('dob', sql.Date, dateOfBirth)
+            .input('title', sql.NVarChar, req.body.title || null);
         if (profileImage) {
             request.input('profileImage', sql.NVarChar, profileImage);
         }
@@ -121,7 +130,7 @@ export const getUserProfile = async (req, res) => {
         // 1. Get Basic User Info
         const userRes = await pool.request()
             .input('id', sql.Int, id)
-            .query('SELECT UserId, FullName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender FROM Users WHERE UserId = @id');
+            .query('SELECT UserId, FullName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender, Title FROM Users WHERE UserId = @id');
         if (userRes.recordset.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -229,5 +238,32 @@ export const getUserProfile = async (req, res) => {
     catch (err) {
         console.error('getUserProfile error:', err);
         res.status(500).json({ message: 'Error fetching user profile' });
+    }
+};
+export const resetUserPassword = async (req, res) => {
+    const { identifier, newPassword } = req.body;
+    if (!identifier || !newPassword) {
+        return res.status(400).json({ message: 'Identifier and new password are required' });
+    }
+    try {
+        const pool = await poolPromise;
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        // Find user by Email OR RegistrationNumber
+        const userCheck = await pool.request()
+            .input('identifier', sql.NVarChar, identifier)
+            .query('SELECT UserId FROM Users WHERE Email = @identifier OR RegistrationNumber = @identifier');
+        if (userCheck.recordset.length === 0) {
+            return res.status(404).json({ message: 'User not found with provided Email or Reg No' });
+        }
+        const userId = userCheck.recordset[0].UserId;
+        await pool.request()
+            .input('id', sql.Int, userId)
+            .input('password', sql.NVarChar, hashedPassword)
+            .query('UPDATE Users SET Password = @password WHERE UserId = @id');
+        res.json({ message: 'Password reset successfully' });
+    }
+    catch (err) {
+        console.error('Reset Password Error:', err);
+        res.status(500).json({ message: 'Error resetting password' });
     }
 };

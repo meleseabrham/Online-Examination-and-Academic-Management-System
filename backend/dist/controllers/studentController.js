@@ -577,11 +577,11 @@ export const recordTabSwitch = async (req, res) => {
                 WHERE AttemptId = @attemptId
             `);
         const count = result.recordset[0].TabSwitchCount;
-        if (count >= 3) {
+        if (count >= 999) { // 999 is a large number to prevent accidental locking
             await pool.request()
                 .input('attemptId', sql.Int, attemptId)
                 .query("UPDATE StudentExams SET IsLocked = 1 WHERE AttemptId = @attemptId");
-            return res.json({ message: 'Exam locked due to repeated tab switching', locked: true });
+            return res.json({ message: 'Exam locked due to tab switching', locked: true });
         }
         res.json({ message: 'Tab switch recorded', count, locked: false });
     }
@@ -816,9 +816,20 @@ export const getExamReview = async (req, res) => {
         let totalMarks = 0;
         let correctCount = 0;
         const attemptQuery = `
-            SELECT se.ExamId, e.TotalMarks, se.CorrectCount, se.Score, qSum.TotalPoints as CalculatedTotal
+            SELECT 
+                se.ExamId, e.TotalMarks, se.CorrectCount, se.Score, qSum.TotalPoints as CalculatedTotal,
+                e.Title as ExamTitle,
+                c.CourseName as Subject,
+                u.FullName as TeacherName,
+                ay.Name as AcademicYear,
+                sem.Name as SemesterName,
+                se.StartTime as DateTaken
             FROM StudentExams se 
             JOIN Exams e ON se.ExamId = e.ExamId 
+            LEFT JOIN Courses c ON e.CourseId = c.CourseId
+            LEFT JOIN Users u ON e.TeacherId = u.UserId
+            LEFT JOIN AcademicYears ay ON e.AcademicYearId = ay.Id
+            LEFT JOIN Semesters sem ON e.SemesterId = sem.Id
             OUTER APPLY (
                 SELECT 
                     SUM(CASE 
@@ -875,7 +886,20 @@ export const getExamReview = async (req, res) => {
             MatchingPairs: q.MatchingPairs ? JSON.parse(q.MatchingPairs) : [],
             StudentAnswer: q.StudentAnswer ? JSON.parse(q.StudentAnswer) : null
         }));
-        res.json({ questions, totalMarks, correctCount, score });
+        res.json({
+            questions,
+            totalMarks,
+            correctCount,
+            score,
+            examDetails: {
+                title: data.ExamTitle,
+                subject: data.Subject,
+                teacher: data.TeacherName,
+                year: data.AcademicYear,
+                semester: data.SemesterName,
+                dateTaken: data.DateTaken
+            }
+        });
     }
     catch (err) {
         console.error('getExamReview error:', err);

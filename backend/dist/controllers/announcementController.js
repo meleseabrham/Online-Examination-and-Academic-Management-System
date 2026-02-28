@@ -76,8 +76,8 @@ export const getLatestAnnouncement = async (req, res) => {
             // Guest User: Only show public announcements (All roles, No specific class)
             query = "SELECT * FROM Announcements WHERE TargetRole = 'All' AND ClassId IS NULL";
         }
-        else if (role.toString().toLowerCase() === 'admin') {
-            // Admin: See everything
+        else if (role.toString().toLowerCase() === 'admin' || role.toString().toLowerCase() === 'director') {
+            // Admin/Director: See everything
             query = "SELECT * FROM Announcements WHERE 1=1";
         }
         else if (role.toString().toLowerCase() === 'student' && userId) {

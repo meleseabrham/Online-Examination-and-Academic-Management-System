@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUsers } from '../controllers/userController.js';
+import { getUsers, getUserProfile } from '../controllers/userController.js';
 import { getClasses, createClass, updateClass, deleteClass, getStudentsByClass, assignStudentToClass, getUnassignedStudents, removeStudentFromClass } from '../controllers/classController.js';
 import { getCourses, createCourse, updateCourse, deleteCourse } from '../controllers/courseController.js';
 import { getTeacherAssignments, createTeacherAssignment, updateTeacherAssignment, deleteTeacherAssignment } from '../controllers/teacherAssignmentController.js';
@@ -16,6 +16,7 @@ import { upload } from '../middleware/upload.js';
 import { calculateCourseTotals, calculateSemesterRankings, calculateFinalYearResults, getSemesterRankings, getAcademicProcessingStatus } from '../controllers/academicResultController.js';
 import { getTeacherResults, getStudentProgress, gradeEssayAnswers } from '../controllers/resultController.js';
 import { getLiveExamSessions, getAttemptAnswers, gradeStudentExam, unlockAttempt } from '../controllers/teacherController.js';
+import { getGuides } from '../controllers/guideController.js';
 const router = express.Router();
 // Apply Director check to all routes here
 router.use(authenticateToken);
@@ -27,6 +28,7 @@ router.get('/dashboard/reports', getReportsData);
 router.get('/notifications', getAdminNotifications);
 // Users route (read-only for Director - to fetch teachers list)
 router.get('/users', getUsers);
+router.get('/users/:id/profile', getUserProfile);
 // Class routes
 router.get('/classes', getClasses);
 router.post('/classes', createClass);
@@ -127,4 +129,8 @@ router.delete('/modules/:id', deleteModule);
 router.get('/system-settings', getSystemSettings);
 router.post('/system-settings', updateSystemSetting);
 router.delete('/system-settings/:id', deleteSystemSetting);
+// =============================================
+// SYSTEM GUIDE ROUTES
+// =============================================
+router.get('/guides', getGuides);
 export default router;

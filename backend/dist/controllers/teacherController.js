@@ -285,7 +285,7 @@ export const getLiveExamSessions = async (req, res) => {
                 LEFT JOIN Classes cl ON e.ClassId = cl.ClassId
                 WHERE (${isAdmin ? '1=1' : 'e.TeacherId = @teacherId'})
                 AND (
-                    (e.IsPublished = 1 AND (e.StartTime IS NULL OR e.StartTime <= GETDATE()) AND (e.EndTime IS NULL OR e.EndTime >= DATEADD(MONTH, -1, GETDATE())))
+                    (e.IsPublished = 1 AND (e.StartTime IS NULL OR e.StartTime <= GETDATE()) AND (e.EndTime IS NULL OR e.EndTime >= GETDATE()))
                     OR 
                     EXISTS (SELECT 1 FROM StudentExams se_active WHERE se_active.ExamId = e.ExamId AND se_active.Status = 'Started')
                 )

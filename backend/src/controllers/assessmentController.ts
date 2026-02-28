@@ -323,6 +323,22 @@ export const updateAssessment = async (req: Request, res: Response) => {
     }
 };
 
+export const updateAssessmentRegradePermission = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { isRegradeAllowed } = req.body;
+    try {
+        const pool = await poolPromise;
+        await pool.request()
+            .input('id', sql.Int, id)
+            .input('val', sql.Bit, isRegradeAllowed ? 1 : 0)
+            .query('UPDATE Assessments SET IsRegradeAllowed = @val WHERE Id = @id');
+        res.json({ message: 'Regrade permission updated successfully' });
+    } catch (err) {
+        console.error('updateAssessmentRegradePermission error:', err);
+        res.status(500).json({ message: 'Error updating regrade permission' });
+    }
+};
+
 export const deleteAssessment = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
@@ -429,18 +445,18 @@ export const getStudentsForAssessment = async (req: Request, res: Response) => {
             SELECT DISTINCT u.UserId as StudentId, u.FullName as StudentName, u.RegistrationNumber,
                 COALESCE(
                     sas.MarksObtained,
-                    (SELECT TOP 1 se.Score FROM StudentExams se JOIN Exams e ON se.ExamId = e.ExamId 
-                     WHERE e.AssessmentId = a.Id AND se.StudentId = u.UserId AND se.Status IN ('Submitted', 'Graded')),
+                    (SELECT TOP 1 se2.Score FROM StudentExams se2 JOIN Exams e ON se2.ExamId = e.ExamId 
+                     WHERE e.AssessmentId = a.Id AND se2.StudentId = u.UserId AND se2.Status IN ('Submitted', 'Graded')),
                     (SELECT TOP 1 asub.Score FROM AssignmentSubmissions asub JOIN Assignments ass ON asub.AssignmentId = ass.AssignmentId
                      WHERE ass.AssessmentId = a.Id AND asub.StudentId = u.UserId AND asub.Status = 'Graded'),
-                    (SELECT TOP 1 se.Score FROM StudentExams se JOIN Exams e ON se.ExamId = e.ExamId 
+                    (SELECT TOP 1 se2.Score FROM StudentExams se2 JOIN Exams e ON se2.ExamId = e.ExamId 
                      WHERE e.CourseId = a.CourseId AND e.SemesterId = a.SemesterId AND LOWER(e.ExamType) = LOWER(a.Type) 
-                     AND se.StudentId = u.UserId AND se.Status IN ('Submitted', 'Graded') AND e.AssessmentId IS NULL)
+                     AND se2.StudentId = u.UserId AND se2.Status IN ('Submitted', 'Graded') AND e.AssessmentId IS NULL)
                 ) as MarksObtained,
                 COALESCE(
                     sas.Status,
-                    (SELECT TOP 1 se.Status FROM StudentExams se JOIN Exams e ON se.ExamId = e.ExamId 
-                     WHERE e.AssessmentId = a.Id AND se.StudentId = u.UserId),
+                    (SELECT TOP 1 se2.Status FROM StudentExams se2 JOIN Exams e ON se2.ExamId = e.ExamId 
+                     WHERE e.AssessmentId = a.Id AND se2.StudentId = u.UserId),
                     (SELECT TOP 1 asub.Status FROM AssignmentSubmissions asub JOIN Assignments ass ON asub.AssignmentId = ass.AssignmentId
                      WHERE ass.AssessmentId = a.Id AND asub.StudentId = u.UserId),
                     'Pending'
@@ -451,10 +467,10 @@ export const getStudentsForAssessment = async (req: Request, res: Response) => {
             CROSS APPLY (
                 SELECT DISTINCT se.StudentId
                 FROM StudentEnrollments se
-                JOIN StudentClasses sc ON sc.StudentId = se.StudentId
+                LEFT JOIN StudentClasses sc ON sc.StudentId = se.StudentId
                 WHERE se.GradeId = a.GradeId 
                   AND se.AcademicYearId = a.AcademicYearId 
-                  AND se.Status = 'Active'
+                  AND se.Status IN ('Active', 'Promoted', 'Transferred')
                   AND (a.ClassId IS NULL OR sc.ClassId = a.ClassId)
         `;
 

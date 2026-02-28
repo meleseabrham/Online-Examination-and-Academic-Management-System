@@ -13,7 +13,7 @@ interface Assessment {
     Id: number; CourseId: number; SemesterId: number; GradeId: number; AcademicYearId: number;
     Type: string; Title: string; TotalMarks: number; WeightPercentage: number;
     CourseName: string; CourseCode: string; GradeNumber: number; SemesterName: string;
-    CreatedByName: string; ClassSection?: string; ClassId?: number; CreatedBy: number;
+    CreatedByName: string; ClassSection?: string; ClassId?: number; CreatedBy: number; IsRegradeAllowed: boolean;
 }
 
 interface StudentScore {
@@ -36,6 +36,8 @@ const AssessmentManagement = () => {
     const [studentScores, setStudentScores] = useState<StudentScore[]>([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+    const [directorRegradeEnabled, setDirectorRegradeEnabled] = useState(false);
 
     // Filters
     const [semesters, setSemesters] = useState<any[]>([]);
@@ -165,8 +167,15 @@ const AssessmentManagement = () => {
 
     const fetchSettings = async () => {
         try {
-            const res = await axios.get(`${baseUrl}/assessment-settings`, { headers });
-            setAdminOnlyAssessment(res.data.adminOnlyAssessment);
+            const [assRes, sysRes] = await Promise.all([
+                axios.get(`${baseUrl}/assessment-settings`, { headers }),
+                axios.get(`http://localhost:5000/api/director/system-settings`, { headers })
+            ]);
+            setAdminOnlyAssessment(assRes.data.adminOnlyAssessment);
+            const drSetting = sysRes.data.find((s: any) => s.SettingKey === 'DirectorGlobalRegrade');
+            if (drSetting && drSetting.SettingValue === 'true') {
+                setDirectorRegradeEnabled(true);
+            }
         } catch (err) { console.error('Error fetching settings:', err); }
     };
 
@@ -376,6 +385,16 @@ const AssessmentManagement = () => {
         }
     };
 
+    const toggleRegradePermission = async (id: number, currentVal: boolean) => {
+        try {
+            await axios.put(`${baseUrl}/assessments/${id}/regrade-permission`, { isRegradeAllowed: !currentVal }, { headers });
+            showMsg('success', `Regrade permission ${!currentVal ? 'enabled' : 'disabled'} for teachers`);
+            fetchAssessments();
+        } catch (err: any) {
+            showMsg('error', 'Error updating regrade permission');
+        }
+    };
+
     const openGrading = async (assessment: Assessment) => {
         setSelectedAssessment(assessment);
         setActiveView('grade');
@@ -451,6 +470,15 @@ const AssessmentManagement = () => {
         Final: 'bg-red-50 text-red-700 border-red-200',
         Assignment: 'bg-emerald-50 text-emerald-700 border-emerald-200',
         Participation: 'bg-purple-50 text-purple-700 border-purple-200'
+    };
+
+    const GRACE_PERIOD_DAYS = 30;
+    const isYearLocked = (ayId: number, isRegradeAllowed?: boolean): boolean => {
+        if (directorRegradeEnabled || isRegradeAllowed) return false;
+        const ay = academicYears.find((a: any) => a.Id === ayId);
+        if (!ay || !ay.EndDate) return false;
+        const lockDate = new Date(new Date(ay.EndDate).getTime() + GRACE_PERIOD_DAYS * 24 * 60 * 60 * 1000);
+        return new Date() > lockDate;
     };
 
     return (
@@ -1173,7 +1201,7 @@ const AssessmentManagement = () => {
                                                                 <h3 className="text-xl font-black text-[#1B2559] group-hover:text-blue-600 transition-colors uppercase tracking-tight">{first.CourseName}</h3>
                                                                 <div className="flex items-center gap-2 mt-0.5">
                                                                     <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">
-                                                                        Grade {first.GradeNumber} {first.ClassSection ? `(${first.ClassSection})` : ''} • {first.SemesterName}
+                                                                        Grade {first.GradeNumber} {first.ClassSection ? `(${first.ClassSection})` : ''} • {first.SemesterName} • {academicYears.find((a: any) => a.Id === first.AcademicYearId)?.Name || ''}
                                                                     </p>
                                                                     <div className="w-1 h-1 rounded-full bg-slate-300"></div>
                                                                     <p className="text-[10px] text-blue-500 font-black uppercase tracking-widest">{group.length} Assessments</p>
@@ -1182,14 +1210,18 @@ const AssessmentManagement = () => {
                                                         </div>
                                                         <div className="flex items-center gap-4">
                                                             <div className="flex flex-col items-end gap-1 mr-4">
-                                                                <button onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    const editable = group.filter(a => isAdmin || !(a.Type === 'Mid' || a.Type === 'Final'));
-                                                                    setGroupEditItems([...editable]);
-                                                                    setActiveView('groupEdit');
-                                                                }} className="text-[10px] font-black text-blue-600 hover:text-blue-800 uppercase tracking-widest bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-100 transition-all">
-                                                                    Manage Weights/Marks
-                                                                </button>
+                                                                {!isYearLocked(first.AcademicYearId, group.some(a => a.IsRegradeAllowed)) ? (
+                                                                    <button onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        const editable = group.filter(a => isAdmin || !(a.Type === 'Mid' || a.Type === 'Final'));
+                                                                        setGroupEditItems([...editable]);
+                                                                        setActiveView('groupEdit');
+                                                                    }} className="text-[10px] font-black text-blue-600 hover:text-blue-800 uppercase tracking-widest bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-100 transition-all">
+                                                                        Manage Weights/Marks
+                                                                    </button>
+                                                                ) : (
+                                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">🔒 Locked</span>
+                                                                )}
                                                             </div>
                                                             <div className={`px-5 py-2.5 rounded-2xl text-[11px] font-black tracking-tighter shadow-sm border ${weight === 100 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
                                                                 weight > 100 ? 'bg-red-50 text-red-700 border-red-100' :
@@ -1239,25 +1271,35 @@ const AssessmentManagement = () => {
                                                                             {(() => {
                                                                                 const isRestricted = !isAdmin && (a.Type === 'Mid' || a.Type === 'Final');
                                                                                 const canManage = isAdmin || !isRestricted;
+                                                                                const locked = isYearLocked(a.AcademicYearId, a.IsRegradeAllowed);
 
                                                                                 return (
                                                                                     <div className="flex gap-2 shrink-0 items-center">
-                                                                                        <button onClick={() => openGrading(a)}
-                                                                                            className="px-4 py-2.5 bg-[#F4F7FE] text-[#1B2559] rounded-xl text-[11px] font-black hover:bg-[#111C44] hover:text-white transition-all flex items-center gap-1.5">
-                                                                                            <PenTool size={12} /> Grade
-                                                                                        </button>
+                                                                                        {!locked && (
+                                                                                            <button onClick={() => openGrading(a)}
+                                                                                                className="px-4 py-2.5 bg-[#F4F7FE] text-[#1B2559] rounded-xl text-[11px] font-black hover:bg-[#111C44] hover:text-white transition-all flex items-center gap-1.5">
+                                                                                                <PenTool size={12} /> Grade
+                                                                                            </button>
+                                                                                        )}
 
-                                                                                        {canManage ? (
+                                                                                        {canManage && !locked ? (
                                                                                             <>
                                                                                                 <button onClick={() => openEdit(a)}
                                                                                                     className="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-400 rounded-xl hover:bg-amber-50 hover:text-amber-500 transition-all">
                                                                                                     <Edit2 size={14} />
                                                                                                 </button>
                                                                                                 {isAdmin && (
-                                                                                                    <button onClick={() => handleDeleteAssessment(a.Id)}
-                                                                                                        className="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all">
-                                                                                                        <Trash2 size={14} />
-                                                                                                    </button>
+                                                                                                    <>
+                                                                                                        <button onClick={(e) => { e.stopPropagation(); toggleRegradePermission(a.Id, a.IsRegradeAllowed); }}
+                                                                                                            title={a.IsRegradeAllowed ? 'Disable Teacher Regrade' : 'Allow Teacher Regrade'}
+                                                                                                            className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${a.IsRegradeAllowed ? 'bg-emerald-50 text-emerald-500 hover:bg-emerald-100 hover:text-emerald-600' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}>
+                                                                                                            {a.IsRegradeAllowed ? <CheckCircle size={14} /> : <AlertTriangle size={14} />}
+                                                                                                        </button>
+                                                                                                        <button onClick={() => handleDeleteAssessment(a.Id)}
+                                                                                                            className="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all">
+                                                                                                            <Trash2 size={14} />
+                                                                                                        </button>
+                                                                                                    </>
                                                                                                 )}
                                                                                             </>
                                                                                         ) : null}

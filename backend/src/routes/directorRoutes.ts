@@ -14,7 +14,7 @@ import {
     calculateSemesterResults, calculateFinalYearRankings, getRankings
 } from '../controllers/academicController.js';
 import { getSchools, createSchool, updateSchool, deleteSchool, transferStudent, transferTeacher, getTransferHistory } from '../controllers/schoolController.js';
-import { getAssessments, createAssessment, updateAssessment, deleteAssessment, getAssessmentScores, submitScores, getStudentsForAssessment, calculateWeightedSemesterResults, getStudentCourseBreakdown, getAssessmentSettings, updateAssessmentSettings, bulkAssignAssessments } from '../controllers/assessmentController.js';
+import { getAssessments, createAssessment, updateAssessment, deleteAssessment, getAssessmentScores, submitScores, getStudentsForAssessment, calculateWeightedSemesterResults, getStudentCourseBreakdown, getAssessmentSettings, updateAssessmentSettings, bulkAssignAssessments, updateAssessmentRegradePermission } from '../controllers/assessmentController.js';
 import { generateTranscript, generateFullYearTranscript } from '../controllers/transcriptController.js';
 import { getModules, createModule, updateModule, deleteModule } from '../controllers/moduleController.js';
 import { getSystemSettings, updateSystemSetting, deleteSystemSetting, updateLogo, deleteLogo, checkMaintenanceMode } from '../controllers/systemController.js';
@@ -120,6 +120,7 @@ router.get('/transfers/history', getTransferHistory);
 router.get('/assessments', getAssessments);
 router.post('/assessments', createAssessment);
 router.put('/assessments/:id', updateAssessment);
+router.put('/assessments/:id/regrade-permission', updateAssessmentRegradePermission);
 router.delete('/assessments/:id', deleteAssessment);
 router.get('/assessments/:assessmentId/scores', getAssessmentScores);
 router.get('/assessments/:assessmentId/students', getStudentsForAssessment);

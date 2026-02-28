@@ -13,7 +13,7 @@ interface Assessment {
     Id: number; CourseId: number; SemesterId: number; GradeId: number; AcademicYearId: number;
     Type: string; Title: string; TotalMarks: number; WeightPercentage: number;
     CourseName: string; CourseCode: string; GradeNumber: number; SemesterName: string;
-    CreatedByName: string; ClassSection?: string; ClassId?: number; CreatedBy: number;
+    CreatedByName: string; ClassSection?: string; ClassId?: number; CreatedBy: number; IsRegradeAllowed: boolean;
 }
 
 interface StudentScore {
@@ -451,6 +451,17 @@ const AssessmentManagement = () => {
         Final: 'bg-red-50 text-red-700 border-red-200',
         Assignment: 'bg-emerald-50 text-emerald-700 border-emerald-200',
         Participation: 'bg-purple-50 text-purple-700 border-purple-200'
+    };
+
+    // Grace period: teachers can still grade for 30 days after the academic year ends
+    const GRACE_PERIOD_DAYS = 30;
+    const isYearLocked = (ayId: number, isRegradeAllowed?: boolean): boolean => {
+        if (isAdmin || isRegradeAllowed) return false; // Admins/Directors or specifically allowed are never locked out
+        const ay = academicYears.find((a: any) => a.Id === ayId);
+        if (!ay || !ay.EndDate) return false;
+        const endDate = new Date(ay.EndDate);
+        const lockDate = new Date(endDate.getTime() + GRACE_PERIOD_DAYS * 24 * 60 * 60 * 1000);
+        return new Date() > lockDate;
     };
 
     return (
@@ -1172,8 +1183,9 @@ const AssessmentManagement = () => {
                                                             <div>
                                                                 <h3 className="text-xl font-black text-[#1B2559] group-hover:text-blue-600 transition-colors uppercase tracking-tight">{first.CourseName}</h3>
                                                                 <div className="flex items-center gap-2 mt-0.5">
+
                                                                     <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">
-                                                                        Grade {first.GradeNumber} {first.ClassSection ? `(${first.ClassSection})` : ''} • {first.SemesterName}
+                                                                        Grade {first.GradeNumber} {first.ClassSection ? `(${first.ClassSection})` : ''} • {first.SemesterName} • {academicYears.find((a: any) => a.Id === first.AcademicYearId)?.Name || ''}
                                                                     </p>
                                                                     <div className="w-1 h-1 rounded-full bg-slate-300"></div>
                                                                     <p className="text-[10px] text-blue-500 font-black uppercase tracking-widest">{group.length} Assessments</p>
@@ -1182,14 +1194,18 @@ const AssessmentManagement = () => {
                                                         </div>
                                                         <div className="flex items-center gap-4">
                                                             <div className="flex flex-col items-end gap-1 mr-4">
-                                                                <button onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    const editable = group.filter(a => isAdmin || !(a.Type === 'Mid' || a.Type === 'Final'));
-                                                                    setGroupEditItems([...editable]);
-                                                                    setActiveView('groupEdit');
-                                                                }} className="text-[10px] font-black text-blue-600 hover:text-blue-800 uppercase tracking-widest bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-100 transition-all">
-                                                                    Manage Weights/Marks
-                                                                </button>
+                                                                {!isYearLocked(first.AcademicYearId, group.some(a => a.IsRegradeAllowed)) ? (
+                                                                    <button onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        const editable = group.filter(a => isAdmin || !(a.Type === 'Mid' || a.Type === 'Final'));
+                                                                        setGroupEditItems([...editable]);
+                                                                        setActiveView('groupEdit');
+                                                                    }} className="text-[10px] font-black text-blue-600 hover:text-blue-800 uppercase tracking-widest bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-100 transition-all">
+                                                                        Manage Weights/Marks
+                                                                    </button>
+                                                                ) : (
+                                                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">🔒 Locked</span>
+                                                                )}
                                                             </div>
                                                             <div className={`px-5 py-2.5 rounded-2xl text-[11px] font-black tracking-tighter shadow-sm border ${weight === 100 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
                                                                 weight > 100 ? 'bg-red-50 text-red-700 border-red-100' :
@@ -1239,15 +1255,18 @@ const AssessmentManagement = () => {
                                                                             {(() => {
                                                                                 const isRestricted = !isAdmin && (a.Type === 'Mid' || a.Type === 'Final');
                                                                                 const canManage = isAdmin || !isRestricted;
+                                                                                const locked = isYearLocked(a.AcademicYearId, a.IsRegradeAllowed);
 
                                                                                 return (
                                                                                     <div className="flex gap-2 shrink-0 items-center">
-                                                                                        <button onClick={() => openGrading(a)}
-                                                                                            className="px-4 py-2.5 bg-[#F4F7FE] text-[#1B2559] rounded-xl text-[11px] font-black hover:bg-[#111C44] hover:text-white transition-all flex items-center gap-1.5">
-                                                                                            <PenTool size={12} /> Grade
-                                                                                        </button>
+                                                                                        {!locked && (
+                                                                                            <button onClick={() => openGrading(a)}
+                                                                                                className="px-4 py-2.5 bg-[#F4F7FE] text-[#1B2559] rounded-xl text-[11px] font-black hover:bg-[#111C44] hover:text-white transition-all flex items-center gap-1.5">
+                                                                                                <PenTool size={12} /> Grade
+                                                                                            </button>
+                                                                                        )}
 
-                                                                                        {canManage ? (
+                                                                                        {canManage && !locked ? (
                                                                                             <>
                                                                                                 <button onClick={() => openEdit(a)}
                                                                                                     className="w-10 h-10 flex items-center justify-center bg-slate-50 text-slate-400 rounded-xl hover:bg-amber-50 hover:text-amber-500 transition-all">

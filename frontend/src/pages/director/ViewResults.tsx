@@ -21,6 +21,8 @@ interface Submission {
     CourseName?: string;
     ProfileImage?: string;
     canRegrade?: boolean;
+    AcademicYearId: number;
+    TeacherId?: number;
 }
 
 interface Stats {
@@ -29,7 +31,7 @@ interface Stats {
     pendingCount: number;
 }
 
-interface AcademicYear { Id: number; Name: string; IsActive: boolean; }
+interface AcademicYear { Id: number; Name: string; IsActive: boolean; EndDate?: string; }
 interface Semester { Id: number; AcademicYearId: number; Name: string; IsActive: boolean; }
 interface Grade { Id: number; GradeNumber: number; }
 interface Section { Id: number; GradeId: number; Name: string; }
@@ -54,6 +56,7 @@ const ViewResults = () => {
     const [grades, setGrades] = useState<Grade[]>([]);
     const [sections, setSections] = useState<Section[]>([]);
     const [courses, setCourses] = useState<Course[]>([]);
+    const [directorRegradeEnabled, setDirectorRegradeEnabled] = useState(false);
 
     // Filter values
     const [selectedYear, setSelectedYear] = useState<string>('');
@@ -104,16 +107,26 @@ const ViewResults = () => {
     const fetchMetadata = async () => {
         try {
             const rolePrefix = 'director';
-            const [yRes, gRes, sRes, cRes] = await Promise.all([
+            const [yRes, gRes, sRes, cRes, sysRes] = await Promise.all([
                 axios.get(`http://localhost:5000/api/${rolePrefix}/academic-years`, { headers }),
                 axios.get(`http://localhost:5000/api/${rolePrefix}/grades`, { headers }),
                 axios.get(`http://localhost:5000/api/${rolePrefix}/semesters`, { headers }),
                 isAdmin
                     ? axios.get(`http://localhost:5000/api/director/courses`, { headers })
-                    : axios.get(`http://localhost:5000/api/teacher/courses`, { headers })
+                    : axios.get(`http://localhost:5000/api/teacher/courses`, { headers }),
+                isAdmin
+                    ? axios.get(`http://localhost:5000/api/director/system-settings`, { headers })
+                    : Promise.resolve({ data: [] })
             ]);
             setYears(yRes.data);
             setSemesters(sRes.data);
+
+            if (isAdmin) {
+                const drSetting = sysRes.data.find((s: any) => s.SettingKey === 'DirectorGlobalRegrade');
+                if (drSetting && drSetting.SettingValue === 'true') {
+                    setDirectorRegradeEnabled(true);
+                }
+            }
 
             // For teachers, extract unique grades from their assigned classes
             if (!isAdmin) {
@@ -429,102 +442,111 @@ const ViewResults = () => {
                                                     </td>
                                                 </tr>
                                             ) : (
-                                                currentItems.map((res) => (
-                                                    <tr
-                                                        key={res.AttemptId}
-                                                        onClick={() => !isAdmin && handleRowClick(res.AttemptId)}
-                                                        className={`group hover:bg-slate-50 transition-all border-b border-slate-50 last:border-0 ${isAdmin ? '' : 'cursor-pointer'}`}
-                                                    >
-                                                        <td className="py-6 flex items-center gap-3">
-                                                            <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden">
-                                                                <img
-                                                                    src={res.ProfileImage
-                                                                        ? `http://localhost:5000/${res.ProfileImage}`
-                                                                        : `https://ui-avatars.com/api/?name=${res.StudentName}&background=random`}
-                                                                    alt=""
-                                                                    className="w-full h-full object-cover"
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <span className="font-bold block text-[#2B3674]">{res.StudentName}</span>
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className="text-[10px] text-slate-400 font-bold uppercase">{res.GradeName}-{res.Section}</span>
-                                                                    {res.CourseName && (
-                                                                        <span className="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md font-bold uppercase">
-                                                                            {res.CourseName}
-                                                                        </span>
-                                                                    )}
-                                                                    {isAdmin && res.TeacherName && (
-                                                                        <span className="text-[10px] bg-blue-50 text-brand-blue px-2 py-0.5 rounded-md font-bold uppercase">
-                                                                            {res.TeacherName}
-                                                                        </span>
-                                                                    )}
+                                                currentItems.map((res, index) => {
+                                                    const ay = years.find(y => y.Id === res.AcademicYearId);
+                                                    let isLocked = false;
+                                                    if (ay && ay.EndDate && !directorRegradeEnabled && isAdmin) {
+                                                        const lockDate = new Date(new Date(ay.EndDate).getTime() + 30 * 24 * 60 * 60 * 1000);
+                                                        isLocked = new Date() > lockDate;
+                                                    }
+
+                                                    return (
+                                                        <tr
+                                                            key={`${res.AttemptId}-${index}`}
+                                                            onClick={() => !isAdmin && handleRowClick(res.AttemptId)}
+                                                            className={`group hover:bg-slate-50 transition-all border-b border-slate-50 last:border-0 ${isAdmin ? '' : 'cursor-pointer'}`}
+                                                        >
+                                                            <td className="py-6 flex items-center gap-3">
+                                                                <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden">
+                                                                    <img
+                                                                        src={res.ProfileImage
+                                                                            ? `http://localhost:5000/${res.ProfileImage}`
+                                                                            : `https://ui-avatars.com/api/?name=${res.StudentName}&background=random`}
+                                                                        alt=""
+                                                                        className="w-full h-full object-cover"
+                                                                    />
                                                                 </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="py-6 text-slate-600 font-medium">{res.ExamTitle}</td>
-                                                        <td className="py-6 text-center">
-                                                            <div className="flex flex-col items-center">
-                                                                <span className="font-bold text-[#2B3674] text-lg leading-tight">
-                                                                    {Number(res.Score || 0).toFixed(1).replace(/\.0$/, '')} <span className="text-slate-300 text-xs">/ {Number(res.MaxPoints)}</span>
-                                                                </span>
-                                                                {/* <span className="text-[10px] text-brand-blue font-black uppercase tracking-tighter mt-1">
+                                                                <div>
+                                                                    <span className="font-bold block text-[#2B3674]">{res.StudentName}</span>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className="text-[10px] text-slate-400 font-bold uppercase">{res.GradeName}-{res.Section}</span>
+                                                                        {res.CourseName && (
+                                                                            <span className="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md font-bold uppercase">
+                                                                                {res.CourseName}
+                                                                            </span>
+                                                                        )}
+                                                                        {isAdmin && res.TeacherName && (
+                                                                            <span className="text-[10px] bg-blue-50 text-brand-blue px-2 py-0.5 rounded-md font-bold uppercase">
+                                                                                {res.TeacherName}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td className="py-6 text-slate-600 font-medium">{res.ExamTitle}</td>
+                                                            <td className="py-6 text-center">
+                                                                <div className="flex flex-col items-center">
+                                                                    <span className="font-bold text-[#2B3674] text-lg leading-tight">
+                                                                        {Number(res.Score || 0).toFixed(1).replace(/\.0$/, '')} <span className="text-slate-300 text-xs">/ {Number(res.MaxPoints)}</span>
+                                                                    </span>
+                                                                    {/* <span className="text-[10px] text-brand-blue font-black uppercase tracking-tighter mt-1">
                                                                     {res.CorrectQuestions} / {res.TotalQuestions} Correct
                                                                 </span> */}
-                                                            </div>
-                                                        </td>
-                                                        <td className="py-6">
-                                                            <span className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider ${res.Status === 'Graded' ? 'bg-green-100 text-green-600' :
-                                                                res.Status === 'Submitted' ? 'bg-blue-100 text-blue-600' :
-                                                                    'bg-orange-100 text-orange-600'
-                                                                }`}>
-                                                                {res.Status}
-                                                            </span>
-                                                        </td>
-                                                        <td className="py-6 text-slate-400 text-sm">
-                                                            {res.Date ? new Date(res.Date).toLocaleString() : 'N/A'}
-                                                        </td>
-                                                        <td className="py-6 text-right">
-                                                            <div className="flex items-center justify-end gap-2 px-4">
-                                                                {isAdmin ? (
-                                                                    /* Admin: show only Grade / Re-Grade button, no detail review */
-                                                                    res.Status !== 'Started' && (
-                                                                        <button
-                                                                            onClick={(e) => {
-                                                                                e.stopPropagation();
-                                                                                navigate(`/director/results/${res.AttemptId}/grade`);
-                                                                            }}
-                                                                            className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all whitespace-nowrap ${res.Status === 'Graded'
-                                                                                ? 'bg-orange-50 text-orange-600 hover:bg-orange-500 hover:text-white'
-                                                                                : 'bg-brand-blue/10 text-brand-blue hover:bg-brand-blue hover:text-white'
-                                                                                }`}
-                                                                        >
-                                                                            {res.Status === 'Graded' ? 'Re-Grade' : 'Grade'}
-                                                                        </button>
-                                                                    )
-                                                                ) : (
-                                                                    /* Teacher: show Grade/Re-Grade + chevron for detail review */
-                                                                    <>
-                                                                        {res.Status !== 'Started' && (res.Status !== 'Graded' || res.canRegrade) && (
+                                                                </div>
+                                                            </td>
+                                                            <td className="py-6">
+                                                                <span className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider ${res.Status === 'Graded' ? 'bg-green-100 text-green-600' :
+                                                                    res.Status === 'Submitted' ? 'bg-blue-100 text-blue-600' :
+                                                                        'bg-orange-100 text-orange-600'
+                                                                    }`}>
+                                                                    {res.Status}
+                                                                </span>
+                                                            </td>
+                                                            <td className="py-6 text-slate-400 text-sm">
+                                                                {res.Date ? new Date(res.Date).toLocaleString() : 'N/A'}
+                                                            </td>
+                                                            <td className="py-6 text-right">
+                                                                <div className="flex items-center justify-end gap-2 px-4">
+                                                                    {isAdmin ? (
+                                                                        /* Admin: show only Grade / Re-Grade button for OWN courses, no detail review */
+                                                                        res.Status !== 'Started' && !isLocked && Number(res.TeacherId) === Number(user?.id || user?.UserId || user?.userId) && (
                                                                             <button
                                                                                 onClick={(e) => {
                                                                                     e.stopPropagation();
-                                                                                    navigate(`/teacher/results/${res.AttemptId}/grade`);
+                                                                                    navigate(`/director/results/${res.AttemptId}/grade`);
                                                                                 }}
-                                                                                className="px-3 py-1 bg-brand-blue/10 text-brand-blue text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-brand-blue hover:text-white transition-all whitespace-nowrap"
+                                                                                className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all whitespace-nowrap ${res.Status === 'Graded'
+                                                                                    ? 'bg-orange-50 text-orange-600 hover:bg-orange-500 hover:text-white'
+                                                                                    : 'bg-brand-blue/10 text-brand-blue hover:bg-brand-blue hover:text-white'
+                                                                                    }`}
                                                                             >
-                                                                                {res.Status === 'Graded' ? 'Re-grade' : 'Grade'}
+                                                                                {res.Status === 'Graded' ? 'Re-Grade' : 'Grade'}
                                                                             </button>
-                                                                        )}
-                                                                        <button className="p-2 text-slate-300 group-hover:text-brand-blue transition-all">
-                                                                            <ChevronRight size={20} />
-                                                                        </button>
-                                                                    </>
-                                                                )}
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                ))
+                                                                        )
+                                                                    ) : (
+                                                                        /* Teacher: show Grade/Re-Grade + chevron for detail review */
+                                                                        <>
+                                                                            {res.Status !== 'Started' && (res.Status !== 'Graded' || res.canRegrade) && (
+                                                                                <button
+                                                                                    onClick={(e) => {
+                                                                                        e.stopPropagation();
+                                                                                        navigate(`/teacher/results/${res.AttemptId}/grade`);
+                                                                                    }}
+                                                                                    className="px-3 py-1 bg-brand-blue/10 text-brand-blue text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-brand-blue hover:text-white transition-all whitespace-nowrap"
+                                                                                >
+                                                                                    {res.Status === 'Graded' ? 'Re-grade' : 'Grade'}
+                                                                                </button>
+                                                                            )}
+                                                                            <button className="p-2 text-slate-300 group-hover:text-brand-blue transition-all">
+                                                                                <ChevronRight size={20} />
+                                                                            </button>
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })
                                             )}
                                         </tbody>
                                     </table>

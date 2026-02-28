@@ -40,6 +40,10 @@ const DirectorSettings = () => {
 
     const [activeSection, setActiveSection] = useState<string | null>('regrade');
 
+    // Director Regrade state
+    const directorRegradeSetting = settings.find(s => s.SettingKey === 'DirectorGlobalRegrade');
+    const isDirectorRegradeEnabled = directorRegradeSetting?.SettingValue === 'true';
+
     const toggleSection = (section: string) => {
         setActiveSection(prev => prev === section ? null : section);
     };
@@ -97,6 +101,26 @@ const DirectorSettings = () => {
             console.error('Update Permission Error:', err);
             const errorMsg = err.response?.data?.error || err.response?.data?.message || 'Failed to update permission';
             setMessage({ type: 'error', text: errorMsg });
+        } finally {
+            setSaving(false);
+            setTimeout(() => setMessage(null), 3000);
+        }
+    };
+
+    const toggleDirectorGlobalRegrade = async () => {
+        try {
+            setSaving(true);
+            const newValue = isDirectorRegradeEnabled ? 'false' : 'true';
+            await axios.post('http://localhost:5000/api/director/system-settings', {
+                key: 'DirectorGlobalRegrade',
+                value: newValue,
+                entityType: null,
+                entityId: null
+            }, { headers });
+            fetchSettings();
+            setMessage({ type: 'success', text: `Director Regrade is now ${newValue === 'true' ? 'enabled' : 'disabled'}` });
+        } catch (err: any) {
+            setMessage({ type: 'error', text: 'Update failed' });
         } finally {
             setSaving(false);
             setTimeout(() => setMessage(null), 3000);
@@ -179,6 +203,24 @@ const DirectorSettings = () => {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div className="space-y-6">
+                            <div className="bg-white rounded-[35px] justify-between shadow-sm border border-slate-100 overflow-hidden transition-all flex items-center p-8">
+                                <div className="flex items-center gap-4 text-left">
+                                    <div className={`p-4 rounded-2xl ${isDirectorRegradeEnabled ? 'bg-purple-50 text-purple-600' : 'bg-slate-50 text-slate-400'}`}>
+                                        <Shield size={24} />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-xl font-black text-[#2B3674]">Director Regrade</h2>
+                                        <p className="text-sm text-slate-400 font-medium">Allow directors to regrade past 30-day deadline.</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={toggleDirectorGlobalRegrade}
+                                    className={`px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${isDirectorRegradeEnabled ? 'bg-purple-100 text-purple-600 hover:bg-purple-200' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}
+                                >
+                                    {isDirectorRegradeEnabled ? 'Enabled' : 'Disabled'}
+                                </button>
+                            </div>
+
                             <div className="bg-white rounded-[35px] shadow-sm border border-slate-100 overflow-hidden transition-all">
                                 <button
                                     onClick={() => toggleSection('regrade')}

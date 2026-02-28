@@ -10,7 +10,15 @@ export const getAdminStats = async (req, res) => {
                 (SELECT COUNT(*) FROM Courses) as courseCount,
                 (SELECT COUNT(*) FROM Sections) as classCount,
                 (SELECT COUNT(*) FROM Exams) as examCount,
-                (SELECT COUNT(*) FROM StudentExams WHERE Status = 'Started') as activeExamsNow
+                (SELECT COUNT(DISTINCT e.ExamId) FROM Exams e
+                 JOIN AcademicYears ay ON e.AcademicYearId = ay.Id
+                 LEFT JOIN Semesters s ON e.SemesterId = s.Id
+                 WHERE e.IsPublished = 1
+                   AND ay.IsActive = 1
+                   AND (e.SemesterId IS NULL OR s.IsActive = 1)
+                   AND (e.StartTime IS NULL OR e.StartTime <= GETDATE())
+                   AND (e.EndTime IS NULL OR e.EndTime >= GETDATE())
+                ) as activeExamsNow
             FROM (SELECT 1 as dummy) as t
         `);
         // 2. Recent Users (Registered in the last 1 hour)
@@ -43,14 +51,26 @@ export const getAdminStats = async (req, res) => {
     }
 };
 export const getReportsData = async (req, res) => {
-    let { range = '6' } = req.query;
+    let { range = '6', classId, schoolId } = req.query;
     let rangeInMonths = parseInt(range);
     if (isNaN(rangeInMonths))
         rangeInMonths = 6;
     try {
         const pool = await poolPromise;
+        // Base filters for Users
+        let usersWhere = "Role IN ('Student', 'Teacher')";
+        if (schoolId)
+            usersWhere += ` AND SchoolId = ${schoolId}`;
+        // Subquery for Class filtering (complex join)
+        if (classId) {
+            usersWhere += ` AND UserId IN (
+                SELECT StudentId FROM StudentEnrollments WHERE GradeId = ${classId} AND Status = 'Active'
+                UNION
+                SELECT TeacherId FROM TeacherAssignments WHERE ClassId = ${classId}
+            )`;
+        }
         // 1. Course Wise Performance
-        const coursePerf = await pool.request().query(`
+        let coursePerfQuery = `
             SELECT 
                 c.CourseName,
                 (SELECT TOP 1 u.FullName FROM Users u 
@@ -63,21 +83,30 @@ export const getReportsData = async (req, res) => {
             LEFT JOIN Exams e ON c.CourseId = e.CourseId
             LEFT JOIN StudentExams se ON e.ExamId = se.ExamId
             WHERE se.Status IN ('Submitted', 'Graded')
-            GROUP BY c.CourseName, c.CourseId
-        `);
+        `;
+        if (classId)
+            coursePerfQuery += ` AND e.ClassId = ${classId}`;
+        coursePerfQuery += ` GROUP BY c.CourseName, c.CourseId`;
+        const coursePerf = await pool.request().query(coursePerfQuery);
         // 2. Exam Participation Trend (By Date Range)
-        const participationTrend = await pool.request().query(`
+        let participationQuery = `
             SELECT 
-                FORMAT(StartTime, 'MMM dd') as month,
+                FORMAT(se.StartTime, 'MMM dd') as month,
                 COUNT(*) as attempts,
-                MIN(StartTime) as sortDate
-            FROM StudentExams
-            WHERE StartTime >= DATEADD(MONTH, -${rangeInMonths}, GETDATE())
-            GROUP BY FORMAT(StartTime, 'MMM dd')
+                MIN(se.StartTime) as sortDate
+            FROM StudentExams se
+        `;
+        if (classId)
+            participationQuery += ` JOIN Exams e ON se.ExamId = e.ExamId WHERE e.ClassId = ${classId} AND `;
+        else
+            participationQuery += ` WHERE `;
+        participationQuery += `se.StartTime >= DATEADD(MONTH, -${rangeInMonths}, GETDATE())
+            GROUP BY FORMAT(se.StartTime, 'MMM dd')
             ORDER BY sortDate ASC
-        `);
+        `;
+        const participationTrend = await pool.request().query(participationQuery);
         // 3. Class Distribution (Students per Class)
-        const classDist = await pool.request().query(`
+        let classDistQuery = `
             SELECT 
                 'Grade ' + CAST(g.GradeNumber AS VARCHAR) + ISNULL(' - ' + s.Name, '') as className,
                 COUNT(se.StudentId) as studentCount
@@ -85,11 +114,15 @@ export const getReportsData = async (req, res) => {
             JOIN Grades g ON se.GradeId = g.Id
             LEFT JOIN Sections s ON se.SectionId = s.Id
             WHERE se.Status = 'Active'
-            GROUP BY g.GradeNumber, s.Name
-            ORDER BY g.GradeNumber, s.Name
-        `);
+        `;
+        if (schoolId)
+            classDistQuery += ` AND se.SchoolId = ${schoolId}`;
+        if (classId)
+            classDistQuery += ` AND se.GradeId = ${classId}`;
+        classDistQuery += ` GROUP BY g.GradeNumber, s.Name ORDER BY g.GradeNumber, s.Name`;
+        const classDist = await pool.request().query(classDistQuery);
         // 4. Teacher Performance (Avg Score per Teacher)
-        const teacherPerf = await pool.request().query(`
+        let teacherPerfQuery = `
             SELECT 
                 t.FullName as teacherName,
                 AVG(CAST(se.Score as FLOAT)) as avgScore,
@@ -98,21 +131,86 @@ export const getReportsData = async (req, res) => {
             JOIN Exams e ON t.UserId = e.TeacherId
             JOIN StudentExams se ON e.ExamId = se.ExamId
             WHERE t.Role = 'Teacher' AND se.Status IN ('Submitted', 'Graded')
-            GROUP BY t.FullName
+        `;
+        if (classId)
+            teacherPerfQuery += ` AND e.ClassId = ${classId}`;
+        if (schoolId)
+            teacherPerfQuery += ` AND t.SchoolId = ${schoolId}`;
+        teacherPerfQuery += ` GROUP BY t.FullName`;
+        const teacherPerf = await pool.request().query(teacherPerfQuery);
+        // 5. Gender Distribution
+        const genderDist = await pool.request().query(`
+            SELECT Role, Gender, COUNT(*) as count
+            FROM Users
+            WHERE ${usersWhere} AND Gender IS NOT NULL
+            GROUP BY Role, Gender
         `);
-        // 5. Overall Statistics
-        const overall = await pool.request().query(`
+        // 6. Age Distribution
+        const ageDist = await pool.request().query(`
+            SELECT 
+                Role,
+                CASE 
+                    WHEN DATEDIFF(YEAR, DateOfBirth, GETDATE()) < 13 THEN 'Child (<13)'
+                    WHEN DATEDIFF(YEAR, DateOfBirth, GETDATE()) BETWEEN 13 AND 19 THEN 'Teen (13-19)'
+                    WHEN DATEDIFF(YEAR, DateOfBirth, GETDATE()) BETWEEN 20 AND 29 THEN 'Young Adult (20-29)'
+                    WHEN DATEDIFF(YEAR, DateOfBirth, GETDATE()) BETWEEN 30 AND 49 THEN 'Adult (30-49)'
+                    ELSE 'Senior (50+)'
+                END as ageGroup,
+                COUNT(*) as count
+            FROM Users
+            WHERE ${usersWhere} AND DateOfBirth IS NOT NULL
+            GROUP BY Role, 
+                CASE 
+                    WHEN DATEDIFF(YEAR, DateOfBirth, GETDATE()) < 13 THEN 'Child (<13)'
+                    WHEN DATEDIFF(YEAR, DateOfBirth, GETDATE()) BETWEEN 13 AND 19 THEN 'Teen (13-19)'
+                    WHEN DATEDIFF(YEAR, DateOfBirth, GETDATE()) BETWEEN 20 AND 29 THEN 'Young Adult (20-29)'
+                    WHEN DATEDIFF(YEAR, DateOfBirth, GETDATE()) BETWEEN 30 AND 49 THEN 'Adult (30-49)'
+                    ELSE 'Senior (50+)'
+                END
+        `);
+        // 7. School Wise Breakdown
+        const schoolBreakdown = await pool.request().query(`
+            SELECT 
+                s.Name as schoolName,
+                (SELECT COUNT(*) FROM Users u WHERE u.SchoolId = s.Id AND u.Role = 'Student') as studentCount,
+                (SELECT COUNT(*) FROM Users u WHERE u.SchoolId = s.Id AND u.Role = 'Teacher') as teacherCount
+            FROM Schools s
+        `);
+        // 8. Gender breakdown in Classes
+        const genderClassDist = await pool.request().query(`
+            SELECT 
+                'Grade ' + CAST(g.GradeNumber AS VARCHAR) + ISNULL(' - ' + sect.Name, '') as className,
+                SUM(CASE WHEN u.Gender = 'Male' THEN 1 ELSE 0 END) as maleCount,
+                SUM(CASE WHEN u.Gender = 'Female' THEN 1 ELSE 0 END) as femaleCount
+            FROM StudentEnrollments se
+            JOIN Users u ON se.StudentId = u.UserId
+            JOIN Grades g ON se.GradeId = g.Id
+            LEFT JOIN Sections sect ON se.SectionId = sect.Id
+            WHERE se.Status = 'Active'
+            GROUP BY g.GradeNumber, sect.Name
+        `);
+        // 9. Overall Statistics
+        let overallQuery = `
             SELECT 
                 AVG(CAST(Score as FLOAT)) as globalAverage,
                 COUNT(*) as totalExamsTaken
-            FROM StudentExams
-            WHERE Status IN ('Submitted', 'Graded')
-        `);
+            FROM StudentExams se
+        `;
+        if (classId)
+            overallQuery += ` JOIN Exams e ON se.ExamId = e.ExamId WHERE e.ClassId = ${classId} AND `;
+        else
+            overallQuery += ` WHERE `;
+        overallQuery += `se.Status IN ('Submitted', 'Graded')`;
+        const overall = await pool.request().query(overallQuery);
         res.json({
             coursePerformance: coursePerf.recordset,
             participationTrend: participationTrend.recordset,
             classDistribution: classDist.recordset,
             teacherPerformance: teacherPerf.recordset,
+            genderDistribution: genderDist.recordset,
+            ageDistribution: ageDist.recordset,
+            schoolWiseBreakdown: schoolBreakdown.recordset,
+            genderClassDistribution: genderClassDist.recordset,
             overall: overall.recordset[0]
         });
     }

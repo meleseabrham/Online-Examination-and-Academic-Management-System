@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUsers, createUser, updateUser, deleteUser, getUserProfile } from '../controllers/userController.js';
+import { getUsers, createUser, updateUser, deleteUser, getUserProfile, resetUserPassword } from '../controllers/userController.js';
 import { getClasses, createClass, updateClass, deleteClass, getStudentsByClass, assignStudentToClass, getUnassignedStudents, removeStudentFromClass } from '../controllers/classController.js';
 import { getCourses, createCourse, updateCourse, deleteCourse } from '../controllers/courseController.js';
 import { getTeacherAssignments, createTeacherAssignment, updateTeacherAssignment, deleteTeacherAssignment } from '../controllers/teacherAssignmentController.js';
@@ -16,7 +16,7 @@ import { upload, profileUpload } from '../middleware/upload.js';
 const router = express.Router();
 // Apply Admin check to all routes here
 router.use(authenticateToken);
-router.use(authorizeRoles('Admin'));
+router.use(authorizeRoles('Admin', 'Director'));
 router.use(checkMaintenanceMode);
 // Dashboard stats & reports
 router.get('/dashboard/stats', getAdminStats);
@@ -26,6 +26,7 @@ router.get('/notifications', getAdminNotifications);
 router.get('/users', authorizeRoles('Admin'), getUsers);
 router.get('/users/:id/profile', authorizeRoles('Admin'), getUserProfile);
 router.post('/users', authorizeRoles('Admin'), profileUpload.single('profileImage'), createUser);
+router.post('/users/reset-password', authorizeRoles('Admin'), resetUserPassword);
 router.put('/users/:id', authorizeRoles('Admin'), profileUpload.single('profileImage'), updateUser);
 router.delete('/users/:id', authorizeRoles('Admin'), deleteUser);
 // Class routes

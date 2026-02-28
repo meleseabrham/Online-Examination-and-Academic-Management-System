@@ -40,7 +40,6 @@ import {
     Target,
     BarChart3,
     ArrowUpRight,
-    Search,
     Filter
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
