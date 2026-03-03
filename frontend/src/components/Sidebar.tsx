@@ -187,7 +187,13 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                 </div>
                 {!isCollapsed && (
                     <span className="font-bold text-lg text-white truncate">
-                        {publicSettings.SchoolName || "Online Exam"}
+                        {publicSettings.SchoolName
+                            ? publicSettings.SchoolName
+                                .split(' ')
+                                .filter((word: string) => word.length > 0)
+                                .map((word: string) => word.charAt(0).toUpperCase())
+                                .join('')
+                            : "AEMS"}
                     </span>
                 )}
             </div>
