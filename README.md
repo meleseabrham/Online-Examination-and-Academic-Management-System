@@ -43,11 +43,17 @@ Built entirely with **TypeScript** for robust end-to-end type safety, this platf
 
 ## ✨ Key Features
 
-### 🏛️ Director & Administrator (System Orchestration)
-- **Executive Live Monitor:** High-level observability into all active exams taking place across the institution. Monitor server load, active test-takers, and lockdown interventions.
-- **Academic Lifecycle Logistics:** Effortlessly manage mass enrollments, student class transfers, and end-of-year automated promotions.
-- **Advanced Analytics & Reporting:** Instantly generate institution-wide performance percentiles, class rankings, and downloadable statistical PDF/Excel reports.
-- **Database Self-Management:** Perform direct SQL Server backups (Full, Differential, Log) and restores directly from the dashboard.
+### 🛠️ Administrator (System Architecture)
+- **Role-Based Access Control (RBAC):** Manage the entire user lifecycle, defining granular permissions for Teachers, Students, and Directors to ensure data integrity and security.
+- **System Personalization & Branding:** Configure institution-wide settings including school logo, contact information, and primary colors to tailor the platform's visual identity.
+- **Infrastructure Health & Database Management:** Perform critical maintenance tasks such as direct MS SQL Server backups (Full, Differential, or Log) and database restores directly from the web interface.
+- **Global Announcements:** Orchestrate system-wide communications to all users through a dedicated notification engine.
+
+### 🏛️ Director (Academic Operations)
+- **Academic Lifecycle Logistics:** Effortlessly manage mass enrollments, student class transfers, and automated end-of-year promotions across different academic years and semesters.
+- **Executive Live Monitor:** Gain real-time observability into all active exam sessions across the institution, monitoring server load and proctoring interventions as they happen.
+- **Institutional Analytics & Insights:** Instantly generate high-level performance percentiles, class rankings, and statistical trends with exportable PDF/Excel reporting suites.
+- **Curriculum & Staff Oversight:** Monitor course modules, manage teacher-class assignments, and review institutional assessment results to maintain high academic standards.
 
 ### 👩‍🏫 Teacher (Instruction & Assessment)
 - **Intelligent Exam Builder:** Construct dynamic quizzes, mid-terms, and finals featuring multiple choice, true/false, matching, and essay question types. Configure tight time limits and scheduling.
