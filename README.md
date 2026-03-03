@@ -3,7 +3,7 @@
 
   <h1 align="center">Academic & Exam Management System</h1>
   <p align="center">
-    <strong>A  Academic & Exam Management System</strong>
+    <strong>Academic & Exam Management System</strong>
     <br />
     <br />
     <a href="#-about-the-project">About</a>
