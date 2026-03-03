@@ -24,7 +24,7 @@ const SystemBranding = () => {
         if (settings.SchoolName) {
             document.title = settings.SchoolName;
         } else {
-            document.title = "Online Examination System";
+            document.title = " Online Examination and Academic Management System";
         }
 
         const favicon = document.querySelector('link[rel="icon"]');

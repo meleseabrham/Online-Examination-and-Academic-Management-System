@@ -63,16 +63,34 @@ const GuestHeader = () => {
                         <span className="text-white font-black text-xl">O</span>
                     )}
                 </div>
-                <h1 className="text-xl font-black text-[#1B2559] tracking-tight hidden sm:block">
-                    {schoolName ? (
-                        <>
-                            {schoolName.split(' ')[0]} <span className="text-brand-blue">{schoolName.split(' ').slice(1).join(' ')}</span>
-                        </>
-                    ) : (
-                        <>
-                            Online <span className="text-brand-blue">Exam</span>
-                        </>
-                    )}
+                <h1 className="text-xl font-black text-[#1B2559] tracking-tight">
+
+                    {/* Mobile View - Acronym */}
+                    <span className="sm:hidden text-brand-blue">
+                        {schoolName
+                            ? schoolName
+                                .split(' ')
+                                .map(word => word.charAt(0).toUpperCase())
+                                .join('')
+                            : "AEMS"}
+                    </span>
+
+                    {/* Desktop View - Full Name */}
+                    <span className="hidden sm:inline">
+                        {schoolName ? (
+                            <>
+                                {schoolName.split(' ')[0]}{" "}
+                                <span className="text-brand-blue">
+                                    {schoolName.split(' ').slice(1).join(' ')}
+                                </span>
+                            </>
+                        ) : (
+                            <span className="text-brand-blue">
+                                AEMS
+                            </span>
+                        )}
+                    </span>
+
                 </h1>
             </div>
 

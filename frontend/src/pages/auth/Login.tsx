@@ -88,16 +88,38 @@ const Login = () => {
                             </div>
                         )}
                     </div>
-                    <h1 className="text-2xl sm:text-4xl font-extrabold text-[#1B2559] tracking-tight whitespace-nowrap">
-                        {publicSettings.SchoolName ? (
-                            <>
-                                {publicSettings.SchoolName.split(' ')[0]} <span className="text-brand-blue">{publicSettings.SchoolName.split(' ').slice(1).join(' ')}</span>
-                            </>
-                        ) : (
-                            <>
-                                Online <span className="text-brand-blue">Examination System</span>
-                            </>
-                        )}
+                    <h1 className="text-2xl sm:text-4xl font-extrabold text-[#1B2559] tracking-tight ml-0 sm:ml-[-80px]">
+
+                        {/* Mobile View - Auto Acronym */}
+                        <span className="sm:hidden text-brand-blue">
+                            {publicSettings.SchoolName
+                                ? publicSettings.SchoolName
+                                    .split(' ')
+                                    .filter((word: string) => word.length > 0)
+                                    .map((word: string) => word.charAt(0).toUpperCase())
+                                    .join('')
+                                : "AEMS"}
+                        </span>
+
+                        {/* Desktop View - Full Name */}
+                        <span className="hidden sm:block whitespace-nowrap">
+                            {publicSettings.SchoolName ? (
+                                <>
+                                    {publicSettings.SchoolName.split(' ')[0]}{" "}
+                                    <span className="text-brand-blue">
+                                        {publicSettings.SchoolName.split(' ').slice(1).join(' ')}
+                                    </span>
+                                </>
+                            ) : (
+                                <>
+                                    Academic
+                                    <span className="text-brand-blue">
+                                        {" "} & Exam Management System
+                                    </span>
+                                </>
+                            )}
+                        </span>
+
                     </h1>
                 </div>
 
