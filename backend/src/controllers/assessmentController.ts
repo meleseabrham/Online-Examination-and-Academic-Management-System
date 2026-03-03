@@ -207,7 +207,6 @@ export const getAssessments = async (req: Request, res: Response) => {
                 WHERE ta.TeacherId = @teacherId 
                 AND ta.CourseId = a.CourseId
                 AND (ta.ClassId = a.ClassId OR a.ClassId IS NULL)
-                AND ta.Status = 'Active'
             )`;
             request.input('teacherId', sql.Int, user.id);
         }
@@ -654,11 +653,19 @@ export const getStudentCourseBreakdown = async (req: Request, res: Response) => 
             teacherFilter = `
                 AND EXISTS (
                     SELECT 1 FROM TeacherAssignments ta
-                    JOIN StudentClasses sc ON sc.ClassId = ta.ClassId
+                    JOIN Classes c ON ta.ClassId = c.ClassId
                     WHERE ta.TeacherId = @teacherId
                     AND ta.CourseId = a.CourseId
-                    AND sc.StudentId = @sid
-                    AND ta.Status = 'Active'
+                    AND ta.AcademicYearId = a.AcademicYearId
+                    AND EXISTS (
+                        SELECT 1 FROM StudentEnrollments se
+                        JOIN Grades g ON se.GradeId = g.Id
+                        JOIN Sections s ON se.SectionId = s.Id
+                        WHERE se.StudentId = @sid 
+                        AND se.AcademicYearId = a.AcademicYearId
+                        AND (c.GradeName = 'Grade ' + CAST(g.GradeNumber AS NVARCHAR) OR c.GradeName = CAST(g.GradeNumber AS NVARCHAR))
+                        AND (ISNULL(c.Section, '') = ISNULL(s.Name, ''))
+                    )
                 )
             `;
         }
@@ -692,7 +699,8 @@ export const getStudentCourseBreakdown = async (req: Request, res: Response) => 
                 WHERE a.SemesterId = @semId
                 AND a.GradeId IN (
                     SELECT se.GradeId FROM StudentEnrollments se 
-                    WHERE se.StudentId = @sid AND se.Status IN ('Active', 'Promoted', 'Transferred')
+                    WHERE se.StudentId = @sid 
+                    AND se.AcademicYearId = a.AcademicYearId
                 )
                 ${teacherFilter}
                 ORDER BY c.CourseName, a.Type

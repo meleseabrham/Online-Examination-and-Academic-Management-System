@@ -187,19 +187,43 @@ export const getMyRecentExams = async (req: Request, res: Response) => {
 
 export const getClassStudents = async (req: Request, res: Response) => {
     const { classId } = req.params;
+    const { academicYearId } = req.query;
+
     try {
         const pool = await poolPromise;
-        const result = await pool.request()
-            .input('classId', sql.Int, classId)
-            .query(`
+        const request = pool.request();
+        request.input('classId', sql.Int, classId);
+
+        let query = '';
+        if (academicYearId) {
+            request.input('ayId', sql.Int, academicYearId);
+            query = `
+                SELECT DISTINCT u.UserId, u.FullName, u.Email, u.Status, u.ProfileImage
+                FROM Users u
+                JOIN StudentEnrollments se ON u.UserId = se.StudentId
+                JOIN Grades g ON se.GradeId = g.Id
+                JOIN Sections s ON se.SectionId = s.Id
+                JOIN Classes c ON (
+                    c.GradeName = 'Grade ' + CAST(g.GradeNumber AS NVARCHAR) 
+                    OR c.GradeName = CAST(g.GradeNumber AS NVARCHAR)
+                ) AND (ISNULL(c.Section, '') = ISNULL(s.Name, ''))
+                WHERE c.ClassId = @classId 
+                AND se.AcademicYearId = @ayId
+                AND se.Status IN ('Active', 'Promoted', 'Repeated', 'Transferred')
+            `;
+        } else {
+            query = `
                 SELECT u.UserId, u.FullName, u.Email, u.Status, u.ProfileImage
                 FROM Users u
                 JOIN StudentClasses sc ON u.UserId = sc.StudentId
                 WHERE sc.ClassId = @classId
-            `);
+            `;
+        }
+
+        const result = await request.query(query);
         res.json(result.recordset);
     } catch (err) {
-        console.error(err);
+        console.error('getClassStudents Error:', err);
         res.status(500).json({ message: 'Error fetching class students' });
     }
 };

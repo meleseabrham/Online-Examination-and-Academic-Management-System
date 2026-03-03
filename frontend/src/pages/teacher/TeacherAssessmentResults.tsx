@@ -74,6 +74,7 @@ const TeacherAssessmentResults = () => {
                 const urlStudentName = searchParams.get('studentName');
                 const urlGradeNumber = searchParams.get('gradeNumber');
                 const urlSectionName = searchParams.get('sectionName');
+                const urlSemesterId = searchParams.get('semesterId');
 
                 if (urlStudentId && urlStudentName && !autoLoadedRef.current) {
                     autoLoadedRef.current = true;
@@ -86,7 +87,10 @@ const TeacherAssessmentResults = () => {
                     };
                     setSelectedStudent(student);
                     setLoadingBreakdown(true);
-                    const semId = activeSem ? activeSem.Id.toString() : '';
+
+                    const semId = urlSemesterId || (activeSem ? activeSem.Id.toString() : '');
+                    if (urlSemesterId) setSelectedSemester(urlSemesterId);
+
                     try {
                         const res = await axios.get(`http://localhost:5000/api/teacher/student-course-breakdown?studentId=${urlStudentId}&semesterId=${semId}&teacherId=${user.id}`, { headers });
                         setCourseBreakdown(res.data);
@@ -133,7 +137,7 @@ const TeacherAssessmentResults = () => {
             const cls = teacherClasses.find(c => c.ClassId.toString() === selectedClass);
             if (!cls) return;
 
-            const res = await axios.get(`http://localhost:5000/api/teacher/classes/${selectedClass}/students`, { headers });
+            const res = await axios.get(`http://localhost:5000/api/teacher/classes/${selectedClass}/students?academicYearId=${selectedYear}`, { headers });
 
             const mapped: Student[] = res.data.map((s: any) => ({
                 StudentId: s.StudentId || s.UserId,
