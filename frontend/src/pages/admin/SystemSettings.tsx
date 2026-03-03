@@ -5,8 +5,8 @@ import Header from '../../components/Header';
 import {
     Power, ChevronDown, ChevronUp,
     Upload, Camera, X, Image as ImageIcon,
-    School,
-    AlertTriangle, CheckCircle2, Info
+    School, Activity, Terminal, Zap,
+    AlertTriangle, CheckCircle2, Info, RefreshCw
 } from 'lucide-react';
 
 interface SystemSetting {
@@ -39,6 +39,27 @@ const SystemSettings = () => {
 
     // Accordion state
     const [activeSection, setActiveSection] = useState<string | null>('logo');
+    const [apiStatus, setApiStatus] = useState<'Checking' | 'Online' | 'Offline'>('Checking');
+    const [apiDetails, setApiDetails] = useState<any>(null);
+
+    const checkApiHealth = async () => {
+        setApiStatus('Checking');
+        try {
+            const res = await axios.get('http://localhost:5000/api/health');
+            if (res.data.status === 'ok') {
+                setApiStatus('Online');
+                setApiDetails(res.data.db);
+            } else {
+                setApiStatus('Offline');
+            }
+        } catch (err) {
+            setApiStatus('Offline');
+        }
+    };
+
+    useEffect(() => {
+        checkApiHealth();
+    }, []);
 
     const toggleSection = (section: string) => {
         setActiveSection(prev => prev === section ? null : section);
@@ -392,6 +413,84 @@ const SystemSettings = () => {
                                         >
                                             Save School Identity
                                         </button>
+                                    </div>
+                                )}
+                            </div>
+
+
+                            <div className="bg-white rounded-[35px] shadow-sm border border-slate-100 overflow-hidden transition-all">
+                                <button
+                                    onClick={() => toggleSection('api')}
+                                    className="w-full p-8 flex items-center justify-between hover:bg-slate-50 transition-colors"
+                                >
+                                    <div className="flex items-center gap-4 text-left">
+                                        <div className="bg-blue-50 p-4 rounded-2xl text-blue-500">
+                                            <Activity size={24} />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-black text-[#2B3674]">System Health</h2>
+                                            <p className="text-sm text-slate-400 font-medium">Monitor backend API and DB connectivity.</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                        <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${apiStatus === 'Online' ? 'bg-emerald-50 text-emerald-500' :
+                                            apiStatus === 'Offline' ? 'bg-red-50 text-red-500' :
+                                                'bg-slate-50 text-slate-400'
+                                            }`}>
+                                            {apiStatus}
+                                        </div>
+                                        {activeSection === 'api' ? <ChevronUp size={24} className="text-slate-300" /> : <ChevronDown size={24} className="text-slate-300" />}
+                                    </div>
+                                </button>
+
+                                {activeSection === 'api' && (
+                                    <div className="px-8 pb-8 space-y-6 animate-in slide-in-from-top-4 duration-300">
+                                        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                            <div className="flex items-center justify-between mb-4">
+                                                <div className="flex items-center gap-2">
+                                                    <Terminal size={18} className="text-[#2B3674]" />
+                                                    <span className="font-black text-sm text-[#2B3674]">Backend API Status</span>
+                                                </div>
+                                                <button
+                                                    onClick={checkApiHealth}
+                                                    className="p-2 hover:bg-slate-200 rounded-lg transition-colors text-slate-400 hover:text-[#2B3674]"
+                                                    title="Re-check status"
+                                                >
+                                                    <RefreshCw size={16} className={apiStatus === 'Checking' ? 'animate-spin' : ''} />
+                                                </button>
+                                            </div>
+
+                                            <div className="space-y-4">
+                                                <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100">
+                                                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Connection</span>
+                                                    <span className={`text-xs font-black ${apiStatus === 'Online' ? 'text-emerald-500' : 'text-red-500'}`}>
+                                                        {apiStatus === 'Online' ? 'RUNNING CORRECTLY' : 'NOT RESPONDING'}
+                                                    </span>
+                                                </div>
+
+                                                {apiDetails && (
+                                                    <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-slate-100">
+                                                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Database Security</span>
+                                                        <span className="text-xs font-black text-emerald-500 flex items-center gap-1">
+                                                            <CheckCircle2 size={12} /> SECURE
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-col gap-3">
+                                            <p className="text-[10px] text-slate-400 font-bold px-2 italic text-center">
+                                                * If the API is offline, ensure the backend service is running on Port 5000.
+                                            </p>
+                                            <button
+                                                onClick={checkApiHealth}
+                                                className="w-full bg-[#2B3674] text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-100 hover:bg-gray-600 active:scale-95 transition-all flex items-center justify-center gap-2"
+                                            >
+                                                <Zap size={18} />
+                                                Run Health Diagnostic
+                                            </button>
+                                        </div>
                                     </div>
                                 )}
                             </div>

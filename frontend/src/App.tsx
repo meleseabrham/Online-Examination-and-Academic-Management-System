@@ -58,6 +58,7 @@ import DirectorSettings from './pages/director/DirectorSettings';
 import DirectorLiveExamMonitor from './pages/director/LiveMonitor';
 import ManageTeachers from './pages/director/ManageTeachers';
 import DirectorReports from './pages/director/Reports';
+import SystemBranding from './components/SystemBranding';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }: { children: JSX.Element, allowedRoles: string[] }) => {
@@ -87,6 +88,7 @@ const ProtectedRoute = ({ children, allowedRoles }: { children: JSX.Element, all
 function App() {
     return (
         <Router>
+            <SystemBranding />
             <Routes>
                 <Route path="/login" element={<Login />} />
 

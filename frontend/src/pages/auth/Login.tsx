@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, AlertCircle, BookOpen, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, AlertCircle, BookOpen, Eye, EyeOff, Phone, MapPin } from 'lucide-react';
 import axios from 'axios';
 import GuestHeader from '../../components/GuestHeader';
 
@@ -163,10 +163,26 @@ const Login = () => {
                     <div className="mt-8 text-center">
                         <button
                             onClick={() => window.location.href = `mailto:${publicSettings.SupportEmail || 'support@examsystem.com'}`}
-                            className="text-brand-blue text-sm font-bold hover:underline underline-offset-4 transition-all opacity-70 hover:opacity-100"
+                            className="text-brand-blue text-sm font-bold hover:underline underline-offset-4 transition-all opacity-70 hover:opacity-100 block mx-auto mb-2"
                         >
                             Trouble signing in? Contact support
                         </button>
+                        {publicSettings.SchoolPhone && (
+                            <div className="flex items-center justify-center gap-2 text-slate-400 mb-1">
+                                <Phone size={14} className="text-brand-blue" />
+                                <p className="text-xs font-bold uppercase tracking-wider">
+                                    {publicSettings.SchoolPhone}
+                                </p>
+                            </div>
+                        )}
+                        {publicSettings.SchoolAddress && (
+                            <div className="flex items-center justify-center gap-2 text-slate-400 max-w-[280px] mx-auto">
+                                <MapPin size={14} className="text-brand-blue shrink-0" />
+                                <p className="text-[10px] font-medium leading-relaxed text-left">
+                                    {publicSettings.SchoolAddress}
+                                </p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
