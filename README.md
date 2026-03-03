@@ -1,9 +1,9 @@
 <div align="center">
   <img src="frontend/public/vite.svg" alt="Logo" width="120" height="120">
 
-  <h1 align="center">NexExam</h1>
+  <h1 align="center">Academic & Exam Management System</h1>
   <p align="center">
-    <strong>A Next-Generation Academic Enterprise Resource Planning & Live Examination Suite</strong>
+    <strong>A  Academic & Exam Management System</strong>
     <br />
     <br />
     <a href="#-about-the-project">About</a>
