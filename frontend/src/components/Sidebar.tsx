@@ -5,7 +5,7 @@ import {
     LayoutDashboard, Users, Calendar, School, BookOpen, GraduationCap,
     FileText, Trophy, Radio, TrendingUp, Megaphone, PlusCircle, LogOut,
     ChevronLeft, ChevronRight, ChevronDown, Clock, UserPlus,
-    ArrowRightLeft, ClipboardList, Library, Database, Settings, UserCheck
+    ArrowRightLeft, ClipboardList, Library, Database, Settings, UserCheck, ShieldCheck
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -100,6 +100,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
         { title: 'Announcements', icon: <Megaphone size={20} />, path: '/admin/announcements' },
         { title: 'System Guides', icon: <BookOpen size={20} />, path: '/admin/guides' },
         { title: 'System Settings', icon: <Settings size={20} />, path: '/admin/system-settings' },
+        { title: 'Audit Logs', icon: <ShieldCheck size={20} />, path: '/admin/audit-logs' },
     ];
 
     const directorLinks: SidebarLink[] = [
@@ -128,6 +129,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
         { title: 'Announcements', icon: <Megaphone size={20} />, path: '/director/announcements', badge: notifications.announcements },
         { title: 'Transfers', icon: <ArrowRightLeft size={20} />, path: '/director/transfers' },
         { title: 'System Settings', icon: <Settings size={20} />, path: '/director/system-settings' },
+        // { title: 'Audit Logs', icon: <ShieldCheck size={20} />, path: '/director/audit-logs' },
         { title: 'Reports', icon: <TrendingUp size={20} />, path: '/director/reports' },
         { title: 'System Guides', icon: <BookOpen size={20} />, path: '/director/guides' },
     ];

@@ -43,11 +43,14 @@ import teacherRoutes from './routes/teacherRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 import { checkMaintenanceMode, ensureSystemSchema } from './controllers/systemController.js';
 
+import auditRoutes from './routes/auditRoutes.js';
+
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/director', directorRoutes);
 app.use('/api/teacher', teacherRoutes);
 app.use('/api/student', studentRoutes);
+app.use('/api/audit', auditRoutes);
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { sql, poolPromise } from '../config/db.js';
+import { logAction } from '../utils/auditLogger.js';
 
 export const getUsers = async (req: Request, res: Response) => {
     const { role } = req.query;
@@ -59,7 +60,7 @@ export const createUser = async (req: Request, res: Response) => {
         const registrationNumber = `${yearPrefix}${newNumber.toString().padStart(5, '0')}`;
         const profileImage = req.file ? req.file.path.replace(/\\/g, '/') : null;
 
-        await pool.request()
+        const result = await pool.request()
             .input('fullName', sql.NVarChar, fullName)
             .input('email', sql.NVarChar, email)
             .input('password', sql.NVarChar, hashedPassword)
@@ -69,7 +70,21 @@ export const createUser = async (req: Request, res: Response) => {
             .input('profileImage', sql.NVarChar, profileImage)
             .input('regNo', sql.NVarChar, registrationNumber)
             .input('title', sql.NVarChar, title || null)
-            .query('INSERT INTO Users (FullName, Email, Password, Role, Status, DateOfBirth, RegistrationNumber, Gender, ProfileImage, Title) VALUES (@fullName, @email, @password, @role, \'Active\', @dob, @regNo, @gender, @profileImage, @title)');
+            .query('INSERT INTO Users (FullName, Email, Password, Role, Status, DateOfBirth, RegistrationNumber, Gender, ProfileImage, Title) VALUES (@fullName, @email, @password, @role, \'Active\', @dob, @regNo, @gender, @profileImage, @title); SELECT SCOPE_IDENTITY() as UserId;');
+
+        const newUserId = result.recordset[0].UserId;
+
+        // Audit Log
+        await logAction({
+            userId: (req as any).user.id,
+            role: (req as any).user.role,
+            action: 'INSERT',
+            tableName: 'Users',
+            recordId: newUserId,
+            newValue: { ...req.body, registrationNumber, profileImage },
+            ipAddress: req.ip
+        });
+
         res.status(201).json({ message: 'User created successfully', registrationNumber });
     } catch (err) {
         console.error(err);
@@ -97,6 +112,13 @@ export const updateUser = async (req: Request, res: Response) => {
 
     try {
         const pool = await poolPromise;
+
+        // 1. Fetch Old Data for Audit
+        const oldResult = await pool.request()
+            .input('id', sql.Int, id)
+            .query('SELECT FullName, Email, Role, Status, DateOfBirth, Gender, Title FROM Users WHERE UserId = @id');
+        const oldValue = oldResult.recordset[0];
+
         const profileImage = req.file ? req.file.path.replace(/\\/g, '/') : null;
 
         let query = 'UPDATE Users SET FullName = @fullName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, Title = @title WHERE UserId = @id';
@@ -119,6 +141,19 @@ export const updateUser = async (req: Request, res: Response) => {
         }
 
         await request.query(query);
+
+        // Audit Log
+        await logAction({
+            userId: (req as any).user.id,
+            role: (req as any).user.role,
+            action: 'UPDATE',
+            tableName: 'Users',
+            recordId: Number(id),
+            oldValue: oldValue,
+            newValue: req.body,
+            ipAddress: req.ip
+        });
+
         res.json({ message: 'User updated successfully' });
     } catch (err) {
         console.error('Update User Error:', err);
@@ -130,9 +165,28 @@ export const deleteUser = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const pool = await poolPromise;
+
+        // Fetch Old Data for Audit
+        const oldResult = await pool.request()
+            .input('id', sql.Int, id)
+            .query('SELECT FullName, Email, Role FROM Users WHERE UserId = @id');
+        const oldValue = oldResult.recordset[0];
+
         await pool.request()
             .input('id', sql.Int, id)
             .query('DELETE FROM Users WHERE UserId = @id');
+
+        // Audit Log
+        await logAction({
+            userId: (req as any).user.id,
+            role: (req as any).user.role,
+            action: 'DELETE',
+            tableName: 'Users',
+            recordId: Number(id),
+            oldValue: oldValue,
+            ipAddress: req.ip
+        });
+
         res.json({ message: 'User deleted successfully' });
     } catch (err) {
         console.error(err);

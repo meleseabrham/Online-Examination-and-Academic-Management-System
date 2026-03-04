@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { sql, poolPromise } from '../config/db.js';
+import { logAction } from '../utils/auditLogger.js';
 
 // =============================================
 // ASSESSMENT SETTINGS
@@ -245,7 +246,7 @@ export const createAssessment = async (req: Request, res: Response) => {
             });
         }
 
-        await pool.request()
+        const result = await pool.request()
             .input('courseId', sql.Int, courseId)
             .input('semesterId', sql.Int, semesterId)
             .input('gradeId', sql.Int, gradeId)
@@ -258,8 +259,22 @@ export const createAssessment = async (req: Request, res: Response) => {
             .input('createdBy', sql.Int, user?.id || null)
             .query(`
                 INSERT INTO Assessments (CourseId, SemesterId, GradeId, AcademicYearId, ClassId, Type, Title, TotalMarks, WeightPercentage, CreatedBy)
-                VALUES (@courseId, @semesterId, @gradeId, @ayId, @classId, @type, @title, @totalMarks, @weight, @createdBy)
+                VALUES (@courseId, @semesterId, @gradeId, @ayId, @classId, @type, @title, @totalMarks, @weight, @createdBy);
+                SELECT SCOPE_IDENTITY() as Id;
             `);
+
+        const newId = result.recordset[0].Id;
+
+        // Audit Log
+        await logAction({
+            userId: user.id,
+            role: user.role,
+            action: 'INSERT',
+            tableName: 'Assessments',
+            recordId: newId,
+            newValue: req.body,
+            ipAddress: req.ip
+        });
 
         res.status(201).json({ message: 'Assessment created successfully' });
     } catch (err) {
@@ -277,13 +292,14 @@ export const updateAssessment = async (req: Request, res: Response) => {
         // Get current assessment details to find its group
         const currentRes = await pool.request()
             .input('id', sql.Int, id)
-            .query("SELECT CourseId, SemesterId, GradeId FROM Assessments WHERE Id = @id");
+            .query("SELECT CourseId, SemesterId, GradeId, Type, Title, TotalMarks, WeightPercentage FROM Assessments WHERE Id = @id");
 
         if (currentRes.recordset.length === 0) {
             return res.status(404).json({ message: 'Assessment not found' });
         }
 
         const { CourseId, SemesterId, GradeId } = currentRes.recordset[0];
+        const oldValue = currentRes.recordset[0];
 
         // Validate total weight doesn't exceed 100% (excluding this assessment's current weight)
         const weightCheck = await pool.request()
@@ -314,6 +330,18 @@ export const updateAssessment = async (req: Request, res: Response) => {
             .input('totalMarks', sql.Decimal(6, 2), totalMarks || 100)
             .input('weight', sql.Decimal(5, 2), weightPercentage)
             .query(`UPDATE Assessments SET Type = @type, Title = @title, TotalMarks = @totalMarks, WeightPercentage = @weight WHERE Id = @id`);
+
+        // Audit Log
+        await logAction({
+            userId: (req as any).user.id,
+            role: (req as any).user.role,
+            action: 'UPDATE',
+            tableName: 'Assessments',
+            recordId: Number(id),
+            oldValue: oldValue,
+            newValue: req.body,
+            ipAddress: req.ip
+        });
 
         res.json({ message: 'Assessment updated successfully' });
     } catch (err) {
@@ -348,7 +376,25 @@ export const deleteAssessment = async (req: Request, res: Response) => {
         if (check.recordset[0].cnt > 0) {
             return res.status(400).json({ message: 'Cannot delete assessment with existing scores. Remove scores first.' });
         }
+        // Fetch Old Data for Audit
+        const oldResult = await pool.request()
+            .input('id', sql.Int, id)
+            .query('SELECT Type, Title, CourseId FROM Assessments WHERE Id = @id');
+        const oldValue = oldResult.recordset[0];
+
         await pool.request().input('id', sql.Int, id).query(`DELETE FROM Assessments WHERE Id = @id`);
+
+        // Audit Log
+        await logAction({
+            userId: (req as any).user.id,
+            role: (req as any).user.role,
+            action: 'DELETE',
+            tableName: 'Assessments',
+            recordId: Number(id),
+            oldValue: oldValue,
+            ipAddress: req.ip
+        });
+
         res.json({ message: 'Assessment deleted' });
     } catch (err) {
         console.error('deleteAssessment error:', err);

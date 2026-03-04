@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { sql, poolPromise } from '../config/db.js';
+import { logAction } from '../utils/auditLogger.js';
 import { ensureSystemSchema } from './systemController.js';
 
 export const login = async (req: Request, res: Response) => {
@@ -52,6 +53,16 @@ export const login = async (req: Request, res: Response) => {
             process.env.JWT_SECRET as string,
             { expiresIn: '1d' }
         );
+
+        // Audit Log for Login
+        await logAction({
+            userId: user.UserId,
+            role: user.Role,
+            action: 'LOGIN',
+            tableName: 'Users',
+            recordId: user.UserId,
+            ipAddress: req.ip
+        });
 
         res.json({
             token,
@@ -203,6 +214,17 @@ export const changePassword = async (req: Request, res: Response) => {
             .input('userId', sql.Int, userId)
             .input('password', sql.NVarChar, hashedNewPassword)
             .query('UPDATE Users SET Password = @password WHERE UserId = @userId');
+
+        // Audit Log
+        await logAction({
+            userId: userId,
+            role: (req as any).user.role,
+            action: 'UPDATE',
+            tableName: 'Users',
+            recordId: userId,
+            newValue: { action: 'Password Change' },
+            ipAddress: req.ip
+        });
 
         res.json({ message: 'Password updated successfully' });
     } catch (err) {

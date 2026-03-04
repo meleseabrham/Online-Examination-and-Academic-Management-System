@@ -8,6 +8,7 @@ import AdminAnnouncements from './pages/admin/Announcements';
 import AcademicManagement from './pages/admin/AcademicManagement';
 import ManageGuides from './pages/admin/ManageGuides';
 import SystemSettings from './pages/admin/SystemSettings';
+import AuditLogs from './pages/admin/AuditLogs';
 
 import TeacherDashboard from './pages/teacher/Dashboard';
 import MyClasses from './pages/teacher/MyClasses';
@@ -102,6 +103,7 @@ function App() {
                 <Route path="/admin/guides" element={<ProtectedRoute allowedRoles={['Admin']}><ManageGuides /></ProtectedRoute>} />
                 <Route path="/admin/system-settings" element={<ProtectedRoute allowedRoles={['Admin']}><SystemSettings /></ProtectedRoute>} />
                 <Route path="/admin/live-monitor" element={<ProtectedRoute allowedRoles={['Admin']}><LiveExamMonitor /></ProtectedRoute>} />
+                <Route path="/admin/audit-logs" element={<ProtectedRoute allowedRoles={['Admin']}><AuditLogs /></ProtectedRoute>} />
 
                 {/* Director Routes */}
                 <Route path="/director" element={<ProtectedRoute allowedRoles={['Director']}><DirectorDashboard /></ProtectedRoute>} />
@@ -119,6 +121,7 @@ function App() {
                 <Route path="/director/reports" element={<ProtectedRoute allowedRoles={['Director']}><DirectorReports /></ProtectedRoute>} />
                 <Route path="/director/system-settings" element={<ProtectedRoute allowedRoles={['Director']}><DirectorSettings /></ProtectedRoute>} />
                 <Route path="/director/teachers" element={<ProtectedRoute allowedRoles={['Director']}><ManageTeachers /></ProtectedRoute>} />
+                <Route path="/director/audit-logs" element={<ProtectedRoute allowedRoles={['Director']}><AuditLogs /></ProtectedRoute>} />
                 <Route path="/director/guides" element={<ProtectedRoute allowedRoles={['Director']}><ViewGuides role="director" /></ProtectedRoute>} />
                 <Route path="/director/results/:attemptId/grade" element={<ProtectedRoute allowedRoles={['Director']}><GradeSubmission /></ProtectedRoute>} />
                 <Route path="/director/results/:attemptId/review" element={<ProtectedRoute allowedRoles={['Director']}><ExamReview /></ProtectedRoute>} />

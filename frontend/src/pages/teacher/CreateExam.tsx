@@ -406,7 +406,7 @@ const QuestionBuilder = ({
                                             + Add Option
                                         </button>
                                     </div>
-                                    <div className="space-y-4">
+                                    <div className="space-y-2">
                                         {options.map((o, i) => (
                                             <div key={i} className="flex items-center gap-3 group/opt">
                                                 <button
