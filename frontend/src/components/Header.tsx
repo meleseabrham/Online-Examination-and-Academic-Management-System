@@ -24,7 +24,16 @@ const Header = ({ email, role }: HeaderProps) => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const avatarUrl = user.ProfileImage
         ? `http://localhost:5000/${user.ProfileImage}`
-        : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName || role)}&background=random`;
+        : null;
+
+    const getInitials = (name: string) => {
+        if (!name) return '??';
+        const parts = name.split(' ').filter(p => p.trim());
+        if (parts.length >= 2) {
+            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+        return parts[0].slice(0, 2).toUpperCase();
+    };
 
     useEffect(() => {
         const fetchAnnouncements = async () => {
@@ -91,9 +100,15 @@ const Header = ({ email, role }: HeaderProps) => {
                             className="flex items-center gap-3 cursor-pointer p-1 pr-3 hover:bg-white/50 rounded-2xl transition-all group"
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         >
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-blue to-indigo-600 p-[2px] shadow-lg shadow-blue-500/10 group-hover:scale-105 transition-transform shrink-0">
-                                <div className="w-full h-full bg-white rounded-[10px] overflow-hidden">
-                                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-blue to-indigo-600 p-[2px] shadow-lg shadow-blue-500/10 group-hover:scale-105 transition-transform shrink-0">
+                                <div className="w-full h-full bg-white rounded-full overflow-hidden flex items-center justify-center">
+                                    {avatarUrl ? (
+                                        <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                                    ) : (
+                                        <span className="text-xs font-bold text-brand-blue">
+                                            {getInitials(user.fullName || role)}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                             <div className="text-left hidden sm:block">

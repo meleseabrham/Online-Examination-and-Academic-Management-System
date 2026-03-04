@@ -42,7 +42,6 @@ import directorRoutes from './routes/directorRoutes.js';
 import teacherRoutes from './routes/teacherRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 import { checkMaintenanceMode, ensureSystemSchema } from './controllers/systemController.js';
-
 import auditRoutes from './routes/auditRoutes.js';
 
 app.use('/api/auth', authRoutes);

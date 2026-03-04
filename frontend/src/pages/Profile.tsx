@@ -15,11 +15,11 @@ import {
     CheckCircle,
     AlertCircle,
     Loader2,
-    UploadCloud,
     Hash,
     Cake,
     Eye,
-    EyeOff
+    EyeOff,
+    Pencil
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -122,7 +122,16 @@ const Profile = () => {
 
     const avatarUrl = profileData?.user?.ProfileImage
         ? `http://localhost:5000/${profileData.user.ProfileImage}`
-        : `https://ui-avatars.com/api/?name=${profileData?.user?.FullName}&size=128&background=random`;
+        : null;
+
+    const getInitials = (name: string) => {
+        if (!name) return '??';
+        const parts = name.split(' ').filter(p => p.trim());
+        if (parts.length >= 2) {
+            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+        return parts[0].slice(0, 2).toUpperCase();
+    };
 
     return (
         <div className="flex bg-[#F4F7FE] min-h-screen font-display">
@@ -178,42 +187,35 @@ const Profile = () => {
 
 
                                     <div
-                                        className="relative w-24 h-24 mx-auto mb-6 cursor-pointer group"
+                                        className="relative w-40 h-40 mx-auto mb-6 cursor-pointer group"
                                         onClick={handleImageClick}
                                     >
-                                        {/* Gradient Border */}
-                                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr 
-                                          from-brand-blue to-indigo-600 p-[3px] 
-                                          shadow-xl shadow-blue-500/20 
-                                          group-hover:shadow-blue-500/40 
-                                          transition-all duration-300" />
-
-                                        {/* Avatar Container */}
-                                        <div className="relative w-full h-full rounded-[21px] bg-white overflow-hidden">
-                                            <img
-                                                src={avatarUrl}
-                                                alt="Avatar"
-                                                className="w-full h-full object-cover"
-                                            />
-
-                                            {/* Overlay */}
-                                            <div
-                                                className={cn(
-                                                    "absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-1",
-                                                    "opacity-0 group-hover:opacity-100 transition-all duration-200",
-                                                    uploadingImage && "opacity-100"
-                                                )}
-                                            >
-                                                {uploadingImage ? (
-                                                    <Loader2 size={22} className="text-white animate-spin" />
+                                        {/* Avatar Circle Container */}
+                                        <div className="relative w-full h-full rounded-full p-1 bg-white border-2 border-slate-100 shadow-sm overflow-visible">
+                                            <div className="w-full h-full rounded-full overflow-hidden bg-[#F0F2F5] flex items-center justify-center border-2 border-white shadow-inner">
+                                                {avatarUrl ? (
+                                                    <img
+                                                        src={avatarUrl}
+                                                        alt="Avatar"
+                                                        className="w-full h-full object-cover"
+                                                    />
                                                 ) : (
-                                                    <>
-                                                        <UploadCloud size={20} className="text-white" />
-                                                        <span className="text-[10px] text-white font-semibold uppercase tracking-wider">
-                                                            Upload
-                                                        </span>
-                                                    </>
+                                                    <span className="text-4xl font-bold text-[#747EA1] tracking-tight">
+                                                        {getInitials(profileData?.user?.FullName)}
+                                                    </span>
                                                 )}
+
+                                                {/* Loading Overlay */}
+                                                {uploadingImage && (
+                                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[2px]">
+                                                        <Loader2 size={24} className="text-white animate-spin" />
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Edit Button Overlay */}
+                                            <div className="absolute bottom-1 right-1 w-10 h-10 bg-[#FF4D6D] rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white transition-transform group-hover:scale-110 active:scale-95 duration-200">
+                                                <Pencil size={16} fill="white" />
                                             </div>
                                         </div>
                                     </div>
