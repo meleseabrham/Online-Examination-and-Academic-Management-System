@@ -7,7 +7,7 @@ export const getUsers = async (req: Request, res: Response) => {
     const { role } = req.query;
     try {
         const pool = await poolPromise;
-        let query = 'SELECT UserId, FullName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender, Title FROM Users';
+        let query = 'SELECT UserId, FullName, FirstName, MiddleName, LastName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender, Title FROM Users';
         const request = pool.request();
 
         if (role) {
@@ -24,7 +24,8 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-    const { fullName, email, password, role, gender, title } = req.body;
+    const { firstName, middleName, lastName, email, password, role, gender, title } = req.body;
+    const fullName = `${firstName} ${middleName} ${lastName}`.replace(/\s+/g, ' ').trim();
     let { dateOfBirth } = req.body;
 
     if (dateOfBirth) {
@@ -62,6 +63,9 @@ export const createUser = async (req: Request, res: Response) => {
 
         const result = await pool.request()
             .input('fullName', sql.NVarChar, fullName)
+            .input('firstName', sql.NVarChar, firstName)
+            .input('middleName', sql.NVarChar, middleName)
+            .input('lastName', sql.NVarChar, lastName)
             .input('email', sql.NVarChar, email)
             .input('password', sql.NVarChar, hashedPassword)
             .input('role', sql.NVarChar, role)
@@ -70,7 +74,7 @@ export const createUser = async (req: Request, res: Response) => {
             .input('profileImage', sql.NVarChar, profileImage)
             .input('regNo', sql.NVarChar, registrationNumber)
             .input('title', sql.NVarChar, title || null)
-            .query('INSERT INTO Users (FullName, Email, Password, Role, Status, DateOfBirth, RegistrationNumber, Gender, ProfileImage, Title) VALUES (@fullName, @email, @password, @role, \'Active\', @dob, @regNo, @gender, @profileImage, @title); SELECT SCOPE_IDENTITY() as UserId;');
+            .query('INSERT INTO Users (FullName, FirstName, MiddleName, LastName, Email, Password, Role, Status, DateOfBirth, RegistrationNumber, Gender, ProfileImage, Title) VALUES (@fullName, @firstName, @middleName, @lastName, @email, @password, @role, \'Active\', @dob, @regNo, @gender, @profileImage, @title); SELECT SCOPE_IDENTITY() as UserId;');
 
         const newUserId = result.recordset[0].UserId;
 
@@ -94,7 +98,10 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const fullName = req.body.fullName || '';
+    const firstName = req.body.firstName || '';
+    const middleName = req.body.middleName || '';
+    const lastName = req.body.lastName || '';
+    const fullName = `${firstName} ${middleName} ${lastName}`.replace(/\s+/g, ' ').trim();
     const email = req.body.email || '';
     const role = req.body.role || 'Student';
     const status = req.body.status || 'Active';
@@ -121,14 +128,17 @@ export const updateUser = async (req: Request, res: Response) => {
 
         const profileImage = req.file ? req.file.path.replace(/\\/g, '/') : null;
 
-        let query = 'UPDATE Users SET FullName = @fullName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, Title = @title WHERE UserId = @id';
+        let query = 'UPDATE Users SET FullName = @fullName, FirstName = @firstName, MiddleName = @middleName, LastName = @lastName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, Title = @title WHERE UserId = @id';
         if (profileImage) {
-            query = 'UPDATE Users SET FullName = @fullName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, ProfileImage = @profileImage, Title = @title WHERE UserId = @id';
+            query = 'UPDATE Users SET FullName = @fullName, FirstName = @firstName, MiddleName = @middleName, LastName = @lastName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, ProfileImage = @profileImage, Title = @title WHERE UserId = @id';
         }
 
         const request = pool.request()
             .input('id', sql.Int, id)
             .input('fullName', sql.NVarChar, fullName)
+            .input('firstName', sql.NVarChar, firstName)
+            .input('middleName', sql.NVarChar, middleName)
+            .input('lastName', sql.NVarChar, lastName)
             .input('email', sql.NVarChar, email)
             .input('role', sql.NVarChar, role)
             .input('status', sql.NVarChar, status)
@@ -202,7 +212,7 @@ export const getUserProfile = async (req: Request, res: Response) => {
         // 1. Get Basic User Info
         const userRes = await pool.request()
             .input('id', sql.Int, id)
-            .query('SELECT UserId, FullName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender, Title FROM Users WHERE UserId = @id');
+            .query('SELECT UserId, FullName, FirstName, MiddleName, LastName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender, Title FROM Users WHERE UserId = @id');
 
         if (userRes.recordset.length === 0) {
             return res.status(404).json({ message: 'User not found' });

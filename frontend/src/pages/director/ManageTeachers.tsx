@@ -8,6 +8,9 @@ import { Search, UserCheck, X, ChevronLeft, ChevronRight, ChevronDown, MoreHoriz
 interface Teacher {
     UserId: number;
     FullName: string;
+    FirstName?: string;
+    MiddleName?: string;
+    LastName?: string;
     Email: string;
     Role: string;
     Status: string;
@@ -73,11 +76,18 @@ const ManageTeachers = () => {
         }
     };
 
-    const filteredTeachers = teachers.filter(t =>
-        t.FullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        t.Email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (t.RegistrationNumber && t.RegistrationNumber.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+    const filteredTeachers = teachers.filter(t => {
+        const lowerQuery = searchQuery.toLowerCase();
+        return (
+            t.FullName.toLowerCase().includes(lowerQuery) ||
+            (t.FirstName && t.FirstName.toLowerCase().includes(lowerQuery)) ||
+            (t.MiddleName && t.MiddleName.toLowerCase().includes(lowerQuery)) ||
+            (t.LastName && t.LastName.toLowerCase().includes(lowerQuery)) ||
+            t.Email.toLowerCase().includes(lowerQuery) ||
+            (t.RegistrationNumber && t.RegistrationNumber.toLowerCase().includes(lowerQuery)) ||
+            (t.Title && t.Title.toLowerCase().includes(lowerQuery))
+        );
+    });
 
     // Pagination logic
     const totalPages = Math.ceil(filteredTeachers.length / perPage);
@@ -158,7 +168,9 @@ const ManageTeachers = () => {
                                 <thead>
                                     <tr className="border-b border-slate-50">
                                         <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">ID / Reg No</th>
-                                        <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">Teacher Profile</th>
+                                        <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">First Name</th>
+                                        <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">Middle Name</th>
+                                        <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">Last Name</th>
                                         <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">Email Address</th>
                                         <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em] text-center">Status</th>
                                         <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em] text-right">Actions</th>
@@ -178,26 +190,41 @@ const ManageTeachers = () => {
                                                     {teacher.RegistrationNumber || "N/A"}
                                                 </span>
                                             </td>
-                                            <td className="py-6 flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-50 to-blue-50 p-1 shrink-0 relative">
-                                                    <div className="w-full h-full bg-white rounded-[14px] overflow-hidden flex items-center justify-center font-bold text-brand-blue uppercase shadow-inner border border-white/50">
-                                                        {teacher.ProfileImage ? (
-                                                            <img
-                                                                src={`http://localhost:5000/${teacher.ProfileImage}`}
-                                                                alt={teacher.FullName}
-                                                                className="w-full h-full object-cover"
-                                                            />
-                                                        ) : (
-                                                            <span>{teacher.FullName[0]}</span>
-                                                        )}
+                                            <td className="py-6 whitespace-nowrap">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-50 to-blue-50 p-1 shrink-0 relative">
+                                                        <div className="w-full h-full bg-white rounded-[14px] overflow-hidden flex items-center justify-center font-bold text-brand-blue uppercase shadow-inner border border-white/50">
+                                                            {teacher.ProfileImage ? (
+                                                                <img
+                                                                    src={`http://localhost:5000/${teacher.ProfileImage}`}
+                                                                    alt={teacher.FullName}
+                                                                    className="w-full h-full object-cover"
+                                                                />
+                                                            ) : (
+                                                                <span>{teacher.FirstName ? teacher.FirstName[0] : (teacher.FullName ? teacher.FullName[0] : '?')}</span>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <span className="font-black text-[#2B3674] block tracking-tight uppercase">{teacher.FirstName || '—'}</span>
                                                     </div>
                                                 </div>
+                                            </td>
+                                            <td className="py-6">
+                                                <span className="font-black text-[#2B3674] block tracking-tight uppercase">{teacher.MiddleName || '—'}</span>
+                                            </td>
+                                            <td className="py-6">
                                                 <div>
-                                                    <span className="font-black text-[#2B3674] block tracking-tight uppercase">{teacher.FullName}</span>
-                                                    <span className="text-[10px] text-slate-400 font-bold tracking-widest uppercase">{teacher.Title || 'Senior Faculty'}</span>
+                                                    <span className="font-black text-[#2B3674] block tracking-tight uppercase">{teacher.LastName || '—'}</span>
+                                                    <div className="mt-1">
+                                                        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-gradient-to-r from-indigo-50 to-blue-50 text-indigo-600 rounded-md text-[9px] font-black uppercase tracking-wider border border-indigo-100/50 shadow-sm w-fit">
+                                                            <Award size={10} className="text-indigo-400" />
+                                                            {teacher.Title || 'Senior Faculty'}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </td>
-                                            <td className="py-6 text-slate-500 font-medium text-sm">{teacher.Email}</td>
+                                            <td className="py-6 text-slate-500 font-medium text-sm italic">{teacher.Email}</td>
 
                                             <td className="py-6 text-center">
                                                 <span className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider border shadow-sm ${teacher.Status === 'Active' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'}`}>
@@ -349,9 +376,12 @@ const ManageTeachers = () => {
                                         </span>
                                     </div>
                                     {selectedTeacherProfile?.user?.Title && (
-                                        <p className="text-white/60 font-black uppercase text-xs tracking-[0.2em] mb-4">
-                                            {selectedTeacherProfile.user.Title}
-                                        </p>
+                                        <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 w-fit mb-4">
+                                            <Award size={14} className="text-indigo-300" />
+                                            <p className="text-white/90 font-black uppercase text-[10px] tracking-[0.2em] leading-none">
+                                                {selectedTeacherProfile.user.Title}
+                                            </p>
+                                        </div>
                                     )}
                                     <div className="flex flex-wrap gap-4 mt-4">
                                         <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 backdrop-blur-sm text-[11px] font-black uppercase tracking-wider border border-white/10">
@@ -395,7 +425,7 @@ const ManageTeachers = () => {
                                             <div className="space-y-6">
                                                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
                                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 leading-none">Registered Email</p>
-                                                    <p className="text-brand-blue font-black break-all text-sm">{selectedTeacherProfile?.user?.Email}</p>
+                                                    <p className="text-brand-blue font-black break-all text-sm italic">{selectedTeacherProfile?.user?.Email}</p>
                                                 </div>
                                                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
                                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 leading-none">Date of Birth</p>

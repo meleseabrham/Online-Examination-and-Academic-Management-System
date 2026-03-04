@@ -315,7 +315,7 @@ const TransferManagement = () => {
                                             <div className="flex items-center gap-1.5 text-sm text-slate-400 mb-1"><Hash size={12} />{s.Code}</div>
                                             {s.Address && <div className="flex items-center gap-1.5 text-sm text-slate-400 mb-1"><MapPin size={12} />{s.Address}</div>}
                                             {s.Phone && <div className="flex items-center gap-1.5 text-sm text-slate-400 mb-1"><Phone size={12} />{s.Phone}</div>}
-                                            {s.Email && <div className="flex items-center gap-1.5 text-sm text-slate-400 mb-1"><Mail size={12} />{s.Email}</div>}
+                                            {s.Email && <div className="flex items-center gap-1.5 text-sm text-slate-400 mb-1 italic"><Mail size={12} />{s.Email}</div>}
                                             <div className="flex gap-6 mt-5 pt-5 border-t border-slate-50">
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center"><GraduationCap size={14} className="text-emerald-500" /></div>
@@ -356,7 +356,7 @@ const TransferManagement = () => {
                                                         <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center font-bold text-xs text-slate-500">{s.FullName[0]}</div>
                                                         <div>
                                                             <p className="font-bold text-sm">{s.FullName}</p>
-                                                            <p className="text-xs text-slate-400">{s.Email}</p>
+                                                            <p className="text-xs text-slate-400 italic">{s.Email}</p>
                                                         </div>
                                                     </button>
                                                 ))}
@@ -461,7 +461,7 @@ const TransferManagement = () => {
                                                         <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center font-bold text-xs text-slate-500">{t.FullName[0]}</div>
                                                         <div>
                                                             <p className="font-bold text-sm">{t.FullName}</p>
-                                                            <p className="text-xs text-slate-400">{t.Email}</p>
+                                                            <p className="text-xs text-slate-400 italic">{t.Email}</p>
                                                         </div>
                                                     </button>
                                                 ))}

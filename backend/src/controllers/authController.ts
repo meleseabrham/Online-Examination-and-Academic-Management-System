@@ -69,9 +69,13 @@ export const login = async (req: Request, res: Response) => {
             user: {
                 id: user.UserId,
                 fullName: user.FullName,
+                firstName: user.FirstName,
+                middleName: user.MiddleName,
+                lastName: user.LastName,
                 email: user.Email,
                 role: user.Role,
-                ProfileImage: user.ProfileImage
+                ProfileImage: user.ProfileImage,
+                title: user.Title
             }
         });
     } catch (err) {
@@ -81,7 +85,8 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const register = async (req: Request, res: Response) => {
-    const { fullName, email, password, role } = req.body;
+    const { firstName, middleName, lastName, email, password, role } = req.body;
+    const fullName = `${firstName} ${middleName} ${lastName}`.replace(/\s+/g, ' ').trim();
 
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -89,10 +94,13 @@ export const register = async (req: Request, res: Response) => {
 
         await pool.request()
             .input('fullName', sql.NVarChar, fullName)
+            .input('firstName', sql.NVarChar, firstName)
+            .input('middleName', sql.NVarChar, middleName)
+            .input('lastName', sql.NVarChar, lastName)
             .input('email', sql.NVarChar, email)
             .input('password', sql.NVarChar, hashedPassword)
             .input('role', sql.NVarChar, role)
-            .query('INSERT INTO Users (FullName, Email, Password, Role, Status) VALUES (@fullName, @email, @password, @role, \'Active\')');
+            .query('INSERT INTO Users (FullName, FirstName, MiddleName, LastName, Email, Password, Role, Status) VALUES (@fullName, @firstName, @middleName, @lastName, @email, @password, @role, \'Active\')');
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (err) {
@@ -112,7 +120,7 @@ export const getProfile = async (req: Request, res: Response) => {
         // Base user info
         const userResult = await pool.request()
             .input('userId', sql.Int, userId)
-            .query('SELECT UserId, FullName, Email, Role, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber FROM Users WHERE UserId = @userId');
+            .query('SELECT UserId, FullName, FirstName, MiddleName, LastName, Email, Role, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Title FROM Users WHERE UserId = @userId');
 
         if (userResult.recordset.length === 0) {
             console.log(`User ${userId} not found in DB`);

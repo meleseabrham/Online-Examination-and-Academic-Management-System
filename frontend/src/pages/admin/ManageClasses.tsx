@@ -639,7 +639,7 @@ const ManageClasses = () => {
                                                         <td className="px-8 py-5">
                                                             <div className="flex items-center gap-2 text-slate-500 font-bold bg-slate-50 w-fit px-4 py-2 rounded-xl border border-slate-100/50">
                                                                 <Mail size={14} className="text-brand-blue opacity-40" />
-                                                                <span className="text-sm">{s.Email}</span>
+                                                                <span className="text-sm italic">{s.Email}</span>
                                                             </div>
                                                         </td>
                                                         <td className="px-8 py-5 text-right">
@@ -687,7 +687,7 @@ const ManageClasses = () => {
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <p className="font-black text-[#2B3674] text-sm truncate">{s.FullName}</p>
-                                                    <p className="text-xs text-slate-400 font-medium truncate">{s.Email}</p>
+                                                    <p className="text-xs text-slate-400 font-medium truncate italic">{s.Email}</p>
                                                 </div>
                                                 <div className="flex items-center gap-1 flex-shrink-0">
                                                     <button

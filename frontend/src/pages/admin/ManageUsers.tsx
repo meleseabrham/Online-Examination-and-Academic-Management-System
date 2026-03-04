@@ -8,6 +8,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface User {
     UserId: number;
     FullName: string;
+    FirstName?: string;
+    MiddleName?: string;
+    LastName?: string;
     Email: string;
     Role: string;
     Status: string;
@@ -28,7 +31,9 @@ const ManageUsers = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const [formData, setFormData] = useState({
-        fullName: '',
+        firstName: '',
+        middleName: '',
+        lastName: '',
         email: '',
         password: '',
         role: 'Student',
@@ -74,7 +79,9 @@ const ManageUsers = () => {
         if (user) {
             setEditingUser(user);
             setFormData({
-                fullName: user.FullName,
+                firstName: user.FirstName || '',
+                middleName: user.MiddleName || '',
+                lastName: user.LastName || '',
                 email: user.Email,
                 password: '', // Don't show password on edit
                 role: user.Role,
@@ -84,7 +91,7 @@ const ManageUsers = () => {
             });
         } else {
             setEditingUser(null);
-            setFormData({ fullName: '', email: '', password: '', role: 'Student', dateOfBirth: '', gender: '', title: '' });
+            setFormData({ firstName: '', middleName: '', lastName: '', email: '', password: '', role: 'Student', dateOfBirth: '', gender: '', title: '' });
         }
         setIsModalOpen(true);
     };
@@ -101,7 +108,9 @@ const ManageUsers = () => {
         const token = localStorage.getItem('token');
 
         const data = new FormData();
-        data.append('fullName', formData.fullName);
+        data.append('firstName', formData.firstName);
+        data.append('middleName', formData.middleName);
+        data.append('lastName', formData.lastName);
         data.append('email', formData.email);
         if (!editingUser) data.append('password', formData.password);
         data.append('role', formData.role);
@@ -169,7 +178,9 @@ const ManageUsers = () => {
         const newStatus = user.Status === 'Active' ? 'Inactive' : 'Active';
         try {
             await axios.put(`http://localhost:5000/api/admin/users/${user.UserId}`, {
-                fullName: user.FullName,
+                firstName: user.FirstName,
+                middleName: user.MiddleName,
+                lastName: user.LastName,
                 email: user.Email,
                 role: user.Role,
                 status: newStatus,
@@ -226,12 +237,19 @@ const ManageUsers = () => {
         }
     };
 
-    const filteredUsers = users.filter((user: any) =>
-        user.FullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.Email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.Role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (user.RegistrationNumber && user.RegistrationNumber.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+    const filteredUsers = users.filter((user: any) => {
+        const lowerQuery = searchQuery.toLowerCase();
+        return (
+            user.FullName.toLowerCase().includes(lowerQuery) ||
+            (user.FirstName && user.FirstName.toLowerCase().includes(lowerQuery)) ||
+            (user.MiddleName && user.MiddleName.toLowerCase().includes(lowerQuery)) ||
+            (user.LastName && user.LastName.toLowerCase().includes(lowerQuery)) ||
+            user.Email.toLowerCase().includes(lowerQuery) ||
+            user.Role.toLowerCase().includes(lowerQuery) ||
+            (user.RegistrationNumber && user.RegistrationNumber.toLowerCase().includes(lowerQuery)) ||
+            (user.Title && user.Title.toLowerCase().includes(lowerQuery))
+        );
+    });
 
     // Pagination logic
     const totalPages = Math.ceil(filteredUsers.length / perPage);
@@ -319,7 +337,9 @@ const ManageUsers = () => {
                                 <thead>
                                     <tr className="text-left text-slate-400 text-xs uppercase tracking-widest font-bold border-b border-slate-100">
                                         <th className="pb-6">RU No</th>
-                                        <th className="pb-6">Name</th>
+                                        <th className="pb-6">First Name</th>
+                                        <th className="pb-6">Middle Name</th>
+                                        <th className="pb-6">Last Name</th>
                                         <th className="pb-6">Email Address</th>
                                         <th className="pb-6">Role</th>
                                         <th className="pb-6">Gender</th>
@@ -346,30 +366,43 @@ const ManageUsers = () => {
                                                 </span>
 
                                             </td>
-                                            <td className="py-6 flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-blue to-indigo-600 p-[2px] shrink-0">
-                                                    <div className="w-full h-full bg-white rounded-[8px] overflow-hidden flex items-center justify-center">
-                                                        {user.ProfileImage ? (
-                                                            <img
-                                                                src={`http://localhost:5000/${user.ProfileImage}`}
-                                                                alt={user.FullName}
-                                                                className="w-full h-full object-cover"
-                                                            />
-                                                        ) : (
-                                                            <span className="font-bold text-brand-blue uppercase">
-                                                                {user.FullName[0]}
-                                                            </span>
-                                                        )}
+                                            <td className="py-6">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-blue to-indigo-600 p-[2px] shrink-0">
+                                                        <div className="w-full h-full bg-white rounded-[8px] overflow-hidden flex items-center justify-center">
+                                                            {user.ProfileImage ? (
+                                                                <img
+                                                                    src={`http://localhost:5000/${user.ProfileImage}`}
+                                                                    alt={user.FullName}
+                                                                    className="w-full h-full object-cover"
+                                                                />
+                                                            ) : (
+                                                                <span className="font-bold text-brand-blue uppercase">
+                                                                    {user.FirstName ? user.FirstName[0] : (user.FullName ? user.FullName[0] : '?')}
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     </div>
+                                                    <span className="font-bold text-[#2B3674]">{user.FirstName || '—'}</span>
                                                 </div>
+                                            </td>
+                                            <td className="py-6">
+                                                <span className="font-bold text-[#2B3674]">{user.MiddleName || '—'}</span>
+                                            </td>
+                                            <td className="py-6">
                                                 <div className="flex flex-col">
-                                                    <span className="font-bold text-[#2B3674]">{user.FullName}</span>
+                                                    <span className="font-bold text-[#2B3674]">{user.LastName || '—'}</span>
                                                     {user.Role !== 'Student' && user.Title && (
-                                                        <span className="text-[10px] text-slate-400 font-bold tracking-widest uppercase">{user.Title}</span>
+                                                        <div className="mt-1">
+                                                            <div className="flex items-center gap-1.5 px-2 py-0.5 bg-gradient-to-r from-indigo-50 to-blue-50 text-indigo-600 rounded-md text-[9px] font-black uppercase tracking-wider border border-indigo-100/50 shadow-sm w-fit">
+                                                                <Award size={10} className="text-indigo-400" />
+                                                                {user.Title}
+                                                            </div>
+                                                        </div>
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="py-6 text-slate-500 font-medium">{user.Email}</td>
+                                            <td className="py-6 text-slate-500 font-medium italic">{user.Email}</td>
                                             <td className="py-6">
                                                 <span className="text-sm font-bold text-[#2B3674]">{user.Role}</span>
                                             </td>
@@ -530,16 +563,38 @@ const ManageUsers = () => {
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
                             <div>
-                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Full Name</label>
+                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">First Name</label>
                                 <input
                                     type="text"
                                     required
-                                    placeholder="e.g. John Doe"
+                                    placeholder="First Name"
                                     className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium"
-                                    value={formData.fullName}
-                                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                                    value={formData.firstName}
+                                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Middle Name</label>
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="Middle Name"
+                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium"
+                                    value={formData.middleName}
+                                    onChange={(e) => setFormData({ ...formData, middleName: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Last Name</label>
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="Last Name"
+                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium"
+                                    value={formData.lastName}
+                                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                 />
                             </div>
                             <div>
@@ -636,7 +691,7 @@ const ManageUsers = () => {
                                 />
                             </div>
 
-                            <div className="md:col-span-2 pt-4">
+                            <div className="lg:col-span-3 pt-4">
                                 <button className="w-full bg-brand-blue text-white py-4 rounded-[22px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-blue-500/20 active:scale-[0.98]">
                                     {editingUser ? 'Update Records' : 'Register User'}
                                 </button>
@@ -674,9 +729,12 @@ const ManageUsers = () => {
                                 <div>
                                     <h2 className="text-3xl font-black mb-1">{selectedUserProfile?.user?.FullName || 'Loading Profile...'}</h2>
                                     {selectedUserProfile?.user?.Role !== 'Student' && selectedUserProfile?.user?.Title && (
-                                        <p className="text-white/80 font-bold uppercase text-[10px] tracking-widest mt-1 mb-2">
-                                            {selectedUserProfile.user.Title}
-                                        </p>
+                                        <div className="flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 w-fit mt-2 mb-2">
+                                            <Award size={12} className="text-indigo-300" />
+                                            <p className="text-white/90 font-black uppercase text-[9px] tracking-[0.2em] leading-none">
+                                                {selectedUserProfile.user.Title}
+                                            </p>
+                                        </div>
                                     )}
                                     <div className="flex flex-wrap gap-3 mt-2">
                                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider border border-white/10">
@@ -720,7 +778,7 @@ const ManageUsers = () => {
                                         <div className="space-y-4">
                                             <div>
                                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none">Email Address</p>
-                                                <p className="text-brand-blue font-bold break-all">{selectedUserProfile?.user?.Email}</p>
+                                                <p className="text-brand-blue font-bold break-all italic">{selectedUserProfile?.user?.Email}</p>
                                             </div>
                                             <div>
                                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 leading-none">Date of Birth</p>

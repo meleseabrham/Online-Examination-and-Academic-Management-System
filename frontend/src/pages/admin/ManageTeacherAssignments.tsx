@@ -12,6 +12,7 @@ interface Assignment {
     CourseId: number;
     TeacherName: string;
     TeacherEmail: string;
+    TeacherTitle?: string;
     GradeName: string;
     Section: string;
     CourseName: string;
@@ -421,7 +422,14 @@ const ManageTeacherAssignments = () => {
                                                                 </div>
                                                                 <div>
                                                                     <span className="font-black text-[#2B3674] block uppercase tracking-tight">{teacher.TeacherName}</span>
-                                                                    <span className="text-[10px] text-slate-400 font-bold lowercase tracking-widest">{teacher.TeacherEmail}</span>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className="text-[10px] text-slate-400 font-bold lowercase tracking-widest italic">{teacher.TeacherEmail}</span>
+                                                                        {teacher.Assignments[0]?.TeacherTitle && (
+                                                                            <span className="px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded text-[8px] font-black uppercase tracking-wider border border-slate-200/50">
+                                                                                {teacher.Assignments[0].TeacherTitle}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </td>

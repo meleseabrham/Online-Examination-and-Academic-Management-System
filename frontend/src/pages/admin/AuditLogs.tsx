@@ -39,7 +39,7 @@ const AuditLogs = () => {
     const [filterAction, setFilterAction] = useState('');
     const [filterDate, setFilterDate] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [perPage, setPerPage] = useState(15);
+    const [perPage, setPerPage] = useState(10);
     const [showPerPageDropdown, setShowPerPageDropdown] = useState(false);
     const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
 
@@ -537,7 +537,7 @@ const AuditLogs = () => {
                                         </div>
                                         <div>
                                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Executor Identity</p>
-                                            <p className="text-sm font-black text-[#2B3674]">{selectedLog.FullName} ({selectedLog.Email})</p>
+                                            <p className="text-sm font-black text-[#2B3674]">{selectedLog.FullName} (<span className="italic font-bold">{selectedLog.Email}</span>)</p>
                                         </div>
                                     </div>
                                     <div className="text-right">

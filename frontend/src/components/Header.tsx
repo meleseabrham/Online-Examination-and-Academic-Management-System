@@ -26,9 +26,12 @@ const Header = ({ email, role }: HeaderProps) => {
         ? `http://localhost:5000/${user.ProfileImage}`
         : null;
 
-    const getInitials = (name: string) => {
-        if (!name) return '??';
-        const parts = name.split(' ').filter(p => p.trim());
+    const getInitials = () => {
+        if (user.firstName && user.lastName) {
+            return (user.firstName[0] + user.lastName[0]).toUpperCase();
+        }
+        if (!user.fullName) return '??';
+        const parts = user.fullName.split(' ').filter((p: string) => p.trim());
         if (parts.length >= 2) {
             return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
         }
@@ -106,14 +109,18 @@ const Header = ({ email, role }: HeaderProps) => {
                                         <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
                                     ) : (
                                         <span className="text-xs font-bold text-brand-blue">
-                                            {getInitials(user.fullName || role)}
+                                            {getInitials()}
                                         </span>
                                     )}
                                 </div>
                             </div>
                             <div className="text-left hidden sm:block">
-                                <p className="text-sm font-bold text-[#2B3674] leading-tight line-clamp-1">{email}</p>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{role}</p>
+                                <p className="text-sm font-bold text-[#2B3674] leading-tight line-clamp-1">
+                                    {user.firstName ? `${user.firstName} ${user.lastName}` : <span className="italic">{email}</span>}
+                                </p>
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                    {(user.role !== 'Student' && user.title) ? user.title : role}
+                                </p>
                             </div>
                             <ChevronDown size={14} className={cn("text-slate-400 transition-transform ml-1", isDropdownOpen && "rotate-180")} />
                         </div>

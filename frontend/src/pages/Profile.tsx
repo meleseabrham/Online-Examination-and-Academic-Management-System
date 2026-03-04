@@ -19,7 +19,8 @@ import {
     Cake,
     Eye,
     EyeOff,
-    Pencil
+    Pencil,
+    Award
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -124,9 +125,14 @@ const Profile = () => {
         ? `http://localhost:5000/${profileData.user.ProfileImage}`
         : null;
 
-    const getInitials = (name: string) => {
+    const getInitials = () => {
+        const userData = profileData?.user;
+        if (userData?.FirstName && userData?.LastName) {
+            return (userData.FirstName[0] + userData.LastName[0]).toUpperCase();
+        }
+        const name = userData?.FullName;
         if (!name) return '??';
-        const parts = name.split(' ').filter(p => p.trim());
+        const parts = name.split(' ').filter((p: string) => p.trim());
         if (parts.length >= 2) {
             return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
         }
@@ -201,7 +207,7 @@ const Profile = () => {
                                                     />
                                                 ) : (
                                                     <span className="text-4xl font-bold text-[#747EA1] tracking-tight">
-                                                        {getInitials(profileData?.user?.FullName)}
+                                                        {getInitials()}
                                                     </span>
                                                 )}
 
@@ -220,15 +226,27 @@ const Profile = () => {
                                         </div>
                                     </div>
 
-                                    <h3 className="text-xl font-black text-[#2B3674] mb-1">{profileData?.user?.FullName}</h3>
-                                    <span className="inline-block px-3 py-1 bg-brand-blue/10 text-brand-blue rounded-full text-[10px] font-black uppercase tracking-wider mb-6">
-                                        {profileData?.user?.Role}
-                                    </span>
+                                    <h3 className="text-xl font-black text-[#2B3674] mb-0.5">
+                                        {profileData?.user?.FirstName} {profileData?.user?.MiddleName && `${profileData.user.MiddleName} `}{profileData?.user?.LastName}
+                                    </h3>
+                                    {profileData?.user?.Role !== 'Student' && profileData?.user?.Title && (
+                                        <div className="flex items-center justify-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 w-fit mx-auto mb-4">
+                                            <Award size={12} className="text-[#FF4D6D]" />
+                                            <p className="text-slate-500 font-black uppercase text-[10px] tracking-[0.2em] leading-none">
+                                                {profileData.user.Title}
+                                            </p>
+                                        </div>
+                                    )}
+                                    <div className="mb-6">
+                                        <span className="inline-block px-3 py-1 bg-brand-blue/10 text-brand-blue rounded-full text-[10px] font-black uppercase tracking-wider">
+                                            {profileData?.user?.Role}
+                                        </span>
+                                    </div>
 
                                     <div className="space-y-4 text-left border-t border-slate-50 pt-6">
                                         <div className="flex items-center gap-3 text-slate-500">
                                             <Mail size={16} className="text-brand-blue" />
-                                            <span className="text-xs font-bold truncate">{profileData?.user?.Email}</span>
+                                            <span className="text-xs font-bold truncate italic">{profileData?.user?.Email}</span>
                                         </div>
                                         <div className="flex items-center gap-3 text-slate-500">
                                             <Hash size={16} className="text-brand-blue" />
@@ -253,6 +271,42 @@ const Profile = () => {
                         <div className="lg:col-span-2">
                             {activeTab === 'profile' ? (
                                 <div className="space-y-6">
+                                    {/* Basic Info */}
+                                    <div className="bg-white p-8 rounded-[40px] shadow-sm border border-slate-100 mb-6">
+                                        <div className="flex items-center gap-3 mb-8">
+                                            <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500 text-sm">
+                                                <User size={20} />
+                                            </div>
+                                            <h4 className="text-lg font-black text-[#2B3674]">Basic Information</h4>
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">First Name</p>
+                                                <p className="text-sm font-bold text-[#2B3674]">{profileData?.user?.FirstName || '—'}</p>
+                                            </div>
+                                            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Middle Name</p>
+                                                <p className="text-sm font-bold text-[#2B3674]">{profileData?.user?.MiddleName || '—'}</p>
+                                            </div>
+                                            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Last Name</p>
+                                                <p className="text-sm font-bold text-[#2B3674]">{profileData?.user?.LastName || '—'}</p>
+                                            </div>
+                                            {profileData?.user?.Role !== 'Student' && (
+                                                <div className="p-4 bg-gradient-to-br from-indigo-50 to-blue-50/30 rounded-2xl border border-indigo-100 shadow-sm relative overflow-hidden group">
+                                                    <div className="absolute -right-2 -bottom-2 opacity-5 group-hover:scale-110 transition-transform duration-500">
+                                                        <Award size={40} className="text-indigo-600" />
+                                                    </div>
+                                                    <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1 relative z-10">Professional Title</p>
+                                                    <p className="text-sm font-black text-indigo-600 flex items-center gap-2 relative z-10">
+                                                        <Award size={14} className="shrink-0" />
+                                                        {profileData?.user?.Title || '—'}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
                                     {/* Role Specific Info */}
                                     <div className="bg-white p-8 rounded-[40px] shadow-sm border border-slate-100">
                                         <div className="flex items-center gap-3 mb-8">

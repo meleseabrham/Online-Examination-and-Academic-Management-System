@@ -34,9 +34,12 @@ GO
 CREATE TABLE Users (
     UserId INT PRIMARY KEY IDENTITY(1,1),
     FullName NVARCHAR(100) NOT NULL,
+    FirstName NVARCHAR(100) NULL,
+    MiddleName NVARCHAR(100) NULL,
+    LastName NVARCHAR(100) NULL,
     Email NVARCHAR(100) UNIQUE NOT NULL,
     Password NVARCHAR(MAX) NOT NULL,
-    Role NVARCHAR(20) CHECK (Role IN ('Admin', 'Teacher', 'Student')) NOT NULL,
+    Role NVARCHAR(20) CHECK (Role IN ('Admin', 'Teacher', 'Student', 'Director')) NOT NULL,
     Status NVARCHAR(20) DEFAULT 'Active' CHECK (Status IN ('Active', 'Inactive')),
     CreatedAt DATETIME DEFAULT GETDATE()
 );

@@ -1369,7 +1369,7 @@ const AcademicManagement = () => {
                                                 <tr key={en.Id} className="hover:bg-slate-50/50 transition-colors group">
                                                     <td className="px-6 py-4">
                                                         <div className="font-bold text-[#2B3674]">{en.StudentName}</div>
-                                                        <div className="text-[10px] text-slate-400 font-medium">{en.StudentEmail}</div>
+                                                        <div className="text-[10px] text-slate-400 font-medium italic">{en.StudentEmail}</div>
                                                     </td>
                                                     <td className="px-6 py-4">
                                                         <span className="px-3 py-1 bg-brand-blue/10 text-brand-blue rounded-lg text-xs font-black uppercase">
