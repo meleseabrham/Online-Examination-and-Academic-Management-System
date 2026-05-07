@@ -262,21 +262,137 @@ erDiagram
     
     COURSES ||--o{ GRADE_COURSES : "included_in"
     COURSES ||--o{ EXAMS : "tested_via"
+    COURSES ||--o{ ASSESSMENTS : "categorized_in"
     
     USERS ||--o{ STUDENT_ENROLLMENTS : "is_enrolled_as"
     USERS ||--o{ TEACHER_ASSIGNMENTS : "is_assigned_to"
+    USERS ||--o{ STUDENT_EXAMS : "takes"
     
     SECTIONS ||--o{ STUDENT_ENROLLMENTS : "groups"
+    SECTIONS ||--o{ TEACHER_ASSIGNMENTS : "assigned_to"
     
     ASSESSMENTS ||--o{ EXAMS : "defines_weight_for"
     EXAMS ||--o{ QUESTIONS : "has_questions"
     EXAMS ||--o{ STUDENT_EXAMS : "taken_by"
     
     QUESTIONS ||--o{ OPTIONS : "provides_choices"
-    STUDENT_EXAMS ||--o{ STUDENT_ANSWERS : "captures"
+    QUESTIONS ||--o{ STUDENT_ANSWERS : "answered_in"
     
-    USERS ||--o{ SEMESTER_RESULTS : "achieves_average"
-    USERS ||--o{ FINAL_YEAR_RESULT : "receives_final_rank"
+    STUDENT_EXAMS ||--o{ STUDENT_ANSWERS : "captures_responses"
+    OPTIONS ||--o{ STUDENT_ANSWERS : "selected_in"
+
+    SCHOOLS {
+        int id PK "Identity"
+        nvarchar name "NOT NULL"
+        nvarchar code UK "Unique Code"
+        nvarchar address
+        nvarchar status "Active | Inactive"
+    }
+
+    USERS {
+        int UserId PK "Identity"
+        nvarchar FullName "NOT NULL"
+        nvarchar Email UK "NOT NULL"
+        nvarchar Role "Student | Teacher | Admin | Director"
+        nvarchar RegistrationNumber UK
+        int SchoolId FK "REFERENCES Schools(Id)"
+        nvarchar Status "Active | Inactive"
+    }
+
+    ACADEMIC_YEARS {
+        int Id PK "Identity"
+        nvarchar Year "e.g. 2024"
+        bit IsActive "DEFAULT 0"
+    }
+
+    SEMESTERS {
+        int Id PK "Identity"
+        nvarchar SemesterName "NOT NULL"
+        int AcademicYearId FK "REFERENCES AcademicYears(Id)"
+    }
+
+    GRADES {
+        int Id PK "Identity"
+        int GradeNumber "NOT NULL"
+    }
+
+    SECTIONS {
+        int Id PK "Identity"
+        int GradeId FK "REFERENCES Grades(Id)"
+        nvarchar Name "NOT NULL"
+        int AcademicYearId FK
+        int SchoolId FK
+    }
+
+    COURSES {
+        int CourseId PK "Identity"
+        nvarchar CourseName "NOT NULL"
+        nvarchar CourseCode
+        int AcademicYearId FK
+        int SemesterId FK
+    }
+
+    ASSESSMENTS {
+        int Id PK "Identity"
+        int CourseId FK
+        int GradeId FK
+        nvarchar Type "Participation | Assignment | Mid | Final | Quiz"
+        decimal WeightPercentage
+    }
+
+    EXAMS {
+        int ExamId PK "Identity"
+        nvarchar Title "NOT NULL"
+        nvarchar ExamType "MCQ | TF | Matching | Essay"
+        int TeacherId FK "REFERENCES Users(UserId)"
+        int AssessmentId FK "REFERENCES Assessments(Id)"
+        int DurationMinutes
+        datetime StartTime
+        datetime EndTime
+        bit IsPublished
+    }
+
+    QUESTIONS {
+        int QuestionId PK "Identity"
+        int ExamId FK "REFERENCES Exams(ExamId)"
+        nvarchar Text "NOT NULL"
+        nvarchar Type "MCQ | TF | Matching | Essay"
+        int Points "DEFAULT 1"
+    }
+
+    OPTIONS {
+        int OptionId PK "Identity"
+        int QuestionId FK "REFERENCES Questions(QuestionId)"
+        nvarchar Text "NOT NULL"
+        bit IsCorrect "DEFAULT 0"
+    }
+
+    STUDENT_EXAMS {
+        int AttemptId PK "Identity"
+        int StudentId FK "REFERENCES Users(UserId)"
+        int ExamId FK "REFERENCES Exams(ExamId)"
+        decimal Score "DEFAULT 0"
+        int TabSwitchCount "Proctoring Log"
+        nvarchar Status "Started | Completed | Locked"
+    }
+
+    STUDENT_ANSWERS {
+        int Id PK "Identity"
+        int AttemptId FK "REFERENCES StudentExams(AttemptId)"
+        int QuestionId FK "REFERENCES Questions(QuestionId)"
+        int SelectedOptionId FK "REFERENCES Options(OptionId)"
+        nvarchar AnswerText "Essay content"
+        decimal Score "Awarded Points"
+    }
+
+    STUDENT_ENROLLMENTS {
+        int Id PK "Identity"
+        int StudentId FK "REFERENCES Users(UserId)"
+        int GradeId FK
+        int SectionId FK
+        int AcademicYearId FK
+        nvarchar Status "Active | Transferred"
+    }
 ```
 
 ---
