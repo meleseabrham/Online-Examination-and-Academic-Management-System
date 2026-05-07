@@ -94,6 +94,193 @@ NexExam is built using modern, industry-standard web technologies to ensure spee
 
 ---
 
+## 📊 Database Schema (Data Dictionary)
+
+The system is powered by a robust Microsoft SQL Server database. Below is the detailed schema categorized by functional modules.
+
+### 🏛️ 1. Core & Institutional Structure
+<details>
+<summary>View Core Tables Details</summary>
+
+#### `Schools`
+Central institutional metadata and branding.
+- `Id`: (PK, int, Identity)
+- `Name`: (nvarchar 200, NOT NULL)
+- `Code`: (nvarchar 50, UNIQUE) - Internal institutional code.
+- `Address`, `Phone`, `Email`: Contact details.
+- `LogoPath`: (nvarchar MAX) - Server path for institution logo.
+- `Status`: (Active/Inactive) - Controls institutional access.
+
+#### `Users`
+Unified account storage for all roles with strict RBAC categorization.
+- `UserId`: (PK, int, Identity)
+- `FullName`, `FirstName`, `MiddleName`, `LastName`: Comprehensive naming data.
+- `Email`: (nvarchar 100, UNIQUE) - Login credential.
+- `Password`: (nvarchar MAX) - BCrypt hashed credentials.
+- `Role`: (Student, Teacher, Admin, Director) - Controls interface access.
+- `RegistrationNumber`: (nvarchar 50, UNIQUE) - Institutional ID.
+- `SchoolId`: (FK -> Schools.Id) - Multi-tenant linkage.
+
+#### `AcademicYears` & `Semesters`
+Time-based organizational units for historical tracking.
+- `AcademicYears`: `Id` (PK), `Year` (e.g., 2024), `IsActive` (bit)
+- `Semesters`: `Id` (PK), `SemesterName` (e.g., Semester I), `AcademicYearId` (FK)
+
+</details>
+
+### 🎓 2. Academic Logistics & Enrollment
+<details>
+<summary>View Academic Tables Details</summary>
+
+#### `Grades` & `Sections`
+Hierarchical student grouping.
+- `Grades`: `Id` (PK), `GradeNumber` (int)
+- `Sections`: `Id` (PK), `GradeId` (FK), `Name` (e.g., Section A), `SchoolId` (FK)
+
+#### `StudentEnrollments`
+Lifecycle tracking of students across years.
+- `Id`: (PK)
+- `StudentId`: (FK -> Users.UserId)
+- `GradeId`, `SectionId`, `AcademicYearId`: (FKs) - Defines where the student sits this year.
+- `Status`: (Active, Transferred, Promoted)
+
+#### `Courses` & `GradeCourses`
+Curriculum definitions.
+- `Courses`: `CourseId` (PK), `CourseName`, `CourseCode`
+- `GradeCourses`: Junction table mapping specific courses to grades per semester.
+
+</details>
+
+### 📝 3. Examination & Assessment Engine
+<details>
+<summary>View Assessment Tables Details</summary>
+
+#### `Assessments`
+Grading containers that define weightage in the final GPA.
+- `Id`: (PK)
+- `CourseId`, `GradeId`, `SemesterId`: (FKs)
+- `Type`: (Participation, Assignment, Mid, Final, Quiz)
+- `WeightPercentage`: (decimal) - Critical for weighted grade calculation.
+
+#### `Exams`
+Specific testing instances with proctoring controls.
+- `ExamId`: (PK)
+- `Title`, `ExamType`, `DurationMinutes`
+- `StartTime`, `EndTime`: Precise scheduling windows.
+- `IsPublished`: (bit) - Controls visibility to students.
+- `IsMakeup`: (bit) - Flags remedial exams.
+- `AssessmentId`: (FK -> Assessments.Id) - Ties exam to a grading category.
+
+#### `Questions` & `Options`
+Atomic test items.
+- `Questions`: `QuestionId` (PK), `ExamId` (FK), `Text` (MAX), `Type` (MCQ, TF, Matching, Essay), `Points`
+- `Options`: `OptionId` (PK), `QuestionId` (FK), `Text`, `IsCorrect` (bit)
+- `MatchingPairs`: `PairId`, `QuestionId`, `LeftText`, `RightText`.
+
+</details>
+
+### 📊 4. Results & Proctored Attempts
+<details>
+<summary>View Results Tables Details</summary>
+
+#### `StudentExams` (Attempts)
+Live exam session tracking and anti-cheat logging.
+- `AttemptId`: (PK)
+- `StudentId`, `ExamId`: (FKs)
+- `Score`: (decimal) - Auto-calculated total.
+- `TabSwitchCount`: (int) - Tracks how many times the user left the browser tab.
+- `Status`: (Started, Completed, Locked) - Managed by real-time proctoring.
+
+#### `StudentAnswers`
+Granular response storage for auditing.
+- `AttemptId`, `QuestionId`: (FKs)
+- `SelectedOptionId`: (FK -> Options.OptionId)
+- `AnswerText`: (nvarchar MAX) - Student's written content for essays.
+- `Score`: (decimal) - Points awarded for this specific answer.
+
+#### `SemesterResults` & `FinalYearResult`
+High-performance aggregated caches for transcripts.
+- `Average`: (decimal) - Weighted GPA calculation.
+- `ClassRank`, `GradeRank`, `SchoolRank`: (int) - Competitive positioning metrics.
+
+</details>
+
+### 🛠️ 5. System & Administrative
+<details>
+<summary>View System Tables Details</summary>
+
+#### `Announcements`
+Institutional communication logs.
+- `AnnouncementId`: (PK)
+- `Title`, `Content`, `TargetRole`
+- `CreatedBy`: (FK -> Users.UserId)
+
+#### `AuditLog`
+Security and activity tracking.
+- `id`: (PK)
+- `user_id`: (FK -> Users.UserId)
+- `action`, `entity`, `timestamp`, `ip_address`.
+
+#### `TransferHistory`
+Tracking student/teacher movement between schools.
+- `FromSchoolId`, `ToSchoolId`: (FKs)
+- `Reason`, `TransferDate`.
+
+#### `SystemSettings` & `BackupLogs`
+- `SystemSettings`: Global config (Key/Value).
+- `BackupLogs`: Records of manual/automated database backups.
+
+</details>
+
+---
+
+## 🔗 Relationship Architecture
+
+The database follows a **Multi-tenant Architecture** where the `Schools` table acts as the root for all institutional data.
+
+1.  **User Mapping:** Users are linked to Schools via `SchoolId`. Their specific roles determine their interactions with the academic and exam modules.
+2.  **Academic Hierarchy:** `AcademicYears` -> `Semesters` -> `Grades` -> `Sections`. This chain ensures that student enrollments (`StudentEnrollments`) and teacher assignments (`TeacherAssignments`) are time-bound and logically isolated.
+3.  **Assessment Flow:** `Courses` are assigned to grades via `GradeCourses`. `Assessments` define the grading rules for those courses, which are then implemented by `Exams`.
+4.  **Result Pipeline:** `StudentExams` capture live data, which is persisted into `StudentAnswers`. Background processes aggregate these into `SemesterResults` and eventually `FinalYearResult` for permanent record keeping.
+
+---
+
+## 📐 Entity Relationship Diagram
+
+The diagram below illustrates the core relational pathways from institutional setup to student performance output.
+
+```mermaid
+erDiagram
+    SCHOOLS ||--o{ USERS : "manages"
+    SCHOOLS ||--o{ SECTIONS : "contains"
+    
+    ACADEMIC_YEARS ||--o{ SEMESTERS : "divided_into"
+    ACADEMIC_YEARS ||--o{ SECTIONS : "active_during"
+    
+    GRADES ||--o{ SECTIONS : "subdivided_into"
+    GRADES ||--o{ GRADE_COURSES : "takes"
+    
+    COURSES ||--o{ GRADE_COURSES : "included_in"
+    COURSES ||--o{ EXAMS : "tested_via"
+    
+    USERS ||--o{ STUDENT_ENROLLMENTS : "is_enrolled_as"
+    USERS ||--o{ TEACHER_ASSIGNMENTS : "is_assigned_to"
+    
+    SECTIONS ||--o{ STUDENT_ENROLLMENTS : "groups"
+    
+    ASSESSMENTS ||--o{ EXAMS : "defines_weight_for"
+    EXAMS ||--o{ QUESTIONS : "has_questions"
+    EXAMS ||--o{ STUDENT_EXAMS : "taken_by"
+    
+    QUESTIONS ||--o{ OPTIONS : "provides_choices"
+    STUDENT_EXAMS ||--o{ STUDENT_ANSWERS : "captures"
+    
+    USERS ||--o{ SEMESTER_RESULTS : "achieves_average"
+    USERS ||--o{ FINAL_YEAR_RESULT : "receives_final_rank"
+```
+
+---
+
 ## 🚥 Installation & Setup
 
 Want to run NexExam locally? Follow these steps:
