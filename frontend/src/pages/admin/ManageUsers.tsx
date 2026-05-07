@@ -288,7 +288,7 @@ const ManageUsers = () => {
             <Sidebar role="admin" />
 
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-10">
+                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-20">
                     <Header email={email} role="admin" />
                 </div>
 
@@ -683,12 +683,25 @@ const ManageUsers = () => {
 
                             <div>
                                 <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Profile Photo</label>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="w-full px-5 py-3 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all text-sm font-medium file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-brand-blue/10 file:text-brand-blue hover:file:bg-brand-blue/20"
-                                    onChange={(e) => setProfileFile(e.target.files ? e.target.files[0] : null)}
-                                />
+                                <div className="flex items-center gap-4">
+                                    {editingUser?.ProfileImage && (
+                                        <div className="w-14 h-14 rounded-2xl overflow-hidden border border-slate-200 shadow-sm shrink-0">
+                                            <img
+                                                src={`http://localhost:5000/${editingUser.ProfileImage}`}
+                                                alt="Current Profile"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
+                                    )}
+                                    <div className="flex-1">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="w-full px-5 py-3 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all text-xs font-medium file:mr-4 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-brand-blue/10 file:text-brand-blue hover:file:bg-brand-blue/20 cursor-pointer"
+                                            onChange={(e) => setProfileFile(e.target.files ? e.target.files[0] : null)}
+                                        />
+                                    </div>
+                                </div>
                             </div>
 
                             <div className="lg:col-span-3 pt-4">
@@ -1043,7 +1056,7 @@ const ManageUsers = () => {
                                 <>
                                     <div className="flex justify-between items-start mb-8">
                                         <div className="flex gap-4 items-center">
-                                            <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-sm">
+                                            <div className="w-14 h-14 rounded-2xl bg-gray-100 text-gray-600 flex items-center justify-center shadow-sm">
                                                 <RotateCcw size={28} />
                                             </div>
                                             <div>
@@ -1127,7 +1140,7 @@ const ManageUsers = () => {
                                             ) : (
                                                 <>
                                                     <RotateCcw size={20} />
-                                                    Execute Account Reset
+                                                    Reset
                                                 </>
                                             )}
                                         </button>

@@ -740,7 +740,7 @@ const AcademicManagement = () => {
             <Sidebar role="admin" />
 
             <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-                <div className="p-4 pb-0 flex-none z-10">
+                <div className="p-4 pb-0 flex-none z-20">
                     <Header email={email} role="admin" />
                 </div>
 

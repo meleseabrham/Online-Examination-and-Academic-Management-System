@@ -37,36 +37,52 @@ const SemesterResults = () => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<{ summary: SemesterSummary | null; courses: CourseResult[] }>({ summary: null, courses: [] });
 
-    useEffect(() => {
-        const fetchMetadata = async () => {
-            try {
-                const [yearsRes, semsRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/student/academic-years', { headers }),
-                    axios.get('http://localhost:5000/api/student/semesters', { headers })
-                ]);
-                setAcademicYears(yearsRes.data);
-                setSemesters(semsRes.data);
+    const fetchMetadata = async () => {
+        try {
+            const yRes = await axios.get('http://localhost:5000/api/student/academic-years', { headers });
+            setAcademicYears(yRes.data);
 
-                const activeYear = yearsRes.data.find((y: any) => y.IsActive);
-                if (activeYear) {
-                    const ayId = activeYear.Id;
-                    setSelectedYear(ayId.toString());
-
-                    const activeSem = semsRes.data.find((s: any) => s.IsActive && s.AcademicYearId === ayId);
-                    if (activeSem) {
-                        setSelectedSemester(activeSem.Id.toString());
-                    } else {
-                        // If no "active" semester found for this specific year, pick the first one available for this year
-                        const firstSem = semsRes.data.find((s: any) => s.AcademicYearId === ayId);
-                        if (firstSem) setSelectedSemester(firstSem.Id.toString());
-                    }
-                }
-            } catch (err) {
-                console.error(err);
+            const activeYear = yRes.data.find((y: any) => y.IsActive);
+            if (activeYear) {
+                setSelectedYear(activeYear.Id.toString());
             }
-        };
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const fetchSemestersForYear = async (ayId: string) => {
+        if (!ayId) {
+            setSemesters([]);
+            return;
+        }
+        try {
+            const res = await axios.get(`http://localhost:5000/api/student/semesters?academicYearId=${ayId}`, { headers });
+            setSemesters(res.data);
+
+            // Auto-select active semester if it belongs to this year
+            const activeSem = res.data.find((s: any) => s.IsActive);
+            if (activeSem) {
+                setSelectedSemester(activeSem.Id.toString());
+            } else if (res.data.length > 0) {
+                setSelectedSemester(res.data[0].Id.toString());
+            } else {
+                setSelectedSemester('');
+            }
+        } catch (err) {
+            console.error('Error fetching semesters:', err);
+        }
+    };
+
+    useEffect(() => {
         fetchMetadata();
     }, []);
+
+    useEffect(() => {
+        if (selectedYear) {
+            fetchSemestersForYear(selectedYear);
+        }
+    }, [selectedYear]);
 
     const fetchResults = async () => {
         if (!selectedYear || !selectedSemester) return;
@@ -101,7 +117,7 @@ const SemesterResults = () => {
             <Sidebar role="student" />
 
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-10">
+                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-20">
                     <Header email={user.email || "student@example.com"} role="student" />
                 </div>
 
@@ -137,7 +153,7 @@ const SemesterResults = () => {
                                         className="w-full appearance-none bg-white border border-slate-100 rounded-2xl px-5 py-3.5 text-sm font-black text-[#2B3674] shadow-sm focus:ring-4 focus:ring-brand-blue/5 transition-all outline-none"
                                     >
                                         <option value="">Select Semester</option>
-                                        {semesters.filter(s => s.AcademicYearId === parseInt(selectedYear)).map(s => <option key={s.Id} value={s.Id}>{s.Name}</option>)}
+                                        {semesters.map(s => <option key={s.Id} value={s.Id}>{s.Name}</option>)}
                                     </select>
                                     <ChevronDown size={14} className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 group-hover:text-brand-blue transition-colors pointer-events-none" />
                                 </div>

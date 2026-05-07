@@ -5,8 +5,9 @@ import Header from '../../components/Header';
 import {
     FileText, Download, ChevronDown, BookOpen, Award,
     Calendar, Layers, CheckCircle, Clock, BarChart3,
-    Target
+    Target, ChevronRight
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface CourseBreakdown {
     courseId: number; courseName: string; courseCode: string;
@@ -28,6 +29,7 @@ const MyTranscript = () => {
     const [courses, setCourses] = useState<CourseBreakdown[]>([]);
     const [loading, setLoading] = useState(false);
     const [downloading, setDownloading] = useState(false);
+    const [expandedCourseId, setExpandedCourseId] = useState<number | null>(null);
 
     useEffect(() => {
         fetchDropdowns();
@@ -69,6 +71,7 @@ const MyTranscript = () => {
                 params: { studentId: user?.id, semesterId: selectedSemester }
             });
             setCourses(res.data);
+            if (res.data.length > 0) setExpandedCourseId(res.data[0].courseId);
         } catch (err) { console.error(err); }
         finally { setLoading(false); }
     };
@@ -242,82 +245,88 @@ const MyTranscript = () => {
                     ) : (
                         <div className="space-y-6">
                             {courses.map(course => (
-                                <div key={course.courseId} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+                                <div key={course.courseId} className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden transition-all duration-300">
                                     {/* Course Header */}
-                                    <div className="px-7 py-5 flex items-center justify-between border-b border-slate-50">
-                                        <div>
+                                    <div
+                                        onClick={() => setExpandedCourseId(expandedCourseId === course.courseId ? null : course.courseId)}
+                                        className={`px-7 py-5 flex items-center justify-between cursor-pointer transition-colors ${expandedCourseId === course.courseId ? 'bg-slate-50/30' : 'hover:bg-slate-50/50'}`}
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className={`w-5 h-5 flex items-center justify-center transition-transform duration-300 ${expandedCourseId === course.courseId ? 'rotate-180' : ''}`}>
+                                                <ChevronDown size={18} className="text-slate-400" />
+                                            </div>
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                                                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
                                                     <BookOpen size={18} className="text-blue-600" />
                                                 </div>
                                                 <div>
-                                                    <h3 className="font-black text-base">{course.courseName}</h3>
-                                                    <p className="text-xs text-slate-400">{course.courseCode}</p>
+                                                    <h3 className="font-black text-base leading-tight">{course.courseName}</h3>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-0.5">{course.courseCode}</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-6">
                                             <div className="text-right">
-                                                <p className={`text-2xl font-black ${getGradeColor(course.courseTotal)}`}>
+                                                <p className={`text-2xl font-black leading-none mb-1 ${getGradeColor(course.courseTotal)}`}>
                                                     {course.courseTotal !== null ? `${course.courseTotal.toFixed(1)}%` : '—'}
                                                 </p>
-                                                <p className="text-xs text-slate-400">
-                                                    Grade: <span className={`font-bold ${getGradeColor(course.courseTotal)}`}>{getLetterGrade(course.courseTotal)}</span>
+                                                <p className="text-[10px] font-black uppercase tracking-tighter text-slate-400">
+                                                    Grade: <span className={`font-black ${getGradeColor(course.courseTotal)}`}>{getLetterGrade(course.courseTotal)}</span>
                                                 </p>
                                             </div>
-                                            <div className={`px-3 py-1.5 rounded-xl text-xs font-bold ${course.status === 'Complete' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
-                                                {course.status === 'Complete' ? <CheckCircle size={12} className="inline mr-1 -mt-0.5" /> : <Clock size={12} className="inline mr-1 -mt-0.5" />}
+                                            <div className={`px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2 border ${course.status === 'Complete' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                                                {course.status === 'Complete' ? <CheckCircle size={14} /> : <Clock size={14} />}
                                                 {course.status}
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Assessment Rows */}
-                                    <div className="px-7 py-3">
-                                        {course.assessments.map((a, idx) => (
-                                            <div key={a.id} className={`flex items-center gap-4 py-3 ${idx < course.assessments.length - 1 ? 'border-b border-slate-50' : ''}`}>
-                                                <div className="w-8 text-center text-lg">{typeIcons[a.type] || '📝'}</div>
-                                                <div className="flex-1">
-                                                    <p className="font-bold text-sm">{a.title}</p>
-                                                    <p className="text-xs text-slate-400">{a.type}</p>
-                                                </div>
-                                                <div className="flex items-center gap-6">
-                                                    <div className="text-right">
-                                                        <p className="text-sm font-bold">
-                                                            {a.marksObtained !== null ? (
-                                                                <><span className={getGradeColor(a.marksObtained / a.totalMarks * 100)}>{a.marksObtained}</span> <span className="text-slate-300">/ {a.totalMarks}</span></>
-                                                            ) : (
-                                                                <span className="text-slate-300">—</span>
-                                                            )}
-                                                        </p>
-                                                    </div>
-                                                    {/* <div className="w-16 text-right">
-                                                        <div className="flex items-center gap-1 justify-end">
-                                                            <Percent size={10} className="text-slate-400" />
-                                                            <span className="text-xs font-bold text-slate-500">{a.weightPercentage}%</span>
+                                    <AnimatePresence>
+                                        {expandedCourseId === course.courseId && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                className="overflow-hidden"
+                                            >
+                                                {/* Assessment Rows */}
+                                                <div className="px-7 py-3 border-t border-slate-50">
+                                                    {course.assessments.map((a, idx) => (
+                                                        <div key={a.id} className={`flex items-center gap-4 py-4 ${idx < course.assessments.length - 1 ? 'border-b border-slate-50' : ''} group/row`}>
+                                                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl group-hover/row:scale-110 transition-transform">{typeIcons[a.type] || '📝'}</div>
+                                                            <div className="flex-1">
+                                                                <p className="font-black text-sm text-[#2B3674]">{a.title}</p>
+                                                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-0.5">{a.type}</p>
+                                                            </div>
+                                                            <div className="flex items-center gap-8">
+                                                                <div className="text-right">
+                                                                    <p className="text-sm font-black text-[#2B3674]">
+                                                                        {a.marksObtained !== null ? (
+                                                                            <><span className={getGradeColor(a.marksObtained / a.totalMarks * 100)}>{a.marksObtained}</span> <span className="text-slate-300">/ {a.totalMarks}</span></>
+                                                                        ) : (
+                                                                            <span className="text-slate-300">—</span>
+                                                                        )}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="w-20 text-right">
-                                                        <p className={`text-sm font-black ${a.weightedScore !== null ? getGradeColor((a.weightedScore / a.weightPercentage) * 100) : 'text-slate-300'}`}>
-                                                            {a.weightedScore !== null ? a.weightedScore.toFixed(1) : '—'}
-                                                        </p>
-                                                        <p className="text-[10px] text-slate-400">weighted</p>
-                                                    </div> */}
+                                                    ))}
                                                 </div>
-                                            </div>
-                                        ))}
-                                    </div>
 
-                                    {/* Course Footer */}
-                                    <div className="px-7 py-3 bg-slate-50/50 flex items-center justify-between text-xs">
-                                        <div className="flex items-center gap-4">
-                                            <span className="text-slate-400">Weight Coverage: <span className="font-bold text-slate-600">{course.completedWeight.toFixed(0)}/{course.totalDefinedWeight.toFixed(0)}%</span></span>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <Target size={12} className="text-slate-400" />
-                                            <span className="text-slate-400">Weighted Total: <span className="font-bold text-slate-700">{course.totalWeightedScore.toFixed(1)}</span></span>
-                                        </div>
-                                    </div>
+                                                {/* Course Footer */}
+                                                <div className="px-7 py-4 bg-slate-50/50 flex items-center justify-between text-[10px] font-black uppercase tracking-widest border-t border-slate-50">
+                                                    <div className="flex items-center gap-4">
+                                                        <span className="text-slate-400">Weight Coverage: <span className="text-slate-600">{course.completedWeight.toFixed(0)}/{course.totalDefinedWeight.toFixed(0)}%</span></span>
+                                                    </div>
+                                                    <div className="flex items-center gap-1.5">
+                                                        <Target size={14} className="text-slate-300" />
+                                                        <span className="text-slate-400">Weighted Total: <span className="text-brand-blue">{course.totalWeightedScore.toFixed(1)}</span></span>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             ))}
                         </div>

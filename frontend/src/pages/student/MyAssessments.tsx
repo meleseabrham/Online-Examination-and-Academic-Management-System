@@ -44,38 +44,50 @@ const StudentAssessments = () => {
     const [selectedAY, setSelectedAY] = useState('');
     const [selectedSemester, setSelectedSemester] = useState('');
 
-    // Load filter options
+    // Load academic years on mount
     useEffect(() => {
-        const loadFilters = async () => {
+        const loadAcademicYears = async () => {
             try {
-                const [ayRes, semRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/student/academic-years', { headers }),
-                    axios.get('http://localhost:5000/api/student/semesters', { headers })
-                ]);
-                setAcademicYears(ayRes.data);
-                setSemesters(semRes.data);
+                const res = await axios.get('http://localhost:5000/api/student/academic-years', { headers });
+                setAcademicYears(res.data);
 
                 // Auto-select the active academic year
-                const activeYear = ayRes.data.find((y: any) => y.IsActive);
+                const activeYear = res.data.find((y: any) => y.IsActive);
                 if (activeYear) {
                     setSelectedAY(String(activeYear.Id));
-                } else if (ayRes.data.length > 0) {
-                    setSelectedAY(String(ayRes.data[0].Id));
-                }
-
-                // Auto-select active semester
-                const activeSem = semRes.data.find((s: any) => s.IsActive);
-                if (activeSem) {
-                    setSelectedSemester(String(activeSem.Id));
-                } else if (semRes.data.length > 0) {
-                    setSelectedSemester(String(semRes.data[0].Id));
+                } else if (res.data.length > 0) {
+                    setSelectedAY(String(res.data[0].Id));
                 }
             } catch (err) {
-                console.error('Error loading filters:', err);
+                console.error('Error loading academic years:', err);
             }
         };
-        loadFilters();
+        loadAcademicYears();
     }, []);
+
+    // Load semesters whenever academic year changes
+    useEffect(() => {
+        const loadSemesters = async () => {
+            if (!selectedAY) return;
+            try {
+                const res = await axios.get(`http://localhost:5000/api/student/semesters?academicYearId=${selectedAY}`, { headers });
+                setSemesters(res.data);
+
+                // Auto-select active semester if it's in this year, otherwise select first one
+                const activeSem = res.data.find((s: any) => s.IsActive);
+                if (activeSem) {
+                    setSelectedSemester(String(activeSem.Id));
+                } else if (res.data.length > 0) {
+                    setSelectedSemester(String(res.data[0].Id));
+                } else {
+                    setSelectedSemester('');
+                }
+            } catch (err) {
+                console.error('Error loading semesters:', err);
+            }
+        };
+        loadSemesters();
+    }, [selectedAY]);
 
     // Fetch data when filters change
     useEffect(() => {

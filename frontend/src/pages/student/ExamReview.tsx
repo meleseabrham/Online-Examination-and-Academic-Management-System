@@ -5,7 +5,8 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
-import { Check, X, Loader, AlertCircle, ChevronLeft, ChevronRight, ChevronDown, Trophy, Target, Award, Download } from 'lucide-react';
+import { Check, X, Loader, AlertCircle, ChevronLeft, ChevronRight, ChevronDown, Trophy, Target, Award, Download, ChevronUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Option { OptionId: number; Text: string; IsCorrect: boolean; }
 interface MatchingPair { PairId: number; LeftText: string; RightText: string; }
@@ -44,6 +45,7 @@ const ExamReview = () => {
     // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
     const [questionsPerPage, setQuestionsPerPage] = useState(5);
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(0); // First question expanded by default
 
     useEffect(() => {
         const fetchReview = async () => {
@@ -165,7 +167,7 @@ const ExamReview = () => {
                         )}
                         {isGraded && (
                             <div className="flex items-center gap-2 text-[#2B3674] font-black">
-                                <span className="text-[10px] uppercase opacity-40">Score Awarded:</span>
+                                <span className="text-[10px] uppercase opacity-40">Score : </span>
                                 <span className="text-lg">{marks}</span>
                                 <span className="text-xs opacity-30">/ {q.Points}</span>
                             </div>
@@ -405,8 +407,11 @@ const ExamReview = () => {
                                 }
 
                                 return (
-                                    <div key={q.QuestionId} className={`bg-white p-12 rounded-[50px] shadow-sm border-2 transition-all duration-500 hover:shadow-2xl hover:shadow-slate-200/50 ${borderColor}`}>
-                                        <div className="flex flex-col md:flex-row items-start justify-between mb-10 gap-6">
+                                    <div key={q.QuestionId} className={`bg-white rounded-[50px] shadow-sm border-2 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-slate-200/50 ${borderColor}`}>
+                                        <div
+                                            onClick={() => setExpandedIndex(expandedIndex === i ? null : i)}
+                                            className={`p-10 cursor-pointer flex flex-col md:flex-row items-start justify-between gap-6 transition-colors ${expandedIndex === i ? 'bg-slate-50/30' : 'hover:bg-slate-50/50'}`}
+                                        >
                                             <div className="flex items-start gap-6">
                                                 <span className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-white shrink-0 text-xl shadow-lg ${statusColor}`}>
                                                     {questionNumber}
@@ -420,22 +425,39 @@ const ExamReview = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="text-right shrink-0 self-center md:self-start">
-                                                <div className={`px-6 py-2.5 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] mb-3 shadow-sm ${status === 'Correct' ? 'bg-green-50 text-green-600' : status === 'Partial' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'}`}>
-                                                    {status}
+                                            <div className="flex items-center gap-6 shrink-0 self-center md:self-start">
+                                                <div className="text-right">
+                                                    <div className={`px-6 py-2.5 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] mb-3 shadow-sm ${status === 'Correct' ? 'bg-green-50 text-green-600' : status === 'Partial' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-red-600'}`}>
+                                                        {status}
+                                                    </div>
+                                                    <div className="flex items-center justify-end gap-2">
+                                                        <Award size={14} className="text-slate-300" />
+                                                        <p className="text-[11px] font-black text-slate-400 tracking-tighter uppercase">
+                                                            Score: <span className="text-[#2B3674] text-sm">{pointsEarned} / {q.Type === 'Matching' ? q.Points * q.MatchingPairs.length : q.Points}</span>
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <Award size={14} className="text-slate-300" />
-                                                    <p className="text-[11px] font-black text-slate-400 tracking-tighter uppercase">
-                                                        Awarded: <span className="text-[#2B3674] text-sm">{pointsEarned} / {q.Type === 'Matching' ? q.Points * q.MatchingPairs.length : q.Points}</span>
-                                                    </p>
+                                                <div className={`w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 transition-transform duration-300 ${expandedIndex === i ? 'rotate-180' : ''}`}>
+                                                    <ChevronDown size={20} />
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div className="pl-0 md:pl-20">
-                                            {q.Type === 'Matching' ? renderMatchingReview(q) : q.Type === 'Essay' ? renderEssayReview(q) : renderOptionReview(q)}
-                                        </div>
+                                        <AnimatePresence>
+                                            {expandedIndex === i && (
+                                                <motion.div
+                                                    initial={{ height: 0, opacity: 0 }}
+                                                    animate={{ height: 'auto', opacity: 1 }}
+                                                    exit={{ height: 0, opacity: 0 }}
+                                                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                >
+                                                    <div className="px-10 pb-12 pt-0 md:pl-30">
+                                                        <div className="w-full h-px bg-slate-100 mb-8"></div>
+                                                        {q.Type === 'Matching' ? renderMatchingReview(q) : q.Type === 'Essay' ? renderEssayReview(q) : renderOptionReview(q)}
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
                                     </div>
                                 );
                             })}

@@ -18,6 +18,7 @@ import {
     ChevronUp,
     MoreHorizontal
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Assignment {
     AssignmentId: number;
@@ -235,7 +236,7 @@ const StudentAssignments = () => {
             <Sidebar role="student" />
 
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-10">
+                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-20">
                     <Header email={user.email || "student@example.com"} role="student" />
                 </div>
 
@@ -408,99 +409,108 @@ const StudentAssignments = () => {
                                                         )}
 
                                                         <div className={`p-3 rounded-2xl transition-all flex items-center justify-center ${expandedId === a.AssignmentId ? 'bg-brand-blue/10 text-brand-blue' : 'bg-slate-50 text-slate-400 group-hover:bg-slate-100 group-hover:text-brand-blue'}`}>
-                                                            {expandedId === a.AssignmentId ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                                                            <ChevronDown size={24} className={`transition-transform duration-300 ${expandedId === a.AssignmentId ? 'rotate-180' : ''}`} />
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                {expandedId === a.AssignmentId && (
-                                                    <div className="animate-in slide-in-from-top-4 fade-in duration-300">
+                                                <AnimatePresence>
+                                                    {expandedId === a.AssignmentId && (
+                                                        <motion.div
+                                                            initial={{ height: 0, opacity: 0 }}
+                                                            animate={{ height: 'auto', opacity: 1 }}
+                                                            exit={{ height: 0, opacity: 0 }}
+                                                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                            className="overflow-hidden"
+                                                        >
+                                                            <div className="pt-8">
+                                                                {(a.Description || a.FilePath || a.SubmissionFilePath) && (
+                                                                    <div className="p-6 bg-slate-50 rounded-[32px] border border-slate-100/50">
+                                                                        {a.Description && (
+                                                                            <div className="mb-6">
+                                                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Instructions</p>
+                                                                                <p className="text-slate-600 font-medium leading-relaxed whitespace-pre-wrap text-sm">{a.Description}</p>
+                                                                            </div>
+                                                                        )}
 
-                                                        {(a.Description || a.FilePath || a.SubmissionFilePath) && (
-                                                            <div className="mt-8 p-6 bg-slate-50 rounded-[32px] border border-slate-100/50">
-                                                                {a.Description && (
-                                                                    <div className="mb-6">
-                                                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Instructions</p>
-                                                                        <p className="text-slate-600 font-medium leading-relaxed whitespace-pre-wrap text-sm">{a.Description}</p>
+                                                                        <div className="flex flex-wrap gap-3 mt-4">
+                                                                            {a.FilePath && (
+                                                                                <a
+                                                                                    href={`http://localhost:5000/${a.FilePath}`}
+                                                                                    target="_blank"
+                                                                                    rel="noreferrer"
+                                                                                    className="inline-flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-brand-blue font-black text-[10px] uppercase tracking-wider hover:bg-brand-blue hover:text-white hover:border-brand-blue transition-all shadow-sm"
+                                                                                >
+                                                                                    <Download size={14} />
+                                                                                    Reference File
+                                                                                </a>
+                                                                            )}
+                                                                            {a.SubmissionFilePath && (
+                                                                                <a
+                                                                                    href={`http://localhost:5000/${a.SubmissionFilePath}`}
+                                                                                    target="_blank"
+                                                                                    rel="noreferrer"
+                                                                                    className="inline-flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-green-600 font-black text-[10px] uppercase tracking-wider hover:bg-green-500 hover:text-white hover:border-green-500 transition-all shadow-sm"
+                                                                                >
+                                                                                    <FileText size={14} />
+                                                                                    My Submission
+                                                                                </a>
+                                                                            )}
+                                                                        </div>
                                                                     </div>
                                                                 )}
 
-                                                                <div className="flex flex-wrap gap-3 mt-4">
-                                                                    {a.FilePath && (
-                                                                        <a
-                                                                            href={`http://localhost:5000/${a.FilePath}`}
-                                                                            target="_blank"
-                                                                            rel="noreferrer"
-                                                                            className="inline-flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-brand-blue font-black text-[10px] uppercase tracking-wider hover:bg-brand-blue hover:text-white hover:border-brand-blue transition-all shadow-sm"
-                                                                        >
-                                                                            <Download size={14} />
-                                                                            Reference File
-                                                                        </a>
-                                                                    )}
-                                                                    {a.SubmissionFilePath && (
-                                                                        <a
-                                                                            href={`http://localhost:5000/${a.SubmissionFilePath}`}
-                                                                            target="_blank"
-                                                                            rel="noreferrer"
-                                                                            className="inline-flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-green-600 font-black text-[10px] uppercase tracking-wider hover:bg-green-500 hover:text-white hover:border-green-500 transition-all shadow-sm"
-                                                                        >
-                                                                            <FileText size={14} />
-                                                                            My Submission
-                                                                        </a>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        )}
+                                                                {activeSubmissionId === a.AssignmentId && (
+                                                                    <div className="mt-8 p-8 border-2 border-brand-blue border-dashed rounded-[32px] bg-brand-blue/[0.02]">
+                                                                        <div className="flex justify-between items-center mb-6">
+                                                                            <h4 className="font-black text-[#2B3674] uppercase tracking-widest text-sm flex items-center gap-2">
+                                                                                <Upload size={18} className="text-brand-blue" />
+                                                                                Upload Submission
+                                                                            </h4>
+                                                                            <button onClick={() => setActiveSubmissionId(null)} className="p-2 hover:bg-slate-100 rounded-xl transition-all">
+                                                                                <X size={20} />
+                                                                            </button>
+                                                                        </div>
 
-                                                        {activeSubmissionId === a.AssignmentId && (
-                                                            <div className="mt-8 p-8 border-2 border-brand-blue border-dashed rounded-[32px] bg-brand-blue/[0.02] animate-in zoom-in-95 duration-300">
-                                                                <div className="flex justify-between items-center mb-6">
-                                                                    <h4 className="font-black text-[#2B3674] uppercase tracking-widest text-sm flex items-center gap-2">
-                                                                        <Upload size={18} className="text-brand-blue" />
-                                                                        Upload Submission
-                                                                    </h4>
-                                                                    <button onClick={() => setActiveSubmissionId(null)} className="p-2 hover:bg-slate-100 rounded-xl transition-all">
-                                                                        <X size={20} />
-                                                                    </button>
-                                                                </div>
+                                                                        <div
+                                                                            onClick={() => fileInputRef.current?.click()}
+                                                                            className={`p-10 border-2 border-dashed rounded-[24px] text-center cursor-pointer transition-all ${selectedFile ? 'border-green-400 bg-green-50' : 'border-slate-200 hover:border-brand-blue hover:bg-white bg-white/50'}`}
+                                                                        >
+                                                                            <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+                                                                            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg transition-all ${selectedFile ? 'bg-green-500 text-white' : 'bg-brand-blue text-white'}`}>
+                                                                                <Upload size={24} />
+                                                                            </div>
+                                                                            <p className={`font-black uppercase tracking-widest text-xs ${selectedFile ? 'text-green-600' : 'text-[#2B3674]'}`}>
+                                                                                {selectedFile ? selectedFile.name : 'Click to select or drag your file here'}
+                                                                            </p>
+                                                                            <p className="text-slate-400 text-[10px] font-bold mt-2 uppercase">PDF, ZIP, or DOCX (Max 10MB)</p>
+                                                                        </div>
 
-                                                                <div
-                                                                    onClick={() => fileInputRef.current?.click()}
-                                                                    className={`p-10 border-2 border-dashed rounded-[24px] text-center cursor-pointer transition-all ${selectedFile ? 'border-green-400 bg-green-50' : 'border-slate-200 hover:border-brand-blue hover:bg-white bg-white/50'}`}
-                                                                >
-                                                                    <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
-                                                                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg transition-all ${selectedFile ? 'bg-green-500 text-white' : 'bg-brand-blue text-white'}`}>
-                                                                        <Upload size={24} />
+                                                                        {selectedFile && (
+                                                                            <button
+                                                                                disabled={submitting === a.AssignmentId}
+                                                                                onClick={() => handleSubmit(a.AssignmentId)}
+                                                                                className="w-full mt-6 bg-brand-blue text-white py-4 rounded-[20px] font-black shadow-xl shadow-blue-500/20 hover:bg-blue-600 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                                                                            >
+                                                                                {submitting === a.AssignmentId ? <Loader size={20} className="animate-spin" /> : <ShieldCheck size={20} />}
+                                                                                {submitting === a.AssignmentId ? 'Uploading...' : 'Confirm Submission'}
+                                                                            </button>
+                                                                        )}
                                                                     </div>
-                                                                    <p className={`font-black uppercase tracking-widest text-xs ${selectedFile ? 'text-green-600' : 'text-[#2B3674]'}`}>
-                                                                        {selectedFile ? selectedFile.name : 'Click to select or drag your file here'}
-                                                                    </p>
-                                                                    <p className="text-slate-400 text-[10px] font-bold mt-2 uppercase">PDF, ZIP, or DOCX (Max 10MB)</p>
-                                                                </div>
+                                                                )}
 
-                                                                {selectedFile && (
-                                                                    <button
-                                                                        disabled={submitting === a.AssignmentId}
-                                                                        onClick={() => handleSubmit(a.AssignmentId)}
-                                                                        className="w-full mt-6 bg-brand-blue text-white py-4 rounded-[20px] font-black shadow-xl shadow-blue-500/20 hover:bg-blue-600 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-                                                                    >
-                                                                        {submitting === a.AssignmentId ? <Loader size={20} className="animate-spin" /> : <ShieldCheck size={20} />}
-                                                                        {submitting === a.AssignmentId ? 'Uploading...' : 'Confirm Submission'}
-                                                                    </button>
+                                                                {a.Feedback && (
+                                                                    <div className="mt-8 p-6 bg-green-50/50 rounded-[32px] border border-green-100 border-dashed">
+                                                                        <p className="text-[10px] font-black text-green-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                                                            <ShieldCheck size={14} /> Teacher Feedback
+                                                                        </p>
+                                                                        <p className="text-slate-600 font-bold leading-relaxed text-sm italic">"{a.Feedback}"</p>
+                                                                    </div>
                                                                 )}
                                                             </div>
-                                                        )}
-
-                                                        {a.Feedback && (
-                                                            <div className="mt-8 p-6 bg-green-50/50 rounded-[32px] border border-green-100 border-dashed">
-                                                                <p className="text-[10px] font-black text-green-600 uppercase tracking-widest mb-3 flex items-center gap-2">
-                                                                    <ShieldCheck size={14} /> Teacher Feedback
-                                                                </p>
-                                                                <p className="text-slate-600 font-bold leading-relaxed text-sm italic">"{a.Feedback}"</p>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                )}
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
                                             </div>
                                         </div>
                                     ))}

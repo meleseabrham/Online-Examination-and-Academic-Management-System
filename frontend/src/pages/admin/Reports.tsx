@@ -184,7 +184,7 @@ const AdminReports = () => {
                 <div id="scrollable-body" ref={reportRef} className="flex-1 overflow-y-auto p-4 md:p-6 pt-4 scroll-smooth bg-[#F4F7FE] selection:bg-brand-blue/10">
 
                     {/* Premium Glass Header */}
-                    <div className="bg-white/40 backdrop-blur-xl border border-white/60 p-4 rounded-[20px] mb-4 shadow-sm relative group">
+                    <div className="bg-white/40 backdrop-blur-xl border border-white/60 p-4 rounded-[20px] mb-4 shadow-sm relative group z-20">
                         {/* Background Decoration Layer */}
                         <div className="absolute inset-0 rounded-[30px] overflow-hidden pointer-events-none">
                             <div className="absolute top-0 right-0 p-8 opacity-5 scale-150 rotate-12 group-hover:rotate-0 transition-transform duration-1000">
