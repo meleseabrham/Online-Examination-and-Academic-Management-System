@@ -16,11 +16,6 @@ import {
     AreaChart,
     Area,
     Cell,
-    Radar,
-    RadarChart,
-    PolarGrid,
-    PolarAngleAxis,
-    PolarRadiusAxis,
     LabelList,
     PieChart,
     Pie,
@@ -99,7 +94,13 @@ const AdminReports = () => {
         fetchReports();
     }, [fetchReports]);
 
-    const COLORS = ['#4318FF', '#6AD2FF', '#EFF4FB', '#2B3674', '#05CD99'];
+    const COLORS = ['#4318FF', '#6AD2FF', '#F97316', '#2B3674', '#05CD99'];
+    const AGE_COLORS = [
+        { name: 'Child (<13)',   color: '#6366F1', bg: '#EEF2FF' },  // Indigo
+        { name: 'Teen (13-19)', color: '#F59E0B', bg: '#FFFBEB' },  // Amber
+        { name: 'Young Adult',  color: '#10B981', bg: '#ECFDF5' },  // Emerald
+        { name: 'Adult (30+)',  color: '#EF4444', bg: '#FEF2F2' },  // Rose
+    ];
 
     const handleExportPDF = async () => {
         if (!reportRef.current) return;
@@ -303,38 +304,46 @@ const AdminReports = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
                         {/* Gender Distribution */}
                         <div className="bg-white p-6 rounded-[35px] shadow-sm border border-slate-100 min-h-[300px]">
-                            <div className="mb-8">
+                            <div className="mb-4">
                                 <h2 className="text-xl font-black text-[#1B2559] tracking-tight">Gender Distribution</h2>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Student & Faculty Gender Diversity</p>
                             </div>
-                            <div className="h-[200px] w-full">
+                            <div className="h-[240px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
                                         <Pie
                                             data={[
-                                                { name: 'Male Students', value: data?.genderDistribution?.filter((g: any) => g.Role === 'Student' && g.Gender === 'Male').reduce((a: any, b: any) => a + b.count, 0) || 0, color: '#4318FF' },
-                                                { name: 'Female Students', value: data?.genderDistribution?.filter((g: any) => g.Role === 'Student' && g.Gender === 'Female').reduce((a: any, b: any) => a + b.count, 0) || 0, color: '#05CD99' },
-                                                { name: 'Male Teachers', value: data?.genderDistribution?.filter((g: any) => g.Role === 'Teacher' && g.Gender === 'Male').reduce((a: any, b: any) => a + b.count, 0) || 0, color: '#3A2E7E' },
-                                                { name: 'Female Teachers', value: data?.genderDistribution?.filter((g: any) => g.Role === 'Teacher' && g.Gender === 'Female').reduce((a: any, b: any) => a + b.count, 0) || 0, color: '#6AD2FF' }
+                                                { name: 'Male Students',   value: data?.genderDistribution?.filter((g: any) => g.Role === 'Student' && g.Gender === 'Male').reduce((a: any, b: any) => a + b.count, 0) || 0 },
+                                                { name: 'Female Students', value: data?.genderDistribution?.filter((g: any) => g.Role === 'Student' && g.Gender === 'Female').reduce((a: any, b: any) => a + b.count, 0) || 0 },
+                                                { name: 'Male Teachers',   value: data?.genderDistribution?.filter((g: any) => g.Role === 'Teacher' && g.Gender === 'Male').reduce((a: any, b: any) => a + b.count, 0) || 0 },
+                                                { name: 'Female Teachers', value: data?.genderDistribution?.filter((g: any) => g.Role === 'Teacher' && g.Gender === 'Female').reduce((a: any, b: any) => a + b.count, 0) || 0 },
                                             ]}
-                                            innerRadius={60}
-                                            outerRadius={80}
-                                            paddingAngle={5}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius={52}
+                                            outerRadius={78}
+                                            paddingAngle={6}
                                             dataKey="value"
                                         >
                                             {[
                                                 { color: '#4318FF' },
-                                                { color: '#05CD99' },
-                                                { color: '#3A2E7E' },
-                                                { color: '#6AD2FF' }
+                                                { color: '#F43F5E' },
+                                                { color: '#0EA5E9' },
+                                                { color: '#F59E0B' },
                                             ].map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                                <Cell key={`cell-${index}`} fill={entry.color} stroke="#fff" strokeWidth={3} />
                                             ))}
                                         </Pie>
                                         <Tooltip
-                                            contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', fontWeight: 'bold', fontSize: '10px', textTransform: 'uppercase' }}
+                                            contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.12)', fontWeight: '700', fontSize: '11px' }}
+                                            formatter={(val: any, name: any) => [`${val} people`, name]}
                                         />
-                                        <Legend verticalAlign="middle" align="right" layout="vertical" iconType="circle" wrapperStyle={{ fontSize: '9px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '1px', paddingLeft: '20px' }} />
+                                        <Legend
+                                            iconType="circle"
+                                            iconSize={8}
+                                            verticalAlign="bottom"
+                                            wrapperStyle={{ fontSize: '10px', fontWeight: '800', color: '#1B2559', paddingTop: '14px', letterSpacing: '0.5px' }}
+                                        />
                                     </PieChart>
                                 </ResponsiveContainer>
                             </div>
@@ -346,31 +355,36 @@ const AdminReports = () => {
                                 <h2 className="text-xl font-black text-[#1B2559] tracking-tight">Age Classification</h2>
                                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Growth Stages Analysis</p>
                             </div>
-                            <div className="h-[200px] w-full">
+                            <div className="h-[240px] w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
                                         <Pie
                                             data={[
-                                                { name: 'Child (<13)', value: data?.ageDistribution?.filter((a: any) => a.ageGroup.includes('<13')).reduce((a: any, b: any) => a + b.count, 0) || 0 },
-                                                { name: 'Teen (13-19)', value: data?.ageDistribution?.filter((a: any) => a.ageGroup.includes('13-19')).reduce((a: any, b: any) => a + b.count, 0) || 0 },
-                                                { name: 'Young Adult', value: data?.ageDistribution?.filter((a: any) => a.ageGroup.includes('20-29')).reduce((a: any, b: any) => a + b.count, 0) || 0 },
-                                                { name: 'Adult (30+)', value: data?.ageDistribution?.filter((a: any) => !a.ageGroup.includes('<13') && !a.ageGroup.includes('13-19') && !a.ageGroup.includes('20-29')).reduce((a: any, b: any) => a + b.count, 0) || 0 }
+                                                { name: 'Child (<13)',  value: data?.ageDistribution?.filter((a: any) => a.ageGroup.includes('<13')).reduce((a: any, b: any) => a + b.count, 0) || 0,  fill: '#6366F1' },
+                                                { name: 'Teen (13-19)', value: data?.ageDistribution?.filter((a: any) => a.ageGroup.includes('13-19')).reduce((a: any, b: any) => a + b.count, 0) || 0, fill: '#F59E0B' },
+                                                { name: 'Young Adult',  value: data?.ageDistribution?.filter((a: any) => a.ageGroup.includes('20-29')).reduce((a: any, b: any) => a + b.count, 0) || 0,  fill: '#10B981' },
+                                                { name: 'Adult (30+)',  value: data?.ageDistribution?.filter((a: any) => !a.ageGroup.includes('<13') && !a.ageGroup.includes('13-19') && !a.ageGroup.includes('20-29')).reduce((a: any, b: any) => a + b.count, 0) || 0, fill: '#EF4444' }
                                             ]}
                                             cx="50%"
                                             cy="50%"
-                                            labelLine={false}
+                                            innerRadius={52}
                                             outerRadius={80}
-                                            fill="#8884d8"
+                                            paddingAngle={4}
                                             dataKey="value"
                                         >
-                                            {COLORS.map((_, index) => (
-                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            {AGE_COLORS.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} stroke="#fff" strokeWidth={2} />
                                             ))}
                                         </Pie>
                                         <Tooltip
-                                            contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', fontWeight: 'bold', fontSize: '10px', textTransform: 'uppercase' }}
+                                            contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 40px rgba(0,0,0,0.12)', fontWeight: '700', fontSize: '11px' }}
+                                            formatter={(val: any, name: any) => [`${val} people`, name]}
                                         />
-                                        <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ fontSize: '9px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '1px', paddingTop: '20px' }} />
+                                        <Legend
+                                            iconType="circle"
+                                            iconSize={8}
+                                            wrapperStyle={{ fontSize: '10px', fontWeight: '800', color: '#1B2559', paddingTop: '12px', letterSpacing: '0.5px' }}
+                                        />
                                     </PieChart>
                                 </ResponsiveContainer>
                             </div>
@@ -404,48 +418,68 @@ const AdminReports = () => {
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-4">
-                        {/* Course Distribution Radar */}
+                        {/* Course Distribution Bar Chart */}
                         <div className="lg:col-span-2 bg-white p-6 rounded-[30px] shadow-sm border border-slate-100 flex flex-col">
-                            <div className="flex justify-between items-start mb-12">
+                            <div className="flex justify-between items-start mb-6">
                                 <div>
                                     <h2 className="text-2xl font-black text-[#1B2559] tracking-tight">Subject Intelligence</h2>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Multidimensional Performance Analysis</p>
+                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Average Score per Subject (%)</p>
                                 </div>
-                                <div className="flex gap-2">
-                                    <div className="flex items-center gap-5 bg-slate-50 px-6 py-3 rounded-2xl border border-slate-100">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 rounded-full bg-brand-blue" />
-                                            <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Average Performance</span>
-                                        </div>
-                                    </div>
+                                <div className="flex items-center gap-3 bg-slate-50 px-4 py-2.5 rounded-2xl border border-slate-100">
+                                    <div className="w-3 h-3 rounded-md bg-gradient-to-b from-[#4318FF] to-[#6AD2FF]" />
+                                    <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Average Score</span>
                                 </div>
                             </div>
                             <div className="flex-1 h-60">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <RadarChart outerRadius="80%" data={data?.coursePerformance}>
-                                        <PolarGrid stroke="#E2E8F0" />
-                                        <PolarAngleAxis
+                                    <BarChart data={data?.coursePerformance} margin={{ top: 20, right: 10, left: -10, bottom: 0 }}>
+                                        <defs>
+                                            <linearGradient id="sbg0" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4318FF" /><stop offset="100%" stopColor="#6AD2FF" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="sbg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#05CD99" /><stop offset="100%" stopColor="#A3E635" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="sbg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FF5630" /><stop offset="100%" stopColor="#FFAB00" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="sbg3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8B5CF6" /><stop offset="100%" stopColor="#EC4899" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="sbg4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#F59E0B" /><stop offset="100%" stopColor="#EF4444" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="sbg5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#06B6D4" /><stop offset="100%" stopColor="#3B82F6" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="sbg6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#10B981" /><stop offset="100%" stopColor="#0EA5E9" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="sbg7" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#F97316" /><stop offset="100%" stopColor="#FBBF24" stopOpacity={0.85} /></linearGradient>
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="#F1F5F9" />
+                                        <XAxis
                                             dataKey="CourseName"
+                                            axisLine={false}
+                                            tickLine={false}
                                             tick={{ fill: '#1B2559', fontSize: 10, fontWeight: '900' }}
                                         />
-                                        <PolarRadiusAxis
-                                            angle={30}
+                                        <YAxis
                                             domain={[0, 100]}
-                                            tick={{ fill: '#CBD5E1', fontSize: 8 }}
-                                        />
-                                        <Radar
-                                            name="Score"
-                                            dataKey="AverageScore"
-                                            stroke="#4318FF"
-                                            fill="#4318FF"
-                                            fillOpacity={0.15}
-                                            strokeWidth={3}
-                                            isAnimationActive={!isExporting}
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#94A3B8', fontSize: 10, fontWeight: '800' }}
+                                            unit="%"
                                         />
                                         <Tooltip
-                                            contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', fontWeight: 'bold' }}
+                                            cursor={{ fill: '#F8FAFF', radius: 12 }}
+                                            contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', fontWeight: 'bold', fontSize: '11px' }}
+                                            formatter={(val: any) => [`${Number(val).toFixed(1)}%`, 'Avg Score']}
                                         />
-                                    </RadarChart>
+                                        <Bar
+                                            dataKey="AverageScore"
+                                            name="Avg Score"
+                                            radius={[12, 12, 0, 0]}
+                                            barSize={32}
+                                            isAnimationActive={!isExporting}
+                                        >
+                                            {(data?.coursePerformance || []).map((_: any, index: number) => (
+                                                <Cell key={`cell-${index}`} fill={`url(#sbg${index % 8})`} />
+                                            ))}
+                                            <LabelList
+                                                dataKey="AverageScore"
+                                                position="top"
+                                                formatter={(val: number) => typeof val === 'number' ? `${val.toFixed(0)}%` : ''}
+                                                style={{ fill: '#1B2559', fontSize: '10px', fontWeight: '900' }}
+                                            />
+                                        </Bar>
+                                    </BarChart>
                                 </ResponsiveContainer>
                             </div>
                         </div>
@@ -506,35 +540,50 @@ const AdminReports = () => {
                             </div>
                             <div className="h-64">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={data?.classDistribution} layout="vertical">
-                                        <CartesianGrid strokeDasharray="6 6" horizontal={true} vertical={false} stroke="#F1F5F9" />
-                                        <XAxis type="number" hide />
-                                        <YAxis
+                                    <BarChart data={data?.classDistribution} margin={{ top: 20, right: 10, left: -10, bottom: 0 }}>
+                                        <defs>
+                                            <linearGradient id="cbg0" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4318FF" /><stop offset="100%" stopColor="#6AD2FF" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="cbg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#05CD99" /><stop offset="100%" stopColor="#A3E635" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="cbg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FF5630" /><stop offset="100%" stopColor="#FFAB00" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="cbg3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8B5CF6" /><stop offset="100%" stopColor="#EC4899" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="cbg4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#F59E0B" /><stop offset="100%" stopColor="#EF4444" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="cbg5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#06B6D4" /><stop offset="100%" stopColor="#3B82F6" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="cbg6" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#10B981" /><stop offset="100%" stopColor="#0EA5E9" stopOpacity={0.85} /></linearGradient>
+                                            <linearGradient id="cbg7" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#F97316" /><stop offset="100%" stopColor="#FBBF24" stopOpacity={0.85} /></linearGradient>
+                                        </defs>
+                                        <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="#F1F5F9" />
+                                        <XAxis
                                             dataKey="className"
-                                            type="category"
                                             axisLine={false}
                                             tickLine={false}
-                                            tick={{ fill: '#64748B', fontSize: 10, fontWeight: '800' }}
-                                            width={140}
+                                            tick={{ fill: '#1B2559', fontSize: 10, fontWeight: '900' }}
+                                        />
+                                        <YAxis
+                                            axisLine={false}
+                                            tickLine={false}
+                                            tick={{ fill: '#94A3B8', fontSize: 10, fontWeight: '800' }}
+                                            allowDecimals={false}
                                         />
                                         <Tooltip
-                                            cursor={{ fill: '#F8FAFC' }}
-                                            contentStyle={{ borderRadius: '24px', border: 'none', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', fontWeight: 'bold' }}
+                                            cursor={{ fill: '#F8FAFF', radius: 12 }}
+                                            contentStyle={{ borderRadius: '20px', border: 'none', boxShadow: '0 20px 40px rgba(0,0,0,0.1)', fontWeight: 'bold', fontSize: '11px' }}
+                                            formatter={(val: any) => [`${val} Students`, 'Enrolled']}
                                         />
                                         <Bar
                                             dataKey="studentCount"
-                                            radius={[0, 15, 15, 0]}
-                                            barSize={24}
+                                            name="Enrolled"
+                                            radius={[12, 12, 0, 0]}
+                                            barSize={32}
                                             isAnimationActive={!isExporting}
                                         >
                                             {data?.classDistribution?.map((_: any, index: number) => (
-                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                <Cell key={`cell-${index}`} fill={`url(#cbg${index % 8})`} />
                                             ))}
                                             <LabelList
                                                 dataKey="studentCount"
-                                                position="right"
+                                                position="top"
                                                 style={{ fill: '#1B2559', fontSize: '11px', fontWeight: '900' }}
-                                                formatter={(val: number) => `${val} Enrolled`}
+                                                formatter={(val: number) => `${val}`}
                                             />
                                         </Bar>
                                     </BarChart>
@@ -581,7 +630,7 @@ const AdminReports = () => {
                                             type="monotone"
                                             dataKey="attempts"
                                             stroke="#4318FF"
-                                            strokeWidth={6}
+                                            strokeWidth={2}
                                             fillOpacity={1}
                                             fill="url(#colorAttempts)"
                                             dot={{ r: 5, fill: '#4318FF', strokeWidth: 3, stroke: '#fff' }}
