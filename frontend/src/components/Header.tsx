@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { Bell, Search, User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { Bell, User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -15,10 +15,65 @@ interface HeaderProps {
     showAnnouncement?: boolean;
 }
 
+const getPageTitle = (pathname: string): { title: string } => {
+    const p = pathname.toLowerCase();
+
+    // Admin Routes
+    if (p.includes('/admin/courses') || p.includes('/admin/manage-courses')) return { title: 'Course Management' };
+    if (p.includes('/admin/users') || p.includes('/admin/manage-users')) return { title: 'User Management' };
+    if (p.includes('/admin/classes') || p.includes('/admin/manage-classes')) return { title: 'Class Management' };
+    if (p.includes('/admin/academic')) return { title: 'Academic Management' };
+    if (p.includes('/admin/guides')) return { title: 'Guide Management' };
+    if (p.includes('/admin/announcements')) return { title: 'Announcements' };
+    if (p.includes('/admin/audit-logs')) return { title: 'Audit Logs' };
+    if (p.includes('/admin/system')) return { title: 'System Settings' };
+    if (p.includes('/admin/reports')) return { title: 'Analytics & Reports' };
+    if (p.includes('/admin/transfers')) return { title: 'Transfer Management' };
+    if (p.includes('/admin/assignments')) return { title: 'Teacher Assignments' };
+    if (p.includes('/admin/assessments') || p.includes('/admin/results')) return { title: 'Assessment Results' };
+    if (p === '/admin' || p === '/admin/dashboard') return { title: 'Main Dashboard' };
+
+    // Director Routes
+    if (p.includes('/director/academic')) return { title: 'Academic Operations' };
+    if (p.includes('/director/teachers')) return { title: 'Teacher Oversight' };
+    if (p.includes('/director/results')) return { title: 'Student Performance' };
+    if (p.includes('/director/assessments')) return { title: 'Assessment Review' };
+    if (p.includes('/director/reports')) return { title: 'Institutional Intelligence' };
+    if (p.includes('/director/live-monitor')) return { title: 'Live Proctor Monitor' };
+    if (p.includes('/director/announcements')) return { title: 'Announcements' };
+    if (p === '/director' || p === '/director/dashboard') return { title: 'Director Dashboard' };
+
+    // Teacher Routes
+    if (p.includes('/teacher/classes')) return { title: 'My Classes' };
+    if (p.includes('/teacher/courses')) return { title: 'My Courses' };
+    if (p.includes('/teacher/exams') || p.includes('/teacher/manage-exams')) return { title: 'Exams & Assessments' };
+    if (p.includes('/teacher/results')) return { title: 'Exam Results' };
+    if (p.includes('/teacher/assignments')) return { title: 'Teacher Assignments' };
+    if (p.includes('/teacher/live-monitor')) return { title: 'Live Exam Monitor' };
+    if (p.includes('/teacher/announcements')) return { title: 'Announcements' };
+    if (p === '/teacher' || p === '/teacher/dashboard') return { title: 'Teacher Dashboard' };
+
+    // Student Routes
+    if (p.includes('/student/exams') || p.includes('/student/take-exam')) return { title: 'My Assessments' };
+    if (p.includes('/student/results')) return { title: 'My Grades & Results' };
+    if (p.includes('/student/transcripts')) return { title: 'Academic Transcript' };
+    if (p.includes('/student/assignments')) return { title: 'My Assignments' };
+    if (p.includes('/student/announcements')) return { title: 'Announcements' };
+    if (p === '/student' || p === '/student/dashboard') return { title: 'Student Portal' };
+
+    // Shared & Profile
+    if (p.includes('/profile')) return { title: 'User Profile' };
+
+    return { title: 'Dashboard' };
+};
+
 const Header = ({ email, role }: HeaderProps) => {
     const [announcementCount, setAnnouncementCount] = useState(0);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const pageInfo = getPageTitle(location.pathname);
 
     // Get current user from localStorage
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -71,13 +126,10 @@ const Header = ({ email, role }: HeaderProps) => {
     return (
         <div className="flex flex-col gap-4 mb-8">
             <div className="flex justify-between items-center bg-white/50 backdrop-blur-md p-4 rounded-3xl border border-white/20 shadow-sm shadow-slate-200/50 relative z-[60]">
-                <div className="relative flex-1 max-w-xs">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        className="w-full pl-10 pr-4 py-2 bg-brand-background rounded-2xl border-none focus:ring-2 focus:ring-brand-blue/20 outline-none text-sm transition-all"
-                    />
+                <div className="flex items-center pl-2">
+                    <h1 className="text-xl sm:text-2xl font-black text-[#1B2559] tracking-tight leading-none drop-shadow-sm">
+                        {pageInfo.title}
+                    </h1>
                 </div>
 
                 <div className="flex items-center gap-4">
