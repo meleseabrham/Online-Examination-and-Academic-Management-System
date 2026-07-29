@@ -216,7 +216,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                 <button
                                     onClick={() => {
                                         if (isCollapsed) setIsCollapsed(false);
-                                        setAcademicOpen(!academicOpen);
+                                        else setAcademicOpen(!academicOpen);
                                     }}
                                     className={cn(
                                         "w-full flex items-center px-4 py-3 rounded-xl transition-all duration-300 relative group",
@@ -236,10 +236,32 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                         </div>
                                     )}
 
+                                    {/* Collapsed: flyout submenu panel */}
                                     {isCollapsed && (
-                                        <div className="absolute left-full ml-4 px-3 py-2 bg-[#111C44] text-white text-xs font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap shadow-2xl z-[100] border border-white/10 pointer-events-none">
-                                            {link.title}
-                                            <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-[#111C44] rotate-45 border-l border-b border-white/10"></div>
+                                        <div className="absolute left-full top-0 ml-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[200] pointer-events-none group-hover:pointer-events-auto">
+                                            {/* Arrow connector */}
+                                            <div className="absolute top-3 -left-1.5 w-3 h-3 bg-white rotate-45 border-l border-b border-slate-100 shadow-sm" />
+                                            {/* Flyout panel */}
+                                            <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 py-2 min-w-[180px] ml-1">
+                                                <p className="px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-50 mb-1">
+                                                    {link.title}
+                                                </p>
+                                                {link.children.map((child) => (
+                                                    <NavLink
+                                                        key={child.path}
+                                                        to={child.path}
+                                                        className={() => cn(
+                                                            "flex items-center gap-3 px-4 py-2.5 text-sm font-semibold transition-all mx-1 rounded-xl",
+                                                            location.pathname + location.search === child.path
+                                                                ? "text-brand-blue bg-blue-50"
+                                                                : "text-slate-600 hover:text-brand-blue hover:bg-slate-50"
+                                                        )}
+                                                    >
+                                                        <span className="shrink-0 text-slate-400">{child.icon}</span>
+                                                        {child.title}
+                                                    </NavLink>
+                                                ))}
+                                            </div>
                                         </div>
                                     )}
                                 </button>
