@@ -115,7 +115,7 @@ const Profile = () => {
 
     if (loading) {
         return (
-            <div className="flex h-screen items-center justify-center bg-[#F4F7FE]">
+            <div className="flex h-screen items-center justify-center bg-[#F8FAFC]">
                 <Loader2 className="animate-spin text-brand-blue" size={48} />
             </div>
         );
@@ -140,7 +140,7 @@ const Profile = () => {
     };
 
     return (
-        <div className="flex bg-[#F4F7FE] min-h-screen font-display">
+        <div className="flex bg-[#F8FAFC] min-h-screen font-display">
             <Sidebar role={user.role.toLowerCase() as any} />
 
             <main className="flex-1 p-8">

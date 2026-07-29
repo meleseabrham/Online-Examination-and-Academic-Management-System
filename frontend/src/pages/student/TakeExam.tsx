@@ -316,7 +316,7 @@ const TakeExam = () => {
     );
 
     if (showResult) return (
-        <div className="min-h-screen bg-[#F4F7FE] flex items-center justify-center p-6 font-display">
+        <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-6 font-display">
             <div className="bg-white p-12 md:p-16 rounded-[60px] shadow-2xl border border-slate-100 max-w-2xl w-full text-center relative overflow-hidden">
                 <div className="absolute -top-10 -right-10 w-40 h-40 bg-green-50 rounded-full"></div>
 
@@ -384,7 +384,7 @@ const TakeExam = () => {
     const currentQuestion = questions[currentIndex];
 
     return (
-        <div className="min-h-screen bg-[#F4F7FE] flex flex-col font-display relative select-none">
+        <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-display relative select-none">
             {/* Time Up Popup overlay */}
             {showTimeUpPopup && !showResult && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#111C44]/80 backdrop-blur-sm animate-in fade-in duration-300">

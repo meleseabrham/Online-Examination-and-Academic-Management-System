@@ -188,11 +188,11 @@ const AuditLogs = () => {
     };
 
     return (
-        <div className="flex bg-[#F4F7FE] h-screen overflow-hidden">
+        <div className="flex bg-[#F8FAFC] h-screen overflow-hidden">
             <Sidebar role={activeRole as any} />
 
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-10">
+                <div className="p-2 pb-0 flex-none bg-[#F8FAFC] z-10">
                     <Header email={email} role={activeRole as any} />
                 </div>
 
@@ -499,7 +499,7 @@ const AuditLogs = () => {
                             </button>
                         </div>
 
-                        <div className="p-10 space-y-8 bg-[#F4F7FE] flex-1 overflow-y-auto custom-scrollbar">
+                        <div className="p-10 space-y-8 bg-[#F8FAFC] flex-1 overflow-y-auto custom-scrollbar">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-[400px]">
                                 <DataRenderer data={selectedLog.old_value} title="Original State" type="old" />
                                 <DataRenderer data={selectedLog.new_value} title="New State" type="new" />

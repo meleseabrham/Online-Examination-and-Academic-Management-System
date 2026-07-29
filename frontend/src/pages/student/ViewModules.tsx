@@ -155,10 +155,10 @@ const ViewModules = () => {
     });
 
     return (
-        <div className="flex bg-[#F4F7FE] h-screen overflow-hidden font-display">
+        <div className="flex bg-[#F8FAFC] h-screen overflow-hidden font-display">
             <Sidebar role={user.role?.toLowerCase() || 'student'} />
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-20">
+                <div className="p-2 pb-0 flex-none bg-[#F8FAFC] z-20">
                     <Header email={user.email} role={user.role?.toLowerCase() || 'student'} />
                 </div>
 

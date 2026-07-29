@@ -736,7 +736,7 @@ const AcademicManagement = () => {
     };
 
     return (
-        <div className="flex bg-[#F4F7FE] h-screen overflow-hidden">
+        <div className="flex bg-[#F8FAFC] h-screen overflow-hidden">
             <Sidebar role="admin" />
 
             <main className="flex-1 flex flex-col min-w-0 overflow-hidden">

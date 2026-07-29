@@ -119,11 +119,11 @@ const ManageTeachers = () => {
     };
 
     return (
-        <div className="flex bg-[#F4F7FE] h-screen overflow-hidden font-display">
+        <div className="flex bg-[#F8FAFC] h-screen overflow-hidden font-display">
             <Sidebar role="director" />
 
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-10">
+                <div className="p-2 pb-0 flex-none bg-[#F8FAFC] z-10">
                     <Header email={email} role="director" />
                 </div>
 
@@ -402,7 +402,7 @@ const ManageTeachers = () => {
                         </div>
 
                         {/* Modal Body */}
-                        <div className="flex-1 overflow-y-auto p-12 bg-[#F4F7FE] custom-scrollbar">
+                        <div className="flex-1 overflow-y-auto p-12 bg-[#F8FAFC] custom-scrollbar">
                             {loadingProfile ? (
                                 <div className="flex flex-col items-center justify-center py-20 gap-4">
                                     <div className="w-16 h-16 border-4 border-brand-blue/20 border-t-brand-blue rounded-full animate-spin" />

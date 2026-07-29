@@ -161,15 +161,15 @@ const AdminAnnouncements = () => {
     };
 
     return (
-        <div className="flex bg-[#F4F7FE] h-screen overflow-hidden relative">
+        <div className="flex bg-[#F8FAFC] h-screen overflow-hidden relative">
             <Sidebar role="admin" />
 
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-10">
+                <div className="p-2 pb-0 flex-none bg-[#F8FAFC] z-10">
                     <Header email={email} role="admin" />
                 </div>
 
-                <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth bg-[#F4F7FE]">
+                <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth bg-[#F8FAFC]">
                     <div className="flex justify-between items-center mb-8">
 
                         <button

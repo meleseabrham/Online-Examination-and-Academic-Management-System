@@ -87,10 +87,10 @@ const MyExams = () => {
     };
 
     return (
-        <div className="flex bg-[#F4F7FE] h-screen overflow-hidden font-display">
+        <div className="flex bg-[#F8FAFC] h-screen overflow-hidden font-display">
             <Sidebar role="student" />
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-10">
+                <div className="p-2 pb-0 flex-none bg-[#F8FAFC] z-10">
                     <Header email={user.email || "student@example.com"} role="student" />
                 </div>
 
@@ -333,7 +333,7 @@ const MyExams = () => {
                         <div className="absolute inset-0 bg-[#2B3674]/40 backdrop-blur-sm" onClick={() => setSelectedExam(null)}></div>
                         <div className="bg-white w-full max-w-xl rounded-[40px] shadow-2xl relative z-10 overflow-hidden animate-in zoom-in-95 duration-300">
                             {/* Modal Header */}
-                            <div className="bg-[#F4F7FE] p-8 flex justify-between items-start text-left">
+                            <div className="bg-[#F8FAFC] p-8 flex justify-between items-start text-left">
                                 <div>
                                     <div className="flex items-center gap-2 mb-3">
                                         <span className="bg-brand-blue/10 text-brand-blue px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest inline-block">

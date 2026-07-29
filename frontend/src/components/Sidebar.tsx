@@ -222,7 +222,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                         }}
                                         className={cn(
                                             "w-full flex items-center px-3.5 py-3 rounded-2xl transition-all duration-300 font-bold text-sm",
-                                            location.pathname.startsWith(link.path) || academicOpen ? "bg-[#F4F7FE] text-[#1B2559]" : "text-[#1B2559] hover:bg-slate-50",
+                                            location.pathname.startsWith(link.path) || academicOpen ? "bg-[#F8FAFC] text-[#1B2559]" : "text-[#1B2559] hover:bg-slate-50",
                                             isCollapsed ? "justify-center" : "justify-between"
                                         )}
                                     >

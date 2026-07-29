@@ -482,10 +482,10 @@ const AssessmentManagement = () => {
     };
 
     return (
-        <div className="flex bg-[#F4F7FE] h-screen overflow-hidden text-[#1B2559]">
+        <div className="flex bg-[#F8FAFC] h-screen overflow-hidden text-[#1B2559]">
             <Sidebar role="director" />
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-10">
+                <div className="p-2 pb-0 flex-none bg-[#F8FAFC] z-10">
                     <Header email={user?.email || ''} role="director" />
                 </div>
 
@@ -1273,7 +1273,7 @@ const AssessmentManagement = () => {
                                                                                     <div className="flex gap-2 shrink-0 items-center">
                                                                                         {!locked && (
                                                                                             <button onClick={() => openGrading(a)}
-                                                                                                className="px-4 py-2.5 bg-[#F4F7FE] text-[#1B2559] rounded-xl text-[11px] font-black hover:bg-[#111C44] hover:text-white transition-all flex items-center gap-1.5">
+                                                                                                className="px-4 py-2.5 bg-[#F8FAFC] text-[#1B2559] rounded-xl text-[11px] font-black hover:bg-[#111C44] hover:text-white transition-all flex items-center gap-1.5">
                                                                                                 <PenTool size={12} /> Grade
                                                                                             </button>
                                                                                         )}

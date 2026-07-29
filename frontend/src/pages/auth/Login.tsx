@@ -76,7 +76,7 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F4F7FE] flex flex-col items-center justify-center p-4 py-12">
+        <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-4 py-12">
             <GuestHeader />
 
             <div className="w-full max-w-md sm:max-w-lg animate-in fade-in slide-in-from-bottom-6 duration-700">

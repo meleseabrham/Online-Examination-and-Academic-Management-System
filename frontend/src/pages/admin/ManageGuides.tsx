@@ -123,10 +123,10 @@ const ManageGuides = () => {
     });
 
     return (
-        <div className="flex bg-[#F4F7FE] h-screen overflow-hidden font-display">
+        <div className="flex bg-[#F8FAFC] h-screen overflow-hidden font-display">
             <Sidebar role="admin" />
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-10">
+                <div className="p-2 pb-0 flex-none bg-[#F8FAFC] z-10">
                     <Header email={user.email} role="admin" />
                 </div>
 
@@ -227,7 +227,7 @@ const ManageGuides = () => {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                     <div className="absolute inset-0 bg-[#2B3674]/40 backdrop-blur-sm" onClick={() => setShowForm(false)}></div>
                     <div className="bg-white w-full max-w-2xl rounded-[30px] shadow-2xl relative z-10 overflow-hidden animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto">
-                        <div className="bg-[#F4F7FE] p-6 flex justify-between items-center sticky top-0 z-20">
+                        <div className="bg-[#F8FAFC] p-6 flex justify-between items-center sticky top-0 z-20">
                             <div>
                                 <span className="text-[9px] font-black text-brand-blue uppercase tracking-widest">
                                     {editingGuide ? 'Edit Guide' : 'New Guide'}

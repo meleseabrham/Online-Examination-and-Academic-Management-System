@@ -115,7 +115,7 @@ const AdminReports = () => {
                 scale: 3, // Higher quality
                 useCORS: true,
                 logging: false,
-                backgroundColor: '#F4F7FE',
+                backgroundColor: '#F8FAFC',
                 width: element.offsetWidth,
                 height: element.scrollHeight,
                 y: 0,
@@ -161,7 +161,7 @@ const AdminReports = () => {
 
     if (loading && !data) {
         return (
-            <div className="flex bg-[#F4F7FE] h-screen overflow-hidden">
+            <div className="flex bg-[#F8FAFC] h-screen overflow-hidden">
                 <Sidebar role="admin" />
                 <main className="flex-1 flex flex-col items-center justify-center">
                     <Loader2 className="animate-spin text-brand-blue mb-4" size={48} />
@@ -172,17 +172,17 @@ const AdminReports = () => {
     }
 
     return (
-        <div className="flex bg-[#F4F7FE] h-screen overflow-hidden relative">
+        <div className="flex bg-[#F8FAFC] h-screen overflow-hidden relative">
             <div data-html2canvas-ignore="true">
                 <Sidebar role="admin" />
             </div>
 
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-                <div className="p-2 pb-0 flex-none bg-[#F4F7FE] z-10" data-html2canvas-ignore="true">
+                <div className="p-2 pb-0 flex-none bg-[#F8FAFC] z-10" data-html2canvas-ignore="true">
                     <Header email={email} role="admin" showAnnouncement={false} />
                 </div>
 
-                <div id="scrollable-body" ref={reportRef} className="flex-1 overflow-y-auto p-4 md:p-6 pt-4 scroll-smooth bg-[#F4F7FE] selection:bg-brand-blue/10">
+                <div id="scrollable-body" ref={reportRef} className="flex-1 overflow-y-auto p-4 md:p-6 pt-4 scroll-smooth bg-[#F8FAFC] selection:bg-brand-blue/10">
 
                     {/* Premium Glass Header */}
                     <div className="bg-white/40 backdrop-blur-xl border border-white/60 p-4 rounded-[20px] mb-4 shadow-sm relative group z-20">
