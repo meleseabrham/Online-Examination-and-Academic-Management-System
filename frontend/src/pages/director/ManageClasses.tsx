@@ -351,7 +351,7 @@ const ManageClasses = () => {
 
                                 <button
                                     onClick={() => handleOpenClassModal()}
-                                    className="bg-brand-blue text-white px-5 py-4 rounded-[12px] font-black shadow-2xl shadow-blue-500/30 hover:bg-blue-600 transition-all flex items-center gap-3 active:scale-95 group uppercase tracking-widest text-xs"
+                                    className="bg-brand-blue text-white px-4 py-3 rounded-[12px] font-black shadow-2xl shadow-blue-500/30 hover:bg-blue-600 transition-all flex items-center gap-3 active:scale-95 group uppercase tracking-widest text-xs"
                                 >
                                     <Plus size={22} className="group-hover:rotate-90 transition-transform duration-300" />
                                     Add Class
@@ -444,7 +444,7 @@ const ManageClasses = () => {
                                                 {/* Manage Button */}
                                                 <button
                                                     onClick={() => handleEnterStudentManagement(cls)}
-                                                    className="w-full py-1.5 rounded-lg text-xs font-semibold bg-[#111C44] text-white hover:bg-brand-blue transition-all duration-200 flex items-center justify-center gap-1"
+                                                    className="w-full py-2 rounded-lg text-xs font-semibold bg-blue-600 text-white hover:bg-brand-blue transition-all duration-200 flex items-center justify-center gap-1"
                                                 >
                                                     Manage
                                                     <ChevronRight size={14} />
@@ -803,9 +803,9 @@ const ManageClasses = () => {
             {isClassModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#111C44]/40 backdrop-blur-md p-4 animate-in fade-in duration-300">
                     <div className="bg-white w-full max-w-lg rounded-[50px] p-12 shadow-2xl animate-in zoom-in-95 duration-300 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-brand-blue/5 rounded-full -mr-20 -mt-20"></div>
+
                         <div className="flex justify-between items-center mb-10 relative z-10">
-                            <h2 className="text-3xl font-black text-[#2B3674] tracking-tighter">{editingClass ? 'Edit Instance' : 'System Provisioning'}</h2>
+                            <h2 className="text-3xl font-black text-[#2B3674] tracking-tighter">{editingClass ? 'Update Class' : 'System Provisioning'}</h2>
                             <button onClick={() => setIsClassModalOpen(false)} className="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 hover:text-[#2B3674] flex items-center justify-center transition-all"><X size={24} /></button>
                         </div>
 
@@ -814,19 +814,19 @@ const ManageClasses = () => {
                                 }`}>
                                 <div className={`absolute top-0 left-0 w-1.5 h-full ${formMessage.type === 'success' ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
                                 <div className="flex items-center gap-4">
-                                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center ${formMessage.type === 'success' ? 'bg-emerald-100/50' : 'bg-rose-100/50'}`}>
+                                    <div className={`w-10 h-5 rounded-xl flex items-center justify-center ${formMessage.type === 'success' ? 'bg-emerald-100/50' : 'bg-rose-100/50'}`}>
                                         {formMessage.type === 'success' ? <Loader className="animate-spin" size={18} /> : <X size={18} />}
                                     </div>
                                     <p className="flex-1">{formMessage.text}</p>
                                 </div>
                             </div>
                         )}
-                        <form onSubmit={handleClassSubmit} className="space-y-8 relative z-10">
-                            <div className="space-y-3">
+                        <form onSubmit={handleClassSubmit} className="space-y-6 relative z-10">
+                            <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-x-4">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Grade Reference</label>
                                 <select
                                     required
-                                    className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all font-bold text-[#2B3674] shadow-inner appearance-none cursor-pointer"
+                                    className="w-full px-6 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all font-bold text-[#2B3674] shadow-inner appearance-none cursor-pointer"
                                     value={classForm.gradeName}
                                     onChange={(e) => setClassForm({ ...classForm, gradeName: e.target.value })}
                                 >
@@ -836,17 +836,19 @@ const ManageClasses = () => {
                                     ))}
                                 </select>
                             </div>
-                            <div className="space-y-3">
+
+                            <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-x-4">
                                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Section Identifier (Optional)</label>
                                 <input
                                     type="text" placeholder="e.g. A"
-                                    className="w-full px-6 py-5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-4 focus:ring-brand-blue/10 outline-none transition-all font-bold text-[#2B3674] shadow-inner"
+                                    className="w-full px-6 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-1 focus:ring-brand-blue/10 outline-none transition-all font-bold text-[#2B3674] shadow-inner"
                                     value={classForm.section}
                                     onChange={(e) => setClassForm({ ...classForm, section: e.target.value })}
                                 />
                             </div>
-                            <button className="w-full bg-[#111C44] text-white py-6 rounded-[22px] font-black shadow-2xl shadow-blue-900/40 hover:bg-brand-blue transition-all active:scale-95 uppercase tracking-widest text-xs mt-4">
-                                {editingClass ? 'Commit Changes' : 'Initialize Class'}
+
+                            <button className="w-full bg-blue-400 text-white py-5 rounded-[22px] font-black shadow-2xl shadow-blue-900/40 hover:bg-brand-blue transition-all active:scale-95 uppercase tracking-widest text-xs mt-4">
+                                {editingClass ? 'Update Class' : 'Add Class'}
                             </button>
                         </form>
                     </div>

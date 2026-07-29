@@ -492,46 +492,45 @@ const ManageModules = () => {
                     <div className="bg-white w-full max-w-2xl rounded-[40px] shadow-2xl overflow-hidden relative z-10 animate-in zoom-in-95 duration-300">
                         <div className="p-8 pb-4 flex items-center justify-between border-b border-slate-50">
                             <div>
-                                <h3 className="text-2xl font-black text-[#2B3674] tracking-tight">{editingModule ? 'Edit Module' : 'Add New Module'}</h3>
+                                <h3 className="text-2xl font-black text-[#2B3674] tracking-tight">{editingModule ? 'Update Module' : 'Add New Module'}</h3>
                                 <p className="text-slate-400 font-medium text-sm">Upload files or share external resource links.</p>
                             </div>
                             <button onClick={() => setIsModalOpen(false)} className="p-3 hover:bg-slate-50 rounded-[20px] text-slate-400 transition-all">
                                 <X size={24} />
                             </button>
                         </div>
-
                         <form onSubmit={handleSubmit} className="p-8">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                                <div className="md:col-span-2">
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Module Title</label>
+                            <div className="space-y-5 mb-8">
+                                <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-x-4">
+                                    <label className="text-xs font-black text-slate-400  tracking-widest ml-1">Module Title</label>
                                     <input
                                         type="text"
                                         required
                                         value={formData.title}
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                         placeholder="Introduction to Calculus - Chapter 1"
-                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-blue/20 font-bold text-[#202540] placeholder:text-slate-300 transition-all"
+                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-1 focus:ring-brand-blue/20 font-bold text-[#202540] placeholder:text-slate-300 transition-all"
                                     />
                                 </div>
 
-                                <div className="md:col-span-2">
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Description</label>
+                                <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-x-4">
+                                    <label className="text-xs font-black text-slate-400  tracking-widest ml-1 pt-3">Description</label>
                                     <textarea
                                         rows={3}
                                         value={formData.description}
                                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                         placeholder="Add context or instructions for your students..."
-                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-blue/20 font-bold text-[#202540] placeholder:text-slate-300 transition-all resize-none"
+                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-1 focus:ring-brand-blue/20 font-bold text-[#202540] placeholder:text-slate-300 transition-all resize-none"
                                     />
                                 </div>
 
-                                <div>
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Academic Year</label>
+                                <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-x-4">
+                                    <label className="text-xs font-black text-slate-400  tracking-widest ml-1">Academic Year</label>
                                     <select
                                         required
                                         value={formData.academicYearId}
                                         onChange={(e) => setFormData({ ...formData, academicYearId: e.target.value })}
-                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-blue/20 font-bold text-[#202540] transition-all"
+                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-1 focus:ring-brand-blue/20 font-bold text-[#202540] transition-all"
                                     >
                                         <option value="">Select Year</option>
                                         {years.map(y => (
@@ -540,13 +539,13 @@ const ManageModules = () => {
                                     </select>
                                 </div>
 
-                                <div>
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Semester</label>
+                                <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-x-4">
+                                    <label className="text-xs font-black text-slate-400  tracking-widest ml-1">Semester</label>
                                     <select
                                         required
                                         value={formData.semesterId}
                                         onChange={(e) => setFormData({ ...formData, semesterId: e.target.value })}
-                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-blue/20 font-bold text-[#202540] transition-all"
+                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-1 focus:ring-brand-blue/20 font-bold text-[#202540] transition-all"
                                     >
                                         <option value="">Select Semester</option>
                                         {semesters.map(s => (
@@ -555,13 +554,13 @@ const ManageModules = () => {
                                     </select>
                                 </div>
 
-                                <div>
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Course</label>
+                                <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-x-4">
+                                    <label className="text-xs font-black text-slate-400  tracking-widest ml-1">Course</label>
                                     <select
                                         required
                                         value={formData.courseId}
                                         onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}
-                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-blue/20 font-bold text-[#202540] transition-all"
+                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-1 focus:ring-brand-blue/20 font-bold text-[#202540] transition-all"
                                     >
                                         <option value="">Select Course</option>
                                         {courses.map(c => (
@@ -570,12 +569,12 @@ const ManageModules = () => {
                                     </select>
                                 </div>
 
-                                <div>
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Target Class (Optional)</label>
+                                <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-x-4">
+                                    <label className="text-xs font-black text-slate-400  tracking-widest ml-1">Target Class (Optional)</label>
                                     <select
                                         value={formData.classId}
                                         onChange={(e) => setFormData({ ...formData, classId: e.target.value })}
-                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-blue/20 font-bold text-[#202540] transition-all"
+                                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-1 focus:ring-brand-blue/20 font-bold text-[#202540] transition-all"
                                     >
                                         <option value="">All Sections</option>
                                         {classes.map(c => (
@@ -584,8 +583,8 @@ const ManageModules = () => {
                                     </select>
                                 </div>
 
-                                <div className="md:col-span-2">
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Resource Type</label>
+                                <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-x-4">
+                                    <label className="text-xs font-black text-slate-400  tracking-widest ml-1">Resource Type</label>
                                     <div className="p-1 rounded-2xl bg-slate-50 flex gap-1">
                                         <button
                                             type="button"
@@ -611,8 +610,8 @@ const ManageModules = () => {
                                 </div>
 
                                 {uploadMode === 'link' ? (
-                                    <div className="md:col-span-2 animate-in slide-in-from-top-2 duration-300">
-                                        <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">External Link (YouTube, Drive, etc.)</label>
+                                    <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-center gap-x-4 animate-in slide-in-from-top-2 duration-300">
+                                        <label className="text-xs font-black text-slate-400  tracking-widest ml-1">External Link (YouTube, Drive, etc.)</label>
                                         <div className="relative">
                                             <LinkIcon className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300" size={20} />
                                             <input
@@ -621,13 +620,13 @@ const ManageModules = () => {
                                                 value={formData.externalLink}
                                                 onChange={(e) => setFormData({ ...formData, externalLink: e.target.value })}
                                                 placeholder="https://www.youtube.com/watch?v=..."
-                                                className="w-full pl-14 pr-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-2 focus:ring-brand-blue/20 font-bold text-[#202540] transition-all"
+                                                className="w-full pl-14 pr-5 py-4 rounded-2xl bg-slate-50 border-none focus:ring-1 focus:ring-brand-blue/20 font-bold text-[#202540] transition-all"
                                             />
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="md:col-span-2 animate-in slide-in-from-top-2 duration-300">
-                                        <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Resource File</label>
+                                    <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] items-start gap-x-4 animate-in slide-in-from-top-2 duration-300">
+                                        <label className="text-xs font-black text-slate-400  tracking-widest ml-1 pt-3">Resource File</label>
                                         <div className="relative group/upload">
                                             <input
                                                 type="file"

@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
-import { UserPlus, Trash2, X, GraduationCap, School, BookOpen, Edit2, Loader2, Search, Users, ChevronLeft, ChevronRight, ChevronDown, MoreHorizontal } from 'lucide-react';
+import { UserPlus, Trash2, X, GraduationCap, School, BookOpen, Edit2, Loader2, Search, Users, ChevronLeft, ChevronRight, ChevronDown, Check, MoreHorizontal } from 'lucide-react';
 
 interface Assignment {
     AssignmentId: number;
@@ -453,7 +453,7 @@ const ManageTeacherAssignments = () => {
                                                                 <div className="p-8 space-y-4">
                                                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                                                         {teacher.Assignments.map((ass) => (
-                                                                            <div key={ass.AssignmentId} className="bg-white p-6 rounded-[30px] shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all group/card relative overflow-hidden">
+                                                                            <div key={ass.AssignmentId} className="bg-white p-6 rounded-[30px] shadow-sm border border-slate-100 hover:shadow-xl  group/card relative overflow-hidden">
                                                                                 <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full -mr-12 -mt-12 opacity-40 group-hover/card:scale-150 transition-transform duration-500"></div>
                                                                                 <div className="relative z-10">
                                                                                     <div className="flex justify-between items-start mb-4">
@@ -601,11 +601,11 @@ const ManageTeacherAssignments = () => {
             {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-in fade-in duration-300">
-                    <div className="bg-white w-full max-w-md rounded-[40px] p-10 shadow-2xl animate-in zoom-in-95 duration-300">
+                    <div className="bg-white w-full max-w-lg rounded-[20px] p-10 shadow-2xl animate-in zoom-in-95 duration-300">
                         <div className="flex justify-between items-center mb-8">
                             <div>
                                 <h2 className="text-2xl font-black text-[#2B3674]">{editingAssignmentId ? 'Update Role' : 'New Assignment'}</h2>
-                                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Configure access control</p>
+
                             </div>
                             <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 rounded-full bg-slate-50 text-slate-400 hover:text-slate-600 flex items-center justify-center transition-all">
                                 <X size={20} />
@@ -680,13 +680,45 @@ const ManageTeacherAssignments = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-[24px] border border-slate-100 hover:border-brand-blue transition-all group cursor-pointer" onClick={() => setFormData({ ...formData, isBothSemesters: !formData.isBothSemesters })}>
-                                <div className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all ${formData.isBothSemesters ? 'bg-brand-blue text-white shadow-lg shadow-blue-500/30' : 'bg-white border-2 border-slate-200'}`}>
-                                    {formData.isBothSemesters && <X size={14} className="rotate-45" />}
+                            <div
+                                onClick={() =>
+                                    setFormData({
+                                        ...formData,
+                                        isBothSemesters: !formData.isBothSemesters,
+                                    })
+                                }
+                                className={`flex items-center justify-between p-5 rounded-2xl border transition-all duration-200 cursor-pointer group ${formData.isBothSemesters
+                                    ? "bg-blue-50 border-brand-blue shadow-sm"
+                                    : "bg-white border-slate-200 hover:border-brand-blue hover:bg-slate-50"
+                                    }`}
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div
+                                        className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all ${formData.isBothSemesters
+                                            ? "bg-brand-blue text-white"
+                                            : "border-2 border-slate-300 bg-white"
+                                            }`}
+                                    >
+                                        {formData.isBothSemesters && <Check size={15} strokeWidth={3} />}
+                                    </div>
+
+                                    <div>
+                                        <h4 className="text-sm font-bold text-[#2B3674]">
+                                            Assign to Both Semesters
+                                        </h4>
+                                        <p className="text-xs text-slate-500 mt-0.5">
+                                            Full academic year coverage
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span className="block text-[10px] font-black text-[#2B3674] uppercase tracking-widest">Assign to Both Semesters</span>
-                                    <span className="block text-[8px] text-slate-400 font-bold uppercase tracking-tight">Full academic year coverage</span>
+
+                                <div
+                                    className={`text-xs font-bold px-3 py-1 rounded-full transition-all ${formData.isBothSemesters
+                                        ? "bg-brand-blue text-white"
+                                        : "bg-slate-100 text-slate-500"
+                                        }`}
+                                >
+                                    {formData.isBothSemesters ? "Enabled" : "Disabled"}
                                 </div>
                             </div>
                             <button

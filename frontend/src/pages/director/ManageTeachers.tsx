@@ -164,10 +164,11 @@ const ManageTeachers = () => {
                             <table className="w-full text-left">
                                 <thead>
                                     <tr className="border-b border-slate-50">
-                                        <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">ID / Reg No</th>
+
                                         <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">First Name</th>
                                         <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">Middle Name</th>
                                         <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">Last Name</th>
+                                        <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">ID / Reg No</th>
                                         <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em]">Email Address</th>
                                         <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em] text-center">Status</th>
                                         <th className="pb-4 font-black text-slate-400 uppercase text-[10px] tracking-[0.2em] text-right">Actions</th>
@@ -182,15 +183,11 @@ const ManageTeachers = () => {
                                         ))
                                     ) : paginatedTeachers.map((teacher) => (
                                         <tr key={teacher.UserId} className="group hover:bg-slate-50/50 transition-all">
-                                            <td className="py-6 whitespace-nowrap">
-                                                <span className="inline-flex px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-mono font-bold tracking-wider uppercase">
-                                                    {teacher.RegistrationNumber || "N/A"}
-                                                </span>
-                                            </td>
+
                                             <td className="py-6 whitespace-nowrap">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-50 to-blue-50 p-1 shrink-0 relative">
-                                                        <div className="w-full h-full bg-white rounded-[14px] overflow-hidden flex items-center justify-center font-bold text-brand-blue uppercase shadow-inner border border-white/50">
+                                                    <div className="w-12 h-12 rounded-full bg-blue-100  border-2 border-blue-200  shrink-0 relative">
+                                                        <div className="w-full h-full bg-white rounded-full overflow-hidden flex items-center justify-center font-bold text-brand-blue  shadow-inner ">
                                                             {teacher.ProfileImage ? (
                                                                 <img
                                                                     src={`http://localhost:5000/${teacher.ProfileImage}`}
@@ -220,6 +217,11 @@ const ManageTeachers = () => {
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </td>
+                                            <td className="py-6 whitespace-nowrap">
+                                                <span className="inline-flex px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-mono font-bold tracking-wider uppercase">
+                                                    {teacher.RegistrationNumber || "N/A"}
+                                                </span>
                                             </td>
                                             <td className="py-6 text-slate-500 font-medium text-sm italic">{teacher.Email}</td>
 

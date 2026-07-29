@@ -284,7 +284,7 @@ const CourseExams = () => {
                                 {paginatedExams.map((exam) => (
                                     <div
                                         key={exam.ExamId}
-                                        className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-50 hover:shadow-2xl hover:shadow-blue-500/10 transition-all group border-b-4 border-b-transparent hover:border-b-brand-blue"
+                                        className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-50 hover:shadow-2xl hover:shadow-blue-500/10 transition-all group border-b-1 border-b-transparent hover:border-b-brand-blue"
                                     >
                                         <div className="flex justify-between items-start mb-6">
                                             <div className="flex flex-wrap gap-2">
