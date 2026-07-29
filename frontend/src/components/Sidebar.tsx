@@ -52,7 +52,19 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
 
     useEffect(() => {
         localStorage.setItem('sidebarCollapsed', String(isCollapsed));
+        // Notify Header that sidebar state changed from within
+        window.dispatchEvent(new CustomEvent('sidebar-changed'));
     }, [isCollapsed]);
+
+    // Listen for toggle events fired by the Header button
+    useEffect(() => {
+        const onToggle = (e: Event) => {
+            const collapsed = (e as CustomEvent).detail?.collapsed;
+            if (typeof collapsed === 'boolean') setIsCollapsed(collapsed);
+        };
+        window.addEventListener('sidebar-toggle', onToggle);
+        return () => window.removeEventListener('sidebar-toggle', onToggle);
+    }, []);
 
     useEffect(() => {
         if ((role === 'student' || role === 'teacher' || role === 'admin' || role === 'director') && token) {

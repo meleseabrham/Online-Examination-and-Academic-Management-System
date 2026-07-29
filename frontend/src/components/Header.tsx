@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { Bell, User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { Bell, User, Settings, LogOut, ChevronDown, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -70,10 +70,29 @@ const getPageTitle = (pathname: string): { title: string } => {
 const Header = ({ email, role }: HeaderProps) => {
     const [announcementCount, setAnnouncementCount] = useState(0);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(
+        () => localStorage.getItem('sidebarCollapsed') === 'true'
+    );
     const navigate = useNavigate();
     const location = useLocation();
 
     const pageInfo = getPageTitle(location.pathname);
+
+    // Keep in sync if Sidebar also toggles internally
+    useEffect(() => {
+        const onSidebarChange = () => {
+            setIsSidebarCollapsed(localStorage.getItem('sidebarCollapsed') === 'true');
+        };
+        window.addEventListener('sidebar-changed', onSidebarChange);
+        return () => window.removeEventListener('sidebar-changed', onSidebarChange);
+    }, []);
+
+    const handleSidebarToggle = () => {
+        const next = !isSidebarCollapsed;
+        localStorage.setItem('sidebarCollapsed', String(next));
+        setIsSidebarCollapsed(next);
+        window.dispatchEvent(new CustomEvent('sidebar-toggle', { detail: { collapsed: next } }));
+    };
 
     // Get current user from localStorage
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -126,7 +145,16 @@ const Header = ({ email, role }: HeaderProps) => {
     return (
         <div className="flex flex-col gap-4 mb-8">
             <div className="flex justify-between items-center bg-white/50 backdrop-blur-md p-4 rounded-3xl border border-white/20 shadow-sm shadow-slate-200/50 relative z-[60]">
-                <div className="flex items-center pl-2">
+                <div className="flex items-center gap-3 pl-2">
+                    <button
+                        onClick={handleSidebarToggle}
+                        className="p-1.5 rounded-xl text-[#1B2559] hover:bg-slate-100 transition-all duration-200 active:scale-95"
+                        title={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                    >
+                        {isSidebarCollapsed
+                            ? <PanelLeftOpen size={20} strokeWidth={2} />
+                            : <PanelLeftClose size={20} strokeWidth={2} />}
+                    </button>
                     <h1 className="text-xl sm:text-2xl font-black text-[#1B2559] tracking-tight leading-none drop-shadow-sm">
                         {pageInfo.title}
                     </h1>
