@@ -4,7 +4,7 @@ import axios from 'axios';
 import {
     LayoutDashboard, Users, Calendar, School, BookOpen, GraduationCap,
     FileText, Trophy, Radio, TrendingUp, Megaphone, PlusCircle, LogOut,
-    ChevronLeft, ChevronRight, ChevronDown, Clock, UserPlus,
+    ChevronDown, Clock, UserPlus,
     ArrowRightLeft, ClipboardList, Library, Database, Settings, UserCheck, ShieldCheck
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
@@ -183,13 +183,6 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
             "bg-[#111827] h-screen sticky top-0 flex flex-col p-4 text-[#fff] transition-all duration-300 relative z-50 shrink-0",
             isCollapsed ? "w-20" : "w-64"
         )}>
-            {/* Collapse Toggle */}
-            <button
-                onClick={() => setIsCollapsed(!isCollapsed)}
-                className="absolute -right-3 top-20 w-6 h-6 bg-brand-blue rounded-full flex items-center justify-center text-white border-4 border-[#F4F7FE] hover:scale-110 transition-all z-[60]"
-            >
-                {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-            </button>
 
             <div className={cn("flex items-center gap-3 mb-10 shrink-0", isCollapsed ? "justify-center px-0" : "px-4")}>
                 <div className="w-8 h-8 bg-brand-blue rounded-lg flex items-center justify-center text-white shrink-0 overflow-hidden">

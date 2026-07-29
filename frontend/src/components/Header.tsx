@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { Bell, User, Settings, LogOut, ChevronDown, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { Bell, User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -152,8 +153,8 @@ const Header = ({ email, role }: HeaderProps) => {
                         title={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                     >
                         {isSidebarCollapsed
-                            ? <PanelLeftOpen size={20} strokeWidth={2} />
-                            : <PanelLeftClose size={20} strokeWidth={2} />}
+                            ? <MenuUnfoldOutlined style={{ fontSize: 20 }} />
+                            : <MenuFoldOutlined style={{ fontSize: 20 }} />}
                     </button>
                     <h1 className="text-xl sm:text-2xl font-black text-[#1B2559] tracking-tight leading-none drop-shadow-sm">
                         {pageInfo.title}
