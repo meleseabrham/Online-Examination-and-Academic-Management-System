@@ -150,8 +150,8 @@ const Header = ({ email, role }: HeaderProps) => {
     };
 
     return (
-        <div className="flex flex-col gap-4 mb-8">
-            <div className="flex justify-between items-center bg-white/50 backdrop-blur-md p-4 rounded-3xl border border-white/20 shadow-sm shadow-slate-200/50 relative z-[60]">
+        <div className="-mx-8 -mt-3 mb-3">
+            <div className="flex justify-between items-center bg-white p-5 px-8 border-b border-slate-100 shadow-sm relative z-[60]">
                 <div className="flex items-center gap-3 pl-2">
                     <button
                         onClick={handleSidebarToggle}

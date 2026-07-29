@@ -296,12 +296,7 @@ const MyCourses = () => {
                             </div>
                             <h3 className="text-2xl font-black text-[#2B3674]">No Courses Found</h3>
                             <p className="text-slate-400 mt-2 font-medium max-w-sm mx-auto">Try adjusting your filters or search query to find the specific course you're looking for.</p>
-                            <button
-                                onClick={resetFilters}
-                                className="mt-8 px-8 py-3.5 bg-[#2B3674] text-white rounded-2xl font-black hover:bg-brand-blue transition-all shadow-xl shadow-indigo-100"
-                            >
-                                Clear All Filters
-                            </button>
+
                         </div>
                     ) : (
                         <>

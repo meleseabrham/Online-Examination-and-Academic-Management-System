@@ -353,7 +353,7 @@ const SystemSettings = () => {
                                                 type="text"
                                                 value={schoolName}
                                                 onChange={(e) => setSchoolName(e.target.value)}
-                                                className="w-full p-4 bg-slate-50 border border-transparent rounded-2xl font-bold text-sm text-[#2B3674] outline-none focus:ring-2 focus:ring-brand-blue focus:bg-white transition-all"
+                                                className="w-full p-4 bg-slate-50 border border-transparent rounded-2xl font-bold text-sm text-[#2B3674] outline-none focus:ring-1 focus:ring-brand-blue focus:bg-white transition-all"
                                                 placeholder="School Name"
                                             />
                                         </div>
@@ -364,7 +364,7 @@ const SystemSettings = () => {
                                                     type="text"
                                                     value={systemVersion}
                                                     onChange={(e) => setSystemVersion(e.target.value)}
-                                                    className="w-full p-4 bg-slate-50 border border-transparent rounded-2xl font-bold text-sm text-[#2B3674] outline-none focus:ring-2 focus:ring-brand-blue focus:bg-white transition-all"
+                                                    className="w-full p-4 bg-slate-50 border border-transparent rounded-2xl font-bold text-sm text-[#2B3674] outline-none focus:ring-1 focus:ring-brand-blue focus:bg-white transition-all"
                                                     placeholder="v1.0.0"
                                                 />
                                             </div>
@@ -374,7 +374,7 @@ const SystemSettings = () => {
                                                     type="email"
                                                     value={supportEmail}
                                                     onChange={(e) => setSupportEmail(e.target.value)}
-                                                    className="w-full p-4 bg-slate-50 border border-transparent rounded-2xl font-bold text-sm text-[#2B3674] outline-none focus:ring-2 focus:ring-brand-blue focus:bg-white transition-all"
+                                                    className="w-full p-4 bg-slate-50 border border-transparent rounded-2xl font-bold text-sm text-[#2B3674] outline-none focus:ring-1 focus:ring-brand-blue focus:bg-white transition-all"
                                                     placeholder="support@example.com"
                                                 />
                                             </div>
@@ -387,7 +387,7 @@ const SystemSettings = () => {
                                                     type="text"
                                                     value={schoolPhone}
                                                     onChange={(e) => setSchoolPhone(e.target.value)}
-                                                    className="w-full p-4 bg-slate-50 border border-transparent rounded-2xl font-bold text-sm text-[#2B3674] outline-none focus:ring-2 focus:ring-brand-blue focus:bg-white transition-all"
+                                                    className="w-full p-4 bg-slate-50 border border-transparent rounded-2xl font-bold text-sm text-[#2B3674] outline-none focus:ring-1 focus:ring-brand-blue focus:bg-white transition-all"
                                                     placeholder="+123..."
                                                 />
                                             </div>
@@ -397,7 +397,7 @@ const SystemSettings = () => {
                                                     type="text"
                                                     value={schoolAddress}
                                                     onChange={(e) => setSchoolAddress(e.target.value)}
-                                                    className="w-full p-4 bg-slate-50 border border-transparent rounded-2xl font-bold text-sm text-[#2B3674] outline-none focus:ring-2 focus:ring-brand-blue focus:bg-white transition-all"
+                                                    className="w-full p-4 bg-slate-50 border border-transparent rounded-2xl font-bold text-sm text-[#2B3674] outline-none focus:ring-1 focus:ring-brand-blue focus:bg-white transition-all"
                                                     placeholder="City, Country..."
                                                 />
                                             </div>
@@ -406,7 +406,7 @@ const SystemSettings = () => {
                                         <button
                                             onClick={handleSaveSchoolInfo}
                                             disabled={saving}
-                                            className="w-full bg-[#2B3674] text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-100 hover:bg-indigo-600 active:scale-95 transition-all disabled:opacity-50"
+                                            className="w-full bg-[#2B3674] text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-100 hover:bg-gray-800 active:scale-95 transition-all disabled:opacity-50"
                                         >
                                             Save School Identity
                                         </button>

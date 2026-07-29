@@ -109,13 +109,13 @@ const Login = () => {
                             {publicSettings.SchoolName ? (
                                 <>
                                     {publicSettings.SchoolName.split(' ')[0]}{" "}
-                                    <span className="text-[#0066FF]">
+                                    <span >
                                         {publicSettings.SchoolName.split(' ').slice(1).join(' ')}
                                     </span>
                                 </>
                             ) : (
                                 <>
-                                    Global <span className="text-[#0066FF]">International School</span>
+                                    Global International School
                                 </>
                             )}
                         </span>

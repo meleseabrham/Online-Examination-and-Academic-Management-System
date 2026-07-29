@@ -180,12 +180,12 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
 
     return (
         <aside className={cn(
-            "bg-[#111827] h-screen sticky top-0 flex flex-col p-4 text-[#fff] transition-all duration-300 relative z-50 shrink-0",
+            "bg-white border-r border-slate-100 h-screen sticky top-0 flex flex-col p-4 text-[#1B2559] transition-all duration-300 relative z-50 shrink-0 shadow-sm",
             isCollapsed ? "w-20" : "w-64"
         )}>
 
-            <div className={cn("flex items-center gap-3 mb-10 shrink-0", isCollapsed ? "justify-center px-0" : "px-4")}>
-                <div className="w-8 h-8 bg-brand-blue rounded-lg flex items-center justify-center text-white shrink-0 overflow-hidden">
+            <div className={cn("flex items-center gap-3 mb-8 shrink-0", isCollapsed ? "justify-center px-0" : "px-3")}>
+                <div className="w-9 h-9  rounded-xl flex items-center justify-center shrink-0 overflow-hidden ">
                     {publicSettings.SchoolLogo ? (
                         <img src={`http://localhost:5000${publicSettings.SchoolLogo}`} alt="L" className="w-full h-full object-cover" />
                     ) : (
@@ -193,7 +193,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                     )}
                 </div>
                 {!isCollapsed && (
-                    <span className="font-bold text-lg text-white truncate">
+                    <span className="font-extrabold text-lg text-[#1B2559] truncate tracking-tight">
                         {publicSettings.SchoolName
                             ? publicSettings.SchoolName
                                 .split(' ')
@@ -206,7 +206,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
             </div>
 
             <nav className={cn(
-                "flex-1 space-y-2 transition-all duration-300",
+                "flex-1 space-y-1.5 transition-all duration-300",
                 isCollapsed ? "overflow-visible" : "overflow-hidden overflow-y-auto pr-1 custom-scrollbar"
             )}>
                 {links.map((link) => (
@@ -221,21 +221,19 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                             setAcademicOpen(!academicOpen);
                                         }}
                                         className={cn(
-                                            "w-full flex items-center px-4 py-3 rounded-xl transition-all duration-300",
-                                            location.pathname.startsWith(link.path) ? "bg-white/10 text-white" : "hover:bg-white/5 hover:text-white",
+                                            "w-full flex items-center px-3.5 py-3 rounded-2xl transition-all duration-300 font-bold text-sm",
+                                            location.pathname.startsWith(link.path) || academicOpen ? "bg-[#F4F7FE] text-[#1B2559]" : "text-[#1B2559] hover:bg-slate-50",
                                             isCollapsed ? "justify-center" : "justify-between"
                                         )}
                                     >
-                                        <div className="flex items-center gap-4">
-                                            <span className={cn("shrink-0", location.pathname.startsWith(link.path) ? "text-white" : "text-[#A3AED0]")}>
+                                        <div className="flex items-center gap-3.5">
+                                            <span className="shrink-0 text-[#1B2559]">
                                                 {link.icon}
                                             </span>
-                                            {!isCollapsed && <span className="font-bold text-sm truncate">{link.title}</span>}
+                                            {!isCollapsed && <span className="truncate">{link.title}</span>}
                                         </div>
                                         {!isCollapsed && (
-                                            <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center group-hover/flyout:bg-white/10 transition-all">
-                                                <ChevronDown size={24} className={cn("transition-all duration-300 text-white", academicOpen ? "rotate-180" : "")} />
-                                            </div>
+                                            <ChevronDown size={18} className={cn("transition-transform duration-300 text-[#1B2559]", academicOpen ? "rotate-180" : "")} />
                                         )}
                                     </button>
 
@@ -251,13 +249,13 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                                         key={child.path}
                                                         to={child.path}
                                                         className={() => cn(
-                                                            "flex items-center gap-3 px-4 py-2.5 text-sm font-semibold transition-all mx-1 rounded-xl",
+                                                            "flex items-center gap-3 px-4 py-2.5 text-sm font-bold transition-all mx-1 rounded-xl",
                                                             location.pathname + location.search === child.path
-                                                                ? "text-brand-blue bg-blue-50"
-                                                                : "text-slate-600 hover:text-brand-blue hover:bg-slate-50"
+                                                                ? "text-white bg-[#0066FF] shadow-sm"
+                                                                : "text-[#1B2559] hover:bg-slate-50"
                                                         )}
                                                     >
-                                                        <span className="shrink-0 text-slate-400">{child.icon}</span>
+                                                        <span className="shrink-0">{child.icon}</span>
                                                         {child.title}
                                                     </NavLink>
                                                 ))}
@@ -267,16 +265,16 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                 </div>
 
                                 {academicOpen && !isCollapsed && (
-                                    <div className="bg-white/10 mt-2 ml-4 pl-4 border-l-2 border-white/10 space-y-1 animate-in slide-in-from-top-2 duration-300 rounded-xl py-2">
+                                    <div className="bg-slate-50/70 mt-1 ml-3 pl-3 border-l-2 border-slate-200 space-y-1 py-1.5 rounded-2xl">
                                         {link.children.map((child) => (
                                             <NavLink
                                                 key={child.path}
                                                 to={child.path}
                                                 className={() => cn(
-                                                    "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-bold transition-all",
+                                                    "flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all",
                                                     location.pathname + location.search === child.path
-                                                        ? "text-white bg-brand-blue shadow-lg shadow-blue-500/20"
-                                                        : "text-white hover:text-white hover:bg-white/5"
+                                                        ? "text-white bg-[#0066FF] shadow-md shadow-blue-500/20"
+                                                        : "text-[#1B2559] hover:bg-slate-100"
                                                 )}
                                             >
                                                 <span className="shrink-0">{child.icon}</span>
@@ -292,16 +290,16 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                 to={link.path}
                                 end={link.path === '/admin' || link.path === '/teacher' || link.path === '/student' || link.path === '/director'}
                                 className={({ isActive }: { isActive: boolean }) => cn(
-                                    "flex items-center px-4 py-3 rounded-xl transition-all duration-300 relative group",
-                                    isActive ? "bg-brand-blue text-white shadow-lg shadow-blue-500/20" : "hover:bg-white/5 hover:text-white",
+                                    "flex items-center px-3.5 py-3 rounded-xl transition-all duration-300 relative group font-bold text-sm",
+                                    isActive ? "bg-[#0066FF] text-white shadow-md shadow-blue-500/20" : "text-[#1B2559] hover:bg-slate-50",
                                     isCollapsed ? "justify-center" : "justify-between",
-                                    (link as any).live && !isActive && "text-green-400"
+                                    (link as any).live && !isActive && "text-green-600"
                                 )}
                             >
-                                <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-3.5">
                                     <span className={cn(
                                         "shrink-0 relative",
-                                        (link as any).live && "text-green-400"
+                                        (link as any).live && !location.pathname.startsWith(link.path) && "text-green-500"
                                     )}>
                                         {link.icon}
                                         {(link as any).live && (
@@ -313,7 +311,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                     </span>
                                     {!isCollapsed && (
                                         <span className={cn(
-                                            "font-bold text-sm truncate",
+                                            "truncate",
                                             (link as any).live && "animate-pulse"
                                         )}>
                                             {link.title}
@@ -328,19 +326,19 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                 )}
 
                                 {(link as any).live && !isCollapsed && (
-                                    <span className="text-[10px] font-black bg-green-500/20 text-green-400 px-2 py-0.5 rounded-lg uppercase tracking-wider animate-pulse ml-2">
+                                    <span className="text-[10px] font-black bg-green-100 text-green-700 px-2 py-0.5 rounded-lg uppercase tracking-wider animate-pulse ml-2">
                                         Live
                                     </span>
                                 )}
 
                                 {(link as any).badge > 0 && isCollapsed && (
-                                    <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#111C44]"></div>
+                                    <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></div>
                                 )}
 
                                 {isCollapsed && (
-                                    <div className="absolute left-full ml-4 px-3 py-2 bg-[#111C44] text-white text-xs font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap shadow-2xl z-[100] border border-white/10 pointer-events-none">
+                                    <div className="absolute left-full ml-4 px-3 py-2 bg-[#1B2559] text-white text-xs font-bold rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap shadow-xl z-[100] border border-slate-100 pointer-events-none">
                                         {link.title}
-                                        <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-[#111C44] rotate-45 border-l border-b border-white/10"></div>
+                                        <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-[#1B2559] rotate-45 border-l border-b border-slate-100"></div>
                                     </div>
                                 )}
                             </NavLink>
@@ -349,19 +347,19 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                 ))}
             </nav>
 
-            <div className="mt-auto border-t border-white/10 pt-4 shrink-0">
+            <div className="mt-auto border-t border-slate-100 pt-3 shrink-0">
                 <button
                     onClick={handleLogout}
                     className={cn(
-                        "flex items-center gap-4 px-4 py-3 w-full rounded-xl hover:bg-red-500/10 hover:text-red-400 transition-all text-red-500 font-bold group relative",
+                        "flex items-center gap-3.5 px-3.5 py-3 w-full rounded-2xl hover:bg-red-50 transition-all text-red-500 font-bold group relative text-sm",
                         isCollapsed ? "justify-center" : ""
                     )}
                 >
                     <LogOut size={20} className="shrink-0" />
-                    {!isCollapsed && <span className="text-sm">Logout</span>}
+                    {!isCollapsed && <span>Logout</span>}
 
                     {isCollapsed && (
-                        <div className="absolute left-full ml-4 px-3 py-2 bg-red-500 text-white text-xs font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap shadow-xl z-[70] pointer-events-none">
+                        <div className="absolute left-full ml-4 px-3 py-2 bg-red-500 text-white text-xs font-bold rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap shadow-xl z-[70] pointer-events-none">
                             Logout
                             <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 bg-red-500 rotate-45"></div>
                         </div>

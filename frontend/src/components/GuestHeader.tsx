@@ -56,7 +56,7 @@ const GuestHeader = () => {
     return (
         <header className="fixed top-0 left-0 right-0 z-[100] px-6 py-4 flex justify-between items-center bg-white/50 backdrop-blur-xl border-b border-white/20 shadow-sm">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/login')}>
-                <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 overflow-hidden">
+                <div className="w-10 h-10  rounded-xl flex items-center justify-center  overflow-hidden">
                     {logo ? (
                         <img src={`http://localhost:5000${logo}`} alt="Logo" className="w-full h-full object-cover" />
                     ) : (
@@ -80,12 +80,12 @@ const GuestHeader = () => {
                         {schoolName ? (
                             <>
                                 {schoolName.split(' ')[0]}{" "}
-                                <span className="text-brand-blue">
+                                <span >
                                     {schoolName.split(' ').slice(1).join(' ')}
                                 </span>
                             </>
                         ) : (
-                            <span className="text-brand-blue">
+                            <span >
                                 AEMS
                             </span>
                         )}

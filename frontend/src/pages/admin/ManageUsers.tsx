@@ -330,8 +330,8 @@ const ManageUsers = () => {
                             <table className="w-full">
                                 <thead>
                                     <tr className="text-left text-slate-400 text-xs uppercase tracking-widest font-bold border-b border-slate-100">
-                                        <th className="pb-6">RU No</th>
                                         <th className="pb-6">First Name</th>
+                                        <th className="pb-6">RU No</th>
                                         <th className="pb-6">Middle Name</th>
                                         <th className="pb-6">Last Name</th>
                                         <th className="pb-6">Email Address</th>
@@ -346,24 +346,9 @@ const ManageUsers = () => {
                                     {paginatedUsers.map((user) => (
                                         <tr key={user.UserId} className="group hover:bg-slate-50 transition-all border-b border-slate-50 last:border-0">
                                             <td className="py-6">
-                                                <span className="
-                                                    inline-flex items-center
-                                                    px-3 py-1
-                                                    text-xs font-semibold
-                                                    font-mono
-                                                    text-slate-600
-                                                    bg-slate-100
-                                                    rounded-lg
-                                                    tracking-wide
-                                                ">
-                                                    {user.RegistrationNumber || "N/A"}
-                                                </span>
-
-                                            </td>
-                                            <td className="py-6">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-blue to-indigo-600 p-[2px] shrink-0">
-                                                        <div className="w-full h-full bg-white rounded-[8px] overflow-hidden flex items-center justify-center">
+                                                    <div className="w-10 h-10 rounded-full bg-blue-300 p-[1px] shrink-0">
+                                                        <div className="w-full h-full bg-white rounded-full overflow-hidden flex items-center justify-center">
                                                             {user.ProfileImage ? (
                                                                 <img
                                                                     src={`http://localhost:5000/${user.ProfileImage}`}
@@ -380,6 +365,22 @@ const ManageUsers = () => {
                                                     <span className="font-bold text-[#2B3674]">{user.FirstName || '—'}</span>
                                                 </div>
                                             </td>
+                                            <td className="py-6">
+                                                <span className="
+                                                    inline-flex items-center
+                                                    px-3 py-1
+                                                    text-xs font-semibold
+                                                    font-mono
+                                                    text-slate-600
+                                                    bg-slate-100
+                                                    rounded-lg
+                                                    tracking-wide
+                                                ">
+                                                    {user.RegistrationNumber || "N/A"}
+                                                </span>
+
+                                            </td>
+
                                             <td className="py-6">
                                                 <span className="font-bold text-[#2B3674]">{user.MiddleName || '—'}</span>
                                             </td>
