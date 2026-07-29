@@ -309,7 +309,7 @@ const DirectorReports = () => {
                             { label: 'Global Performance', value: `${data?.overall?.globalAverage?.toFixed(1)}%`, id: 'avg-score', icon: HeartPulse, bg: 'card-gradient-green' },
                             { label: 'Exams', value: data?.overall?.totalExamsTaken, id: 'exam-count', icon: Target, bg: 'card-gradient-blue' },
                             { label: 'Teachers', value: data?.teacherPerformance?.length, id: 'teacher-count', icon: Users, bg: 'card-gradient-orange' },
-                            { label: 'Subjects', value: data?.coursePerformance?.length, id: 'course-count', icon: BookOpen, bg: 'card-gradient-cyan' }
+                            { label: 'Subjects', value: data?.coursePerformance?.length, id: 'course-count', icon: BookOpen, bg: 'card-gradient-purple' }
                         ].map((stat) => (
                             <div 
                                 key={stat.id} 

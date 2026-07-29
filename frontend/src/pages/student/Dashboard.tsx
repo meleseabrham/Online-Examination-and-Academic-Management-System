@@ -88,7 +88,7 @@ const StudentDashboard = () => {
     };
 
     const statCards = [
-        { title: 'Active Exams', value: stats.active, color: 'card-gradient-orange', icon: <Clock size={24} /> },
+        { title: 'Active Exams', value: stats.active, color: 'card-gradient-rose', icon: <Clock size={24} /> },
         { title: 'Completed', value: stats.completed, color: 'card-gradient-green', icon: <CheckCircle size={24} /> },
         { title: 'Total Raw Score', value: stats.totalRaw, color: 'card-gradient-blue', icon: <Trophy size={24} /> },
     ];

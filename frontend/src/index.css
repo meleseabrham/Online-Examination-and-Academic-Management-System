@@ -28,20 +28,40 @@ body {
   @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
 }
 
+/* Humanized Premium Card Gradients */
 .card-gradient-blue {
-  @apply bg-gradient-to-br from-blue-500 to-blue-600;
+  background: linear-gradient(135deg, #4318FF 0%, #3311DB 50%, #1A0CA0 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .card-gradient-green {
-  @apply bg-gradient-to-br from-emerald-400 to-emerald-500;
+  background: linear-gradient(135deg, #05CD99 0%, #03B284 50%, #018562 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .card-gradient-orange {
-  @apply bg-gradient-to-br from-orange-400 to-orange-500;
+  background: linear-gradient(135deg, #FF7043 0%, #F4511E 50%, #D84315 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .card-gradient-cyan {
-  @apply bg-gradient-to-br from-cyan-400 to-cyan-500;
+  background: linear-gradient(135deg, #00B4D8 0%, #0096C7 50%, #0077B6 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-gradient-purple {
+  background: linear-gradient(135deg, #868CFF 0%, #6C53FF 50%, #4318FF 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-gradient-indigo {
+  background: linear-gradient(135deg, #5932EA 0%, #4726C7 50%, #351A99 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-gradient-rose {
+  background: linear-gradient(135deg, #FF5B60 0%, #E63946 50%, #B7094C 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Custom Scrollbar */

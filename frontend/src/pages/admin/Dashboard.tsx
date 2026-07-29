@@ -8,6 +8,8 @@ import {
     UserCheck,
     BookOpen,
     School,
+    FileText,
+    Activity,
     Loader
 } from 'lucide-react';
 import {
@@ -48,12 +50,12 @@ const AdminDashboard = () => {
             const s = d.stats;
 
             setStats([
-                { title: 'Total Students', value: s.studentCount.toLocaleString(), color: 'card-gradient-blue', icon: <Users size={24} strokeWidth={2.5} /> },
-                { title: 'Total Teachers', value: s.teacherCount.toLocaleString(), color: 'card-gradient-orange', icon: <UserCheck size={24} strokeWidth={2.5} /> },
-                { title: 'Total Courses', value: s.courseCount.toLocaleString(), color: 'card-gradient-cyan', icon: <BookOpen size={24} strokeWidth={2.5} /> },
-                { title: 'Total Classes', value: s.classCount.toLocaleString(), color: 'card-gradient-green', icon: <School size={24} strokeWidth={2.5} /> },
-                { title: 'Total Exams', value: s.examCount.toLocaleString(), color: 'card-gradient-blue', icon: <BookOpen size={24} strokeWidth={2.5} /> },
-                { title: 'Active Exams', value: s.activeExamsNow.toLocaleString(), color: 'card-gradient-green', icon: <Users size={24} strokeWidth={2.5} /> },
+                { title: 'Total Students', value: s.studentCount.toLocaleString(), color: 'card-gradient-blue', icon: <Users size={24} strokeWidth={2.2} /> },
+                { title: 'Total Teachers', value: s.teacherCount.toLocaleString(), color: 'card-gradient-orange', icon: <UserCheck size={24} strokeWidth={2.2} /> },
+                { title: 'Total Courses', value: s.courseCount.toLocaleString(), color: 'card-gradient-cyan', icon: <BookOpen size={24} strokeWidth={2.2} /> },
+                { title: 'Total Classes', value: s.classCount.toLocaleString(), color: 'card-gradient-green', icon: <School size={24} strokeWidth={2.2} /> },
+                { title: 'Total Exams', value: s.examCount.toLocaleString(), color: 'card-gradient-purple', icon: <FileText size={24} strokeWidth={2.2} /> },
+                { title: 'Active Exams', value: s.activeExamsNow.toLocaleString(), color: 'card-gradient-rose', icon: <Activity size={24} strokeWidth={2.2} /> },
             ]);
 
             setRecentUsers(d.recentUsers);
