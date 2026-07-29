@@ -261,9 +261,9 @@ const TeacherAnnouncements = () => {
 
                         <button
                             onClick={() => setSelectedAnnouncement(null)}
-                            className="mt-10 w-full bg-[#111C44] text-white py-4 rounded-3xl font-black text-sm uppercase tracking-widest hover:bg-brand-blue transition-all shadow-xl shadow-[#111C44]/20"
+                            className="mt-10 w-full bg-[#111C44] text-white py-4 rounded-3xl font-black text-sm uppercase tracking-widest transition-all shadow-xl shadow-[#111C44]/20"
                         >
-                            Close Announcement
+                            Close
                         </button>
                     </div>
                 </div>
