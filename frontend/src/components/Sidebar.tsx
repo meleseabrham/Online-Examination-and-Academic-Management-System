@@ -213,36 +213,39 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                     <div key={link.path}>
                         {link.children ? (
                             <>
-                                <button
-                                    onClick={() => {
-                                        if (isCollapsed) setIsCollapsed(false);
-                                        else setAcademicOpen(!academicOpen);
-                                    }}
-                                    className={cn(
-                                        "w-full flex items-center px-4 py-3 rounded-xl transition-all duration-300 relative group",
-                                        location.pathname.startsWith(link.path) ? "bg-white/10 text-white" : "hover:bg-white/5 hover:text-white",
-                                        isCollapsed ? "justify-center" : "justify-between"
-                                    )}
-                                >
-                                    <div className="flex items-center gap-4">
-                                        <span className={cn("shrink-0", location.pathname.startsWith(link.path) ? "text-white" : "text-[#A3AED0]")}>
-                                            {link.icon}
-                                        </span>
-                                        {!isCollapsed && <span className="font-bold text-sm truncate">{link.title}</span>}
-                                    </div>
-                                    {!isCollapsed && (
-                                        <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-all">
-                                            <ChevronDown size={24} className={cn("transition-all duration-300 text-white", academicOpen ? "rotate-180" : "")} />
+                                {/* Wrapper with group so both button and flyout share hover state */}
+                                <div className={cn("relative group/flyout", isCollapsed ? "" : "")}>
+                                    <button
+                                        onClick={() => {
+                                            if (isCollapsed) return; // collapsed uses hover flyout
+                                            setAcademicOpen(!academicOpen);
+                                        }}
+                                        className={cn(
+                                            "w-full flex items-center px-4 py-3 rounded-xl transition-all duration-300",
+                                            location.pathname.startsWith(link.path) ? "bg-white/10 text-white" : "hover:bg-white/5 hover:text-white",
+                                            isCollapsed ? "justify-center" : "justify-between"
+                                        )}
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <span className={cn("shrink-0", location.pathname.startsWith(link.path) ? "text-white" : "text-[#A3AED0]")}>
+                                                {link.icon}
+                                            </span>
+                                            {!isCollapsed && <span className="font-bold text-sm truncate">{link.title}</span>}
                                         </div>
-                                    )}
+                                        {!isCollapsed && (
+                                            <div className="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center group-hover/flyout:bg-white/10 transition-all">
+                                                <ChevronDown size={24} className={cn("transition-all duration-300 text-white", academicOpen ? "rotate-180" : "")} />
+                                            </div>
+                                        )}
+                                    </button>
 
-                                    {/* Collapsed: flyout submenu panel */}
+                                    {/* Collapsed: flyout panel as sibling (NavLinks valid here) */}
                                     {isCollapsed && (
-                                        <div className="absolute left-full top-0 ml-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[200] pointer-events-none group-hover:pointer-events-auto">
+                                        <div className="absolute left-full top-0 ml-3 opacity-0 invisible group-hover/flyout:opacity-100 group-hover/flyout:visible transition-all duration-200 z-[200]">
                                             {/* Arrow connector */}
                                             <div className="absolute top-3 -left-1.5 w-3 h-3 bg-white rotate-45 border-l border-b border-slate-100 shadow-sm" />
                                             {/* Flyout panel */}
-                                            <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 py-2 min-w-[180px] ml-1">
+                                            <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 py-2 min-w-[190px] ml-1">
                                                 {link.children.map((child) => (
                                                     <NavLink
                                                         key={child.path}
@@ -261,10 +264,10 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                             </div>
                                         </div>
                                     )}
-                                </button>
+                                </div>
 
                                 {academicOpen && !isCollapsed && (
-                                    <div className=" bg-white/10 mt-2 ml-4 pl-4 border-l-2 border-white/10 space-y-1 animate-in slide-in-from-top-2 duration-300 rounded-xl py-2">
+                                    <div className="bg-white/10 mt-2 ml-4 pl-4 border-l-2 border-white/10 space-y-1 animate-in slide-in-from-top-2 duration-300 rounded-xl py-2">
                                         {link.children.map((child) => (
                                             <NavLink
                                                 key={child.path}
