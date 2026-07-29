@@ -21,7 +21,8 @@
 }
 
 body {
-  @apply bg-[#F4F7FE] text-slate-900 font-sans;
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  @apply bg-[#F4F7FE] text-slate-900 antialiased;
 }
 
 .glass {
