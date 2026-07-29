@@ -243,9 +243,6 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                             <div className="absolute top-3 -left-1.5 w-3 h-3 bg-white rotate-45 border-l border-b border-slate-100 shadow-sm" />
                                             {/* Flyout panel */}
                                             <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 py-2 min-w-[180px] ml-1">
-                                                <p className="px-4 py-1.5 text-[10px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-50 mb-1">
-                                                    {link.title}
-                                                </p>
                                                 {link.children.map((child) => (
                                                     <NavLink
                                                         key={child.path}
