@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, cloneElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
@@ -110,17 +110,28 @@ const StudentDashboard = () => {
                     {/* Stats Section */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                         {statCards.map((card, i) => (
-                            <div key={i} className={`p-8 rounded-[40px] text-white shadow-xl relative overflow-hidden group transition-all duration-500 hover:scale-[1.02] ${card.color}`}>
-                                <div className="relative z-10 flex items-center justify-between">
-                                    <div>
-                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-2">{card.title}</p>
-                                        <h3 className="text-4xl font-black tracking-tighter">{card.value}</h3>
-                                    </div>
-                                    <div className="p-4 bg-white/20 rounded-3xl backdrop-blur-md group-hover:rotate-12 transition-transform duration-500">
-                                        {card.icon}
-                                    </div>
+                            <div key={i} className={`${card.color} p-6 rounded-[28px] text-white shadow-xl shadow-blue-500/10 flex items-center gap-5 group hover:scale-[1.02] active:scale-95 transition-all duration-300 relative overflow-hidden min-h-[100px]`}>
+                                {/* Left Icon Container (Image 2 style) */}
+                                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/30 text-white shadow-md group-hover:scale-105 transition-transform duration-300 relative z-10">
+                                    {card.icon && cloneElement(card.icon as React.ReactElement, { size: 24, strokeWidth: 2.2 })}
                                 </div>
-                                <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+
+                                {/* Right Text Content (Image 2 style) */}
+                                <div className="relative z-10 flex flex-col min-w-0 flex-1">
+                                    <div className="flex items-center justify-between gap-1 mb-1">
+                                        <p className="text-[11px] font-black uppercase tracking-wider text-white/80 truncate leading-none">{card.title}</p>
+                                        {card.title.toLowerCase().includes('active') && (
+                                            <span className="flex items-center gap-1 text-[9px] font-black uppercase bg-white/20 text-white px-1.5 py-0.5 rounded-full border border-white/30 shrink-0">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse"></span>
+                                                LIVE
+                                            </span>
+                                        )}
+                                    </div>
+                                    <h3 className="text-3xl font-black tracking-tight text-white drop-shadow-sm leading-none">{card.value}</h3>
+                                </div>
+
+                                {/* Background Glow */}
+                                <div className="absolute -right-8 -bottom-8 w-28 h-28 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
                             </div>
                         ))}
                     </div>

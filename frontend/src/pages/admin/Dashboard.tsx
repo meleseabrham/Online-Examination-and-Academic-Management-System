@@ -96,22 +96,29 @@ const AdminDashboard = () => {
                             {/* Stats Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-12">
                                 {stats.map((stat, i) => (
-                                    <div key={i} className={`${stat.color} p-6 rounded-[35px] text-white shadow-2xl shadow-blue-500/20 flex flex-col items-center justify-center text-center group hover:scale-[1.03] active:scale-95 transition-all duration-500 relative overflow-hidden min-h-[180px]`}>
-                                        {/* Dynamic Blurred Glow */}
-                                        <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-
+                                    <div key={i} className={`${stat.color} p-5 rounded-[28px] text-white shadow-xl shadow-blue-500/10 flex items-center gap-4 group hover:scale-[1.03] active:scale-95 transition-all duration-300 relative overflow-hidden min-h-[96px]`}>
                                         {/* Background Icon Watermark */}
-                                        <div className="absolute -right-6 -bottom-6 opacity-[0.07] group-hover:opacity-10 group-hover:scale-150 group-hover:-rotate-12 transition-all duration-1000 pointer-events-none text-white">
-                                            {stat.icon && cloneElement(stat.icon as React.ReactElement, { size: 140, strokeWidth: 1 })}
+                                        <div className="absolute -right-4 -bottom-4 opacity-[0.08] group-hover:opacity-15 group-hover:scale-125 transition-all duration-500 pointer-events-none text-white">
+                                            {stat.icon && cloneElement(stat.icon as React.ReactElement, { size: 90, strokeWidth: 1.5 })}
                                         </div>
 
-                                        <div className="mb-4 bg-white/20 p-4 rounded-[22px] relative z-10 shadow-xl backdrop-blur-md group-hover:translate-y-[-5px] group-hover:rotate-3 transition-all duration-500 border border-white/30">
-                                            {stat.icon}
+                                        {/* Left Icon Container (Image 2 style) */}
+                                        <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/30 text-white shadow-md group-hover:scale-105 transition-transform duration-300 relative z-10">
+                                            {stat.icon && cloneElement(stat.icon as React.ReactElement, { size: 22, strokeWidth: 2.2 })}
                                         </div>
 
-                                        <div className="relative z-10">
-                                            <p className="text-[10px] font-black uppercase tracking-[0.15em] opacity-70 mb-1 leading-none drop-shadow-sm">{stat.title}</p>
-                                            <h3 className="text-4xl font-black tracking-tighter drop-shadow-md">{stat.value}</h3>
+                                        {/* Right Text Content (Image 2 style) */}
+                                        <div className="relative z-10 flex flex-col min-w-0 flex-1">
+                                            <div className="flex items-center justify-between gap-1 mb-1">
+                                                <p className="text-[10px] font-black uppercase tracking-wider text-white/80 truncate leading-none">{stat.title}</p>
+                                                {stat.title.toLowerCase().includes('active') && (
+                                                    <span className="flex items-center gap-1 text-[9px] font-black uppercase bg-white/20 text-white px-1.5 py-0.5 rounded-full border border-white/30 shrink-0">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse"></span>
+                                                        LIVE
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <h3 className="text-2xl font-black tracking-tight text-white drop-shadow-sm leading-none">{stat.value}</h3>
                                         </div>
 
                                         {/* Subtle Highlight */}

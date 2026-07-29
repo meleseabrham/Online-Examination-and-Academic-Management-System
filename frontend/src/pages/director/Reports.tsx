@@ -304,21 +304,35 @@ const DirectorReports = () => {
                     </div>
 
                     {/* KPI CARDS */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                         {[
-                            { label: 'Global Performance', value: `${data?.overall?.globalAverage?.toFixed(1)}%`, id: 'avg-score', icon: HeartPulse, color: 'emerald' },
-                            { label: 'Exams', value: data?.overall?.totalExamsTaken, id: 'exam-count', icon: Target, color: 'blue' },
-                            { label: 'Teachers', value: data?.teacherPerformance?.length, id: 'teacher-count', icon: Users, color: 'violet' },
-                            { label: 'Subjects', value: data?.coursePerformance?.length, id: 'course-count', icon: BookOpen, color: 'indigo' }
+                            { label: 'Global Performance', value: `${data?.overall?.globalAverage?.toFixed(1)}%`, id: 'avg-score', icon: HeartPulse, bg: 'card-gradient-green' },
+                            { label: 'Exams', value: data?.overall?.totalExamsTaken, id: 'exam-count', icon: Target, bg: 'card-gradient-blue' },
+                            { label: 'Teachers', value: data?.teacherPerformance?.length, id: 'teacher-count', icon: Users, bg: 'card-gradient-orange' },
+                            { label: 'Subjects', value: data?.coursePerformance?.length, id: 'course-count', icon: BookOpen, bg: 'card-gradient-cyan' }
                         ].map((stat) => (
-                            <div key={stat.id} className="bg-white p-6 rounded-[30px] border border-slate-100 shadow-sm group hover:shadow-xl transition-all duration-500 flex flex-col justify-between">
-                                <div className={`w-10 h-10 rounded-xl bg-${stat.color}-50 text-${stat.color}-500 flex items-center justify-center mb-4 transition-transform group-hover:scale-110`}>
-                                    <stat.icon size={20} />
+                            <div 
+                                key={stat.id} 
+                                className={`${stat.bg} p-5 rounded-[28px] text-white shadow-xl shadow-blue-500/10 flex items-center gap-4 group hover:scale-[1.02] active:scale-95 transition-all duration-300 relative overflow-hidden min-h-[96px]`}
+                            >
+                                {/* Background Icon Watermark */}
+                                <div className="absolute -right-4 -bottom-4 opacity-[0.08] group-hover:opacity-15 group-hover:scale-125 transition-all duration-500 pointer-events-none text-white">
+                                    <stat.icon size={90} strokeWidth={1.5} />
                                 </div>
-                                <div>
-                                    <h3 className="text-2xl font-black text-[#1B2559] mb-1">{stat.value}</h3>
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</p>
+
+                                {/* Left Icon Container (Image 2 style) */}
+                                <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 border border-white/30 text-white shadow-md group-hover:scale-105 transition-transform duration-300 relative z-10">
+                                    <stat.icon size={22} strokeWidth={2.2} />
                                 </div>
+
+                                {/* Right Text Content (Image 2 style) */}
+                                <div className="relative z-10 flex flex-col min-w-0 flex-1">
+                                    <p className="text-[10px] font-black uppercase tracking-wider text-white/80 truncate mb-1 leading-none">{stat.label}</p>
+                                    <h3 className="text-2xl font-black tracking-tight text-white drop-shadow-sm leading-none">{stat.value}</h3>
+                                </div>
+
+                                {/* Subtle Highlight */}
+                                <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
                             </div>
                         ))}
                     </div>
