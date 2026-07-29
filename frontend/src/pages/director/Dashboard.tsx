@@ -118,23 +118,57 @@ const DirectorDashboard = () => {
                             </div>
 
                             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 pb-10">
+                                {/* Left Column: Recent Announcements */}
+                                <div className="space-y-10">
+                                    <div className="bg-white p-10 rounded-[50px] shadow-sm border border-slate-100 h-full">
+                                        <div className="flex items-center justify-between mb-10">
+                                            <h2 className="text-2xl font-black text-[#2B3674] tracking-tight">Recent Announcements</h2>
+                                        </div>
+                                        <div className="space-y-6">
+                                            {announcements.map((item, i) => (
+                                                <div key={i} className="group cursor-default">
+                                                    <div className="flex justify-between items-start mb-2">
+                                                        <span className="text-[10px] text-brand-blue font-black uppercase tracking-[0.2em]">
+                                                            {new Date(item.CreatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                                        </span>
+                                                    </div>
+                                                    <h4 className="font-bold text-[#2B3674] text-sm line-clamp-2 leading-relaxed">{item.Title}</h4>
+                                                    <p className="text-xs text-slate-400 font-medium line-clamp-3 leading-relaxed mt-2">{item.Content}</p>
+                                                    {i !== announcements.length - 1 && <div className="h-px bg-slate-50 w-full mt-6"></div>}
+                                                </div>
+                                            ))}
+                                            {announcements.length === 0 && (
+                                                <div className="py-12 text-center bg-slate-50 rounded-[35px] border border-dashed border-slate-200">
+                                                    <p className="text-xs text-slate-300 font-black uppercase tracking-widest">No Bulletins Available</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Right Column: Quick Actions Banner & Oversight Cards */}
                                 <div className="xl:col-span-2 space-y-8">
                                     <div className="bg-gradient-to-br from-[#111C44] to-[#1B254B] p-12 rounded-[50px] shadow-2xl shadow-blue-900/40 text-white overflow-hidden relative group border border-white/5">
                                         <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
                                             <div className="flex-1">
-                                                <h2 className="text-3xl font-black mb-4 tracking-tighter">Academic Oversight</h2>
-                                                <p className="text-white/60 text-sm mb-10 font-bold leading-relaxed max-w-md">Oversee classes, assessments, evaluate student progress, and finalize grade processing for the current academic session.</p>
+                                                <div className="flex items-center gap-2 mb-3">
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.25em] text-brand-blue bg-brand-blue/10 px-3 py-1 rounded-full border border-brand-blue/20">
+                                                        Quick Action
+                                                    </span>
+                                                </div>
+                                                <h2 className="text-3xl font-black mb-4 tracking-tighter">Quick Actions</h2>
+                                                <p className="text-white/60 text-sm mb-8 font-bold leading-relaxed max-w-md">Oversee classes, assessments, evaluate student progress, and finalize grade processing for the current academic session.</p>
 
                                                 <div className="flex gap-4 flex-wrap">
                                                     <button
                                                         onClick={() => navigate('/director/academic?tab=results')}
-                                                        className="bg-brand-blue text-white py-4 px-8 rounded-[20px] font-black text-xs uppercase tracking-widest shadow-lg hover:bg-blue-600 transition-all duration-300"
+                                                        className="bg-brand-blue text-white py-4 px-8 rounded-[20px] font-black text-xs uppercase tracking-widest shadow-lg hover:bg-blue-600 transition-all duration-300 active:scale-95"
                                                     >
                                                         Process Results
                                                     </button>
                                                     <button
                                                         onClick={() => navigate('/director/assessments')}
-                                                        className="bg-white/10 text-white border border-white/20 py-4 px-8 rounded-[20px] font-black text-xs uppercase tracking-widest hover:bg-white/20 transition-all duration-300"
+                                                        className="bg-white/10 text-white border border-white/20 py-4 px-8 rounded-[20px] font-black text-xs uppercase tracking-widest hover:bg-white/20 transition-all duration-300 active:scale-95"
                                                     >
                                                         Review Exams
                                                     </button>
@@ -161,33 +195,6 @@ const DirectorDashboard = () => {
                                             </div>
                                             <h3 className="font-black text-[#2B3674] text-lg mb-2">Student Performance</h3>
                                             <p className="text-slate-400 text-xs font-bold leading-relaxed">Review finalized exam attempts, essay grading, and analytics.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="space-y-10">
-                                    <div className="bg-white p-10 rounded-[50px] shadow-sm border border-slate-100">
-                                        <div className="flex items-center justify-between mb-10">
-                                            <h2 className="text-2xl font-black text-[#2B3674] tracking-tight">Recent Announcements</h2>
-                                        </div>
-                                        <div className="space-y-6">
-                                            {announcements.map((item, i) => (
-                                                <div key={i} className="group cursor-default">
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <span className="text-[10px] text-brand-blue font-black uppercase tracking-[0.2em]">
-                                                            {new Date(item.CreatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                                                        </span>
-                                                    </div>
-                                                    <h4 className="font-bold text-[#2B3674] text-sm line-clamp-2 leading-relaxed">{item.Title}</h4>
-                                                    <p className="text-xs text-slate-400 font-medium line-clamp-3 leading-relaxed mt-2">{item.Content}</p>
-                                                    {i !== announcements.length - 1 && <div className="h-px bg-slate-50 w-full mt-6"></div>}
-                                                </div>
-                                            ))}
-                                            {announcements.length === 0 && (
-                                                <div className="py-12 text-center bg-slate-50 rounded-[35px] border border-dashed border-slate-200">
-                                                    <p className="text-xs text-slate-300 font-black uppercase tracking-widest">No Bulletins Available</p>
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
