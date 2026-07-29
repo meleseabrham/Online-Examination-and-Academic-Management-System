@@ -1056,7 +1056,7 @@ const ManageUsers = () => {
                                             </div>
                                             <div>
                                                 <h2 className="text-2xl font-black text-[#2B3674] tracking-tight">Reset Account</h2>
-                                                <p className="text-slate-500 font-medium text-sm mt-1">Force update credentials for any user account.</p>
+                                                {/* <p className="text-slate-500 font-medium text-sm mt-1">Force update credentials for any user account.</p> */}
                                             </div>
                                         </div>
                                         <button
@@ -1068,7 +1068,7 @@ const ManageUsers = () => {
                                     </div>
 
                                     <form onSubmit={handleResetPassword} className="space-y-6">
-                                        <div className="bg-amber-50 rounded-2xl p-5 border border-amber-100/50 mb-6 flex gap-4">
+                                        <div className="bg-amber-50 rounded-2xl p-3 border border-amber-100/50 mb-6 flex gap-4">
                                             <div className="p-2 bg-amber-100 rounded-xl h-fit">
                                                 <Info size={16} className="text-amber-600" />
                                             </div>
@@ -1079,7 +1079,7 @@ const ManageUsers = () => {
 
                                         <div className="space-y-4">
                                             <div>
-                                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Account Identifier</label>
+                                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Email or RU Number</label>
                                                 <div className="relative group">
                                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors">
                                                         <Search size={18} />
@@ -1088,7 +1088,7 @@ const ManageUsers = () => {
                                                         type="text"
                                                         required
                                                         placeholder="Enter Email or Reg No..."
-                                                        className="w-full pl-12 pr-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-400 outline-none transition-all font-bold text-[#2B3674] placeholder:text-slate-300 placeholder:font-medium"
+                                                        className="w-full pl-12 pr-5 py-3 rounded-2xl border border-slate-100 bg-slate-100 focus:ring-1 focus:ring-indigo-100 focus:border-indigo-400 outline-none transition-all font-bold text-[#2B3674] placeholder:text-slate-400 placeholder:font-medium"
                                                         value={resetData.identifier}
                                                         onChange={(e) => setResetData({ ...resetData, identifier: e.target.value })}
                                                     />
@@ -1096,7 +1096,7 @@ const ManageUsers = () => {
                                             </div>
 
                                             <div>
-                                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">New Secure Password</label>
+                                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">New Password</label>
                                                 <div className="relative group">
                                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors">
                                                         <Key size={18} />
@@ -1104,8 +1104,8 @@ const ManageUsers = () => {
                                                     <input
                                                         type={showResetPassword ? "text" : "password"}
                                                         required
-                                                        placeholder="••••••••"
-                                                        className="w-full pl-12 pr-12 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-400 outline-none transition-all font-bold text-[#2B3674] placeholder:text-slate-300"
+                                                        placeholder="Enter New Password"
+                                                        className="w-full pl-12 pr-5 py-3 rounded-2xl border border-slate-100 bg-slate-100 focus:ring-1 focus:ring-indigo-100 focus:border-indigo-400 outline-none transition-all font-bold text-[#2B3674] placeholder:text-slate-400 placeholder:font-medium"
                                                         value={resetData.newPassword}
                                                         onChange={(e) => setResetData({ ...resetData, newPassword: e.target.value })}
                                                     />
@@ -1122,14 +1122,14 @@ const ManageUsers = () => {
 
                                         <button
                                             disabled={resetLoading}
-                                            className={`w-full py-5 rounded-[22px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 shadow-xl ${resetLoading
+                                            className={`w-full py-4 rounded-[22px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 shadow-xl ${resetLoading
                                                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
                                                 : 'bg-black text-white hover:bg-gray-600 shadow-black/25 active:scale-[0.98]'
                                                 }`}
                                         >
                                             {resetLoading ? (
                                                 <>
-                                                    <div className="w-5 h-5 border-2 border-slate-300 border-t-indigo-600 rounded-full animate-spin" />
+                                                    <div className="w-5 h-4 border-2 border-slate-300 border-t-indigo-600 rounded-full animate-spin" />
                                                     Processing Reset...
                                                 </>
                                             ) : (
