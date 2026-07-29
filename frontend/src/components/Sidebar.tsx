@@ -263,7 +263,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                             <NavLink
                                 key={link.path}
                                 to={link.path}
-                                end={link.path === '/admin' || link.path === '/teacher' || link.path === '/student'}
+                                end={link.path === '/admin' || link.path === '/teacher' || link.path === '/student' || link.path === '/director'}
                                 className={({ isActive }: { isActive: boolean }) => cn(
                                     "flex items-center px-4 py-3 rounded-xl transition-all duration-300 relative group",
                                     isActive ? "bg-brand-blue text-white shadow-lg shadow-blue-500/20" : "hover:bg-white/5 hover:text-white",
