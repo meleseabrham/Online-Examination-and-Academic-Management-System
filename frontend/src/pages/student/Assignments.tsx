@@ -242,10 +242,7 @@ const StudentAssignments = () => {
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-10 gap-6">
-                        <div>
-                            <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">Assignments</h1>
-                            <p className="text-slate-500 mt-1 font-medium">Complete your tasks and boost your performance.</p>
-                        </div>
+
 
                         {/* Filter Bar */}
                         <div className="flex flex-wrap items-center gap-2 bg-white/50 p-2 rounded-3xl border border-slate-200">

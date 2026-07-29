@@ -275,13 +275,7 @@ const ManageModules = () => {
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth lowercase-scroll">
                     <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                        <div>
-                            <h1 className="text-3xl font-black text-[#2B3674] tracking-tight flex items-center gap-3">
-                                <Library className="text-brand-blue" size={32} />
-                                Course Modules
-                            </h1>
-                            <p className="text-slate-500 font-medium">Manage and share curriculum resources with your students.</p>
-                        </div>
+
                         <button
                             onClick={() => handleOpenModal()}
                             className="bg-brand-blue text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-blue-500/20 hover:scale-[1.02] transition-all flex items-center gap-2"

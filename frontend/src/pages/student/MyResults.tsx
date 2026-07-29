@@ -203,10 +203,6 @@ const MyResults = () => {
                 </div>
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
-                    <div className="mb-10 text-center md:text-left">
-                        <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">My Results</h1>
-                        <p className="text-slate-500 mt-1 font-medium">Detailed analysis of your academic performance.</p>
-                    </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                         <div className="bg-white p-8 rounded-[40px] border border-slate-100 shadow-sm relative overflow-hidden group">

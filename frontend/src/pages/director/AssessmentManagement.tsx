@@ -1044,11 +1044,7 @@ const AssessmentManagement = () => {
                             {/* Header */}
                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                                 <div>
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <div className="p-2.5 bg-[#111C44] rounded-xl text-white shadow-lg"><ClipboardList size={20} /></div>
-                                        <h1 className="text-3xl font-black tracking-tight">Assessment Management</h1>
-                                    </div>
-                                    <p className="text-slate-500 font-medium ml-1">Create assessments, define weights, and grade students.</p>
+
 
                                     {isAdmin && (
                                         <div className="mt-4 flex items-center gap-4 bg-white/50 p-2 rounded-2xl border border-slate-100 w-fit">

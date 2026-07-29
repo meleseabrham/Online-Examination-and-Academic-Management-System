@@ -250,12 +250,7 @@ const ClassRankings = () => {
                     {/* Hero Section */}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
                         <div>
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2.5 bg-brand-blue/10 text-brand-blue rounded-xl">
-                                    <Trophy size={20} />
-                                </div>
-                                <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">Academic Rankings</h1>
-                            </div>
+
                             <p className="text-slate-500 font-medium">
                                 {selectedSemester && selectedSemester !== 'full-year'
                                     ? `Verified performance standings for ${semesters.find(s => String(s.Id) === selectedSemester)?.Name || 'Selected Semester'}.`

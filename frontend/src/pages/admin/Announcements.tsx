@@ -171,10 +171,7 @@ const AdminAnnouncements = () => {
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth bg-[#F4F7FE]">
                     <div className="flex justify-between items-center mb-8">
-                        <div>
-                            <h1 className="text-3xl font-bold text-[#2B3674]">Announcements</h1>
-                            <p className="text-slate-500 mt-1">Broadcast important updates to students, teachers, or all users.</p>
-                        </div>
+
                         <button
                             onClick={() => handleOpenModal()}
                             className="bg-brand-blue text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-blue-500/30 hover:bg-blue-600 transition-all flex items-center gap-3"

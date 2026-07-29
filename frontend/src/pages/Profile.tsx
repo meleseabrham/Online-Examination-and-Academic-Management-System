@@ -146,7 +146,7 @@ const Profile = () => {
             <main className="flex-1 p-8">
                 <Header email={user.email} role={user.role} />
 
-                <div className="max-w-4xl mx-auto">
+                <div className="max-w-7xl mx-auto">
                     <div className="mb-8">
                         <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">Personal Profile</h1>
                         <p className="text-slate-500 font-medium text-sm">Manage your account information and security settings.</p>
@@ -193,7 +193,7 @@ const Profile = () => {
 
 
                                     <div
-                                        className="relative w-40 h-40 mx-auto mb-6 cursor-pointer group"
+                                        className="relative w-24 h-24 mx-auto mb-4 cursor-pointer group"
                                         onClick={handleImageClick}
                                     >
                                         {/* Avatar Circle Container */}
@@ -206,7 +206,7 @@ const Profile = () => {
                                                         className="w-full h-full object-cover"
                                                     />
                                                 ) : (
-                                                    <span className="text-4xl font-bold text-[#747EA1] tracking-tight">
+                                                    <span className="text-xl font-bold text-[#747EA1] tracking-tight">
                                                         {getInitials()}
                                                     </span>
                                                 )}
@@ -214,14 +214,14 @@ const Profile = () => {
                                                 {/* Loading Overlay */}
                                                 {uploadingImage && (
                                                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[2px]">
-                                                        <Loader2 size={24} className="text-white animate-spin" />
+                                                        <Loader2 size={18} className="text-white animate-spin" />
                                                     </div>
                                                 )}
                                             </div>
 
                                             {/* Edit Button Overlay */}
-                                            <div className="absolute bottom-1 right-1 w-10 h-10 bg-[#FF4D6D] rounded-full border-4 border-white shadow-lg flex items-center justify-center text-white transition-transform group-hover:scale-110 active:scale-95 duration-200">
-                                                <Pencil size={16} fill="white" />
+                                            <div className="absolute bottom-0 right-0 w-7 h-7 bg-[#FF4D6D] rounded-full border-2 border-white shadow-md flex items-center justify-center text-white transition-transform group-hover:scale-110 active:scale-95 duration-200">
+                                                <Pencil size={12} fill="white" />
                                             </div>
                                         </div>
                                     </div>
@@ -279,18 +279,18 @@ const Profile = () => {
                                             </div>
                                             <h4 className="text-lg font-black text-[#2B3674]">Basic Information</h4>
                                         </div>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                                             <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">First Name</p>
-                                                <p className="text-sm font-bold text-[#2B3674]">{profileData?.user?.FirstName || '—'}</p>
+                                                <p className="text-sm font-bold text-[#2B3674] break-words">{profileData?.user?.FirstName || '—'}</p>
                                             </div>
                                             <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Middle Name</p>
-                                                <p className="text-sm font-bold text-[#2B3674]">{profileData?.user?.MiddleName || '—'}</p>
+                                                <p className="text-sm font-bold text-[#2B3674] break-words">{profileData?.user?.MiddleName || '—'}</p>
                                             </div>
                                             <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                                                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Last Name</p>
-                                                <p className="text-sm font-bold text-[#2B3674]">{profileData?.user?.LastName || '—'}</p>
+                                                <p className="text-sm font-bold text-[#2B3674] break-words">{profileData?.user?.LastName || '—'}</p>
                                             </div>
                                             {profileData?.user?.Role !== 'Student' && (
                                                 <div className="p-4 bg-gradient-to-br from-indigo-50 to-blue-50/30 rounded-2xl border border-indigo-100 shadow-sm relative overflow-hidden group">
@@ -298,9 +298,9 @@ const Profile = () => {
                                                         <Award size={40} className="text-indigo-600" />
                                                     </div>
                                                     <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1 relative z-10">Professional Title</p>
-                                                    <p className="text-sm font-black text-indigo-600 flex items-center gap-2 relative z-10">
+                                                    <p className="text-sm font-black text-indigo-600 flex items-center gap-2 relative z-10 break-words">
                                                         <Award size={14} className="shrink-0" />
-                                                        {profileData?.user?.Title || '—'}
+                                                        <span className="break-words">{profileData?.user?.Title || '—'}</span>
                                                     </p>
                                                 </div>
                                             )}

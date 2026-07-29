@@ -295,13 +295,7 @@ const ManageUsers = () => {
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
                     <div className="flex justify-between items-center mb-10">
-                        <div>
-                            <h1 className="text-4xl font-black text-[#2B3674] tracking-tight">User Management</h1>
-                            <p className="text-slate-500 mt-1.5 font-medium flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />
-                                Control institutional access and maintain user security.
-                            </p>
-                        </div>
+
                         <div className="flex gap-4">
                             <button
                                 onClick={() => setIsResetModalOpen(true)}

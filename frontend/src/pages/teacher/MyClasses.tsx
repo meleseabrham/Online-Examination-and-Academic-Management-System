@@ -273,10 +273,7 @@ const MyClasses = () => {
                         </>
                     ) : (
                         <>
-                            <div className="mb-8">
-                                <h1 className="text-3xl font-bold text-[#2B3674]">My Classes</h1>
-                                <p className="text-slate-500 mt-1">Manage your assigned classes and view student lists.</p>
-                            </div>
+
 
                             {loading ? (
                                 <div className="flex justify-center items-center h-64">

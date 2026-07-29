@@ -79,10 +79,7 @@ const DirectorDashboard = () => {
                         </div>
                     ) : (
                         <>
-                            <div className="mb-8">
-                                <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">Director Overview</h1>
-                                <p className="text-slate-500 mt-1 font-medium">Academic performance and system statistics.</p>
-                            </div>
+
 
                             {/* Stats Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-12">

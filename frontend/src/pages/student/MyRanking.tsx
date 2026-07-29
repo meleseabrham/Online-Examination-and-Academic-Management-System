@@ -116,15 +116,6 @@ const MyRanking = () => {
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
                     {/* Header */}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
-                        <div>
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2.5 bg-brand-blue rounded-xl text-white shadow-lg shadow-blue-500/30">
-                                    <Trophy size={20} />
-                                </div>
-                                <h1 className="text-3xl font-black tracking-tight">Personal Performance Hall</h1>
-                            </div>
-                            <p className="text-slate-500 font-medium ml-1">Track your academic standing and competitive growth.</p>
-                        </div>
 
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-3 bg-white p-2 rounded-2xl shadow-sm border border-slate-100">

@@ -137,18 +137,7 @@ const MyTranscript = () => {
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
-                    {/* Header */}
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                        <div>
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2.5 bg-[#111C44] rounded-xl text-white shadow-lg">
-                                    <FileText size={20} />
-                                </div>
-                                <h1 className="text-3xl font-black tracking-tight">My Transcript</h1>
-                            </div>
-                            <p className="text-slate-500 font-medium ml-1">View your detailed assessment breakdown and download official transcripts.</p>
-                        </div>
-                    </div>
+
 
                     {/* Selectors & Downloads */}
                     <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm mb-8">

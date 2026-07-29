@@ -186,13 +186,7 @@ const DirectorSettings = () => {
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-2">
-                    <div className="mb-8 flex justify-between items-center">
-                        <div>
-                            <h1 className="text-3xl font-black text-[#2B3674]">Director Settings</h1>
-                            <p className="text-slate-500 mt-1">Manage staff permissions and grading controls.</p>
-                        </div>
-                        {saving && <div className="flex items-center gap-2 text-brand-blue font-bold text-sm"><Info className="animate-pulse" size={16} /> Saving...</div>}
-                    </div>
+
 
                     {message && (
                         <div className={`mb-6 p-4 rounded-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300 ${message.type === 'success' ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>

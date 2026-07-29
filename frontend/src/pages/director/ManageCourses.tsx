@@ -275,10 +275,7 @@ const ManageCourses = () => {
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
-                        <div>
-                            <h1 className="text-3xl font-bold text-[#2B3674]">Course Management</h1>
-                            <p className="text-slate-500 mt-1">Define curriculum, subject codes, and departmental assignments.</p>
-                        </div>
+
                         <button
                             onClick={() => handleOpenModal()}
                             className="bg-brand-blue text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-blue-500/30 hover:bg-blue-600 transition-all flex items-center gap-3"

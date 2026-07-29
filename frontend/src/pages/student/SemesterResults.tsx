@@ -123,10 +123,7 @@ const SemesterResults = () => {
 
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-                        <div>
-                            <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">Academic Performance</h1>
-                            <p className="text-slate-500 mt-1 font-medium italic">Comprehensive semester breakdown and weighted aggregates.</p>
-                        </div>
+
 
                         <div className="flex flex-wrap gap-4">
                             <div className="flex flex-col gap-1.5 min-w-[160px]">

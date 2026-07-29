@@ -91,11 +91,7 @@ const TeacherDashboard = () => {
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
 
-                    {/* Greeting */}
-                    <div className="mb-8">
-                        <h1 className="text-3xl font-bold text-[#2B3674]">Welcome back, {user?.fullName?.split(' ')[0] || 'Teacher'}! 👋</h1>
-                        <p className="text-slate-500 mt-1">Here's an overview of your classes and exams.</p>
-                    </div>
+
 
                     {/* Stats Grid */}
                     {loading ? (

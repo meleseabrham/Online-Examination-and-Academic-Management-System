@@ -163,13 +163,7 @@ const ViewModules = () => {
                 </div>
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth lowercase-scroll">
-                    <div className="mb-8">
-                        <h1 className="text-3xl font-black text-[#2B3674] tracking-tight flex items-center gap-3">
-                            <Library className="text-brand-blue" size={32} />
-                            Course Modules
-                        </h1>
-                        <p className="text-slate-500 font-medium text-lg">Access library resources, lecture notes, and study materials shared by your teachers.</p>
-                    </div>
+
 
                     {/* Filters */}
                     <div className="flex flex-col gap-4 mb-8">

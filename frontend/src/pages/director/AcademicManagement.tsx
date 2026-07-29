@@ -677,13 +677,7 @@ const AcademicManagement = () => {
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth pt-2">
-                    <div className="mb-8">
-                        <h1 className="text-3xl font-black text-[#2B3674] tracking-tight flex items-center gap-3">
-                            <Calendar className="text-brand-blue" size={32} />
-                            Academic Management
-                        </h1>
-                        <p className="text-slate-500 font-medium text-lg ml-11">System-wide academic hierarchy and promotion engine.</p>
-                    </div>
+
 
                     {/* Tabs */}
                     <div className="flex items-center gap-1 bg-white p-1 rounded-2xl w-fit mb-8 shadow-sm border border-slate-100 overflow-x-auto max-w-full">

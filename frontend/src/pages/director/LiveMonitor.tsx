@@ -253,16 +253,13 @@ const LiveExamMonitor = () => {
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-6">
                         <div>
                             <div className="flex items-center gap-4 mb-2">
-                                <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">Live Exam Monitor</h1>
+
                                 <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase bg-red-100 text-red-600 px-3 py-1 rounded-full animate-pulse shadow-sm">
                                     <span className="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
                                     Live
                                 </span>
                             </div>
-                            <p className="text-slate-500 font-medium">
-                                Real-time view of students currently taking your exams.
-                                <span className="text-slate-400 text-xs ml-2">Auto-refreshes every 10s • Last: {lastRefresh.toLocaleTimeString()}</span>
-                            </p>
+
                         </div>
 
                         {/* Filter Bar */}

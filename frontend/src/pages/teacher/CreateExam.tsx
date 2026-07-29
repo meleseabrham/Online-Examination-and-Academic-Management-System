@@ -844,10 +844,7 @@ const CreateExam = () => {
                     ) : (
                         <>
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-                                <div>
-                                    <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">Exams Manager</h1>
-                                    <p className="text-slate-500 font-medium">Create, edit, and publish new examinations for your students.</p>
-                                </div>
+
                                 <button
                                     onClick={() => { setShowForm(true); setSuccess(false); setError(''); }}
                                     className="bg-brand-blue text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-blue-500/30 hover:bg-blue-600 transition-all active:scale-95 flex items-center gap-3"

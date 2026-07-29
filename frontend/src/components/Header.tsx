@@ -101,12 +101,18 @@ const Header = ({ email, role }: HeaderProps) => {
         ? `http://localhost:5000/${user.ProfileImage}`
         : null;
 
+    const getUserDisplayName = () => {
+        if (user.fullName) return user.fullName;
+        if (user.FullName) return user.FullName;
+        if (user.firstName || user.lastName) return `${user.firstName || ''} ${user.lastName || ''}`.trim();
+        if (user.FirstName || user.LastName) return `${user.FirstName || ''} ${user.LastName || ''}`.trim();
+        return email;
+    };
+
     const getInitials = () => {
-        if (user.firstName && user.lastName) {
-            return (user.firstName[0] + user.lastName[0]).toUpperCase();
-        }
-        if (!user.fullName) return '??';
-        const parts = user.fullName.split(' ').filter((p: string) => p.trim());
+        const name = getUserDisplayName();
+        if (!name || name === email) return '??';
+        const parts = name.split(' ').filter((p: string) => p.trim());
         if (parts.length >= 2) {
             return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
         }
@@ -161,7 +167,7 @@ const Header = ({ email, role }: HeaderProps) => {
                     </h1>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 ">
                     <button
                         onClick={handleBellClick}
                         className={cn(
@@ -181,70 +187,54 @@ const Header = ({ email, role }: HeaderProps) => {
 
                     <div className="relative">
                         <div
-                            className="flex items-center gap-3 cursor-pointer p-1 pr-3 hover:bg-white/50 rounded-2xl transition-all group"
+                            className="flex items-center gap-2 cursor-pointer group select-none shrink-0"
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         >
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-blue to-indigo-600 p-[2px] shadow-lg shadow-blue-500/10 group-hover:scale-105 transition-transform shrink-0">
-                                <div className="w-full h-full bg-white rounded-full overflow-hidden flex items-center justify-center">
-                                    {avatarUrl ? (
-                                        <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                                    ) : (
-                                        <span className="text-xs font-bold text-brand-blue">
-                                            {getInitials()}
-                                        </span>
-                                    )}
-                                </div>
+                            <div className="w-10 h-10 rounded-full bg-brand-blue text-white font-bold text-sm flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0">
+                                {avatarUrl ? (
+                                    <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover rounded-full" />
+                                ) : (
+                                    <span>{getInitials()}</span>
+                                )}
                             </div>
-                            <div className="text-left hidden sm:block">
-                                <p className="text-sm font-bold text-[#2B3674] leading-tight line-clamp-1">
-                                    {user.firstName ? `${user.firstName} ${user.lastName}` : <span className="italic">{email}</span>}
-                                </p>
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                    {(user.role !== 'Student' && user.title) ? user.title : role}
-                                </p>
+                            <div className="hidden sm:block px-4 py-2 bg-slate-100/80 hover:bg-slate-100 rounded-2xl text-sm font-bold text-[#2B3674] transition-colors whitespace-nowrap">
+                                {getUserDisplayName()}
                             </div>
-                            <ChevronDown size={14} className={cn("text-slate-400 transition-transform ml-1", isDropdownOpen && "rotate-180")} />
                         </div>
 
                         {isDropdownOpen && (
                             <>
                                 <div className="fixed inset-0 z-40" onClick={() => setIsDropdownOpen(false)}></div>
-                                <div className="absolute right-0 mt-2 w-60 bg-white rounded-[32px] shadow-2xl border border-slate-100 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-200 origin-top-right overflow-hidden">
-                                    <div className="px-3 space-y-0.5">
+                                <div className="absolute right-0 mt-2 w-55 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-50 animate-in fade-in zoom-in-95 duration-150 origin-top-right">
+                                    <div className="space-y-0.5">
                                         <Link
                                             to="/profile"
-                                            className="flex items-center gap-2 px-3 py-2 text-slate-600 hover:bg-brand-blue/5 hover:text-brand-blue rounded-2xl transition-all group"
+                                            className="flex items-center gap-2.5 px-3 py-1.5 text-[#1B2559] hover:bg-slate-50 rounded-xl transition-all group font-semibold text-sm"
                                             onClick={() => setIsDropdownOpen(false)}
                                         >
-                                            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-brand-blue/10 transition-colors shrink-0">
-                                                <User size={18} />
-                                            </div>
-                                            <span className="text-sm font-bold">My Profile</span>
+                                            <User size={18} className="text-brand-blue" />
+                                            <span>Personal Info</span>
                                         </Link>
 
                                         <Link
                                             to="/profile?tab=settings"
-                                            className="flex items-center gap-2 px-3 py-2 text-slate-600 hover:bg-brand-blue/5 hover:text-brand-blue rounded-2xl transition-all group"
+                                            className="flex items-center gap-2.5 px-3 py-1.5 text-[#1B2559] hover:bg-slate-50 rounded-xl transition-all group font-semibold text-sm"
                                             onClick={() => setIsDropdownOpen(false)}
                                         >
-                                            <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-brand-blue/10 transition-colors shrink-0">
-                                                <Settings size={18} />
-                                            </div>
-                                            <span className="text-sm font-bold">Settings</span>
+                                            <Settings size={18} className="text-brand-blue" />
+                                            <span>Settings</span>
                                         </Link>
                                     </div>
 
-                                    <div className="h-[1px] bg-slate-50 my-1 mx-6"></div>
+                                    <div className="border-t border-slate-100 my-1"></div>
 
-                                    <div className="px-3">
+                                    <div>
                                         <button
                                             onClick={handleLogout}
-                                            className="w-full flex items-center gap-2 px-3 py-2 text-red-500 hover:bg-red-50 rounded-2xl transition-all group"
+                                            className="w-full flex items-center gap-2.5 px-3 py-1.5 text-red-500 hover:bg-red-50 rounded-xl transition-all group font-bold text-sm"
                                         >
-                                            <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0">
-                                                <LogOut size={18} />
-                                            </div>
-                                            <span className="text-sm font-black  tracking-widest">Logout</span>
+                                            <LogOut size={18} className="text-red-500" />
+                                            <span>Logout</span>
                                         </button>
                                     </div>
                                 </div>

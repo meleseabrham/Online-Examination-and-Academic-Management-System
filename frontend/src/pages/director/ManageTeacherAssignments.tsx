@@ -286,10 +286,7 @@ const ManageTeacherAssignments = () => {
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                        <div>
-                            <h1 className="text-3xl font-black text-[#2B3674]">Teacher Assignments</h1>
-                            <p className="text-slate-500 font-medium">Link faculty members with their specific courses and sections.</p>
-                        </div>
+
                         <button
                             onClick={() => {
                                 setEditingAssignmentId(null);

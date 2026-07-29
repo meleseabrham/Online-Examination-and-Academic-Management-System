@@ -148,16 +148,7 @@ const StudentAssessments = () => {
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
-                    {/* Page Header */}
-                    <div className="mb-8">
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2.5 bg-[#111C44] rounded-xl text-white shadow-lg"><ClipboardList size={20} /></div>
-                            <h1 className="text-3xl font-black tracking-tight text-[#1B2559]">Semester Result Detail</h1>
-                        </div>
-                        <p className="text-slate-500 font-medium ml-1 flex items-center gap-2">
-                            <Calendar size={14} /> Academic Record & Performance Breakdown
-                        </p>
-                    </div>
+
 
                     {/* Filters */}
                     <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm mb-8">

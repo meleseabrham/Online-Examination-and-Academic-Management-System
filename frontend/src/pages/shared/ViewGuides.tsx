@@ -112,15 +112,7 @@ const ViewGuides = ({ role }: { role: 'student' | 'teacher' | 'director' }) => {
                         /* Guide List View */
                         <>
                             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-2xl bg-brand-blue/10 flex items-center justify-center text-brand-blue">
-                                        <BookOpen size={24} />
-                                    </div>
-                                    <div>
-                                        <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">System Guide</h1>
-                                        <p className="text-slate-500 mt-0.5 font-medium text-sm">Learn how to use the platform with step-by-step guides.</p>
-                                    </div>
-                                </div>
+
                                 <div className="relative w-72">
                                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                                     <input

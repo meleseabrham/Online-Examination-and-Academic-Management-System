@@ -305,12 +305,7 @@ const TeacherAssessmentResults = () => {
                         </div>
                     ) : (
                         <>
-                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-                                <div>
-                                    <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">Student Assessment Results</h1>
-                                    <p className="text-slate-500 mt-1 font-medium">Review detailed course assessment breakdown for your assigned classes.</p>
-                                </div>
-                            </div>
+
 
                             {/* Filters */}
                             <div className="bg-white p-6 rounded-[30px] shadow-sm border border-slate-100 mb-8">

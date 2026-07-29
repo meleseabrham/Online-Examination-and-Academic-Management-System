@@ -95,10 +95,7 @@ const StudentAnnouncements = () => {
                 </div>
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
-                    <div className="mb-8 text-center md:text-left">
-                        <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">Announcements</h1>
-                        <p className="text-slate-500 mt-1 font-medium">Stay updated with the latest news and highlights from the administration.</p>
-                    </div>
+
 
                     {loading ? (
                         <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[40px] shadow-sm border border-slate-100">

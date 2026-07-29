@@ -224,13 +224,10 @@ const DirectorReports = () => {
                             <div>
                                 <div className="flex items-center gap-3 mb-2">
                                     <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
-                                    <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">Director Command Center</span>
+                                    <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">Reports</span>
                                 </div>
-                                <h1 className="text-3xl font-black text-[#1B2559] tracking-tight mb-1">Institutional Intelligence</h1>
-                                <p className="text-slate-500 font-bold uppercase text-[11px] tracking-[0.2em] flex items-center gap-2">
-                                    <Target size={14} className="text-brand-blue" />
-                                    Comprehensive Academic & Operational Analytics
-                                </p>
+
+
                             </div>
 
                             <div className="flex flex-wrap gap-3" data-html2canvas-ignore="true">
@@ -311,8 +308,8 @@ const DirectorReports = () => {
                             { label: 'Teachers', value: data?.teacherPerformance?.length, id: 'teacher-count', icon: Users, bg: 'card-gradient-orange' },
                             { label: 'Subjects', value: data?.coursePerformance?.length, id: 'course-count', icon: BookOpen, bg: 'card-gradient-purple' }
                         ].map((stat) => (
-                            <div 
-                                key={stat.id} 
+                            <div
+                                key={stat.id}
                                 className={`${stat.bg} p-5 rounded-[28px] text-white shadow-xl shadow-blue-500/10 flex items-center gap-4 group hover:scale-[1.02] active:scale-95 transition-all duration-300 relative overflow-hidden min-h-[96px]`}
                             >
                                 {/* Background Icon Watermark */}

@@ -196,10 +196,7 @@ const SystemSettings = () => {
 
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-2">
                     <div className="mb-8 flex justify-between items-center">
-                        <div>
-                            <h1 className="text-3xl font-black text-[#2B3674]">System Settings</h1>
-                            <p className="text-slate-500 mt-1">Global configurations, maintenance mode, and staff permissions.</p>
-                        </div>
+
                         {saving && <div className="flex items-center gap-2 text-brand-blue font-bold text-sm"><Info className="animate-pulse" size={16} /> Saving changes...</div>}
                     </div>
 

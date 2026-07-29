@@ -133,10 +133,7 @@ const ManageGuides = () => {
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
                     {/* Header */}
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-                        <div>
-                            <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">System Guides</h1>
-                            <p className="text-slate-500 mt-1 font-medium">Create and manage guides for students and teachers on how to use the system.</p>
-                        </div>
+
                         <button
                             onClick={openCreateForm}
                             className="flex items-center gap-2 px-6 py-3 bg-brand-blue text-white rounded-2xl font-bold text-sm shadow-lg shadow-blue-500/20 hover:bg-blue-600 transition-all hover:scale-[1.02] active:scale-95"

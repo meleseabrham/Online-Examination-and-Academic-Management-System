@@ -102,10 +102,7 @@ const StudentDashboard = () => {
                 </div>
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-8 pt-2 scroll-smooth">
-                    <div className="mb-10 mt-4">
-                        <h1 className="text-4xl font-black text-[#2B3674] tracking-tight">Student Dashboard</h1>
-                        <p className="text-slate-500 font-medium mt-1">Welcome back! Here's a summary of your academic progress.</p>
-                    </div>
+
 
                     {/* Stats Section */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">

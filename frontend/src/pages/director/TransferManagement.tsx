@@ -212,18 +212,7 @@ const TransferManagement = () => {
                         </div>
                     )}
 
-                    {/* Header */}
-                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                        <div>
-                            <div className="flex items-center gap-3 mb-2">
-                                <div className="p-2.5 bg-[#111C44] rounded-xl text-white shadow-lg">
-                                    <ArrowRightLeft size={20} />
-                                </div>
-                                <h1 className="text-3xl font-black tracking-tight">Transfer Management</h1>
-                            </div>
-                            <p className="text-slate-500 font-medium ml-1">Manage schools, student & teacher transfers. All history is preserved.</p>
-                        </div>
-                    </div>
+
 
                     {/* Tabs */}
                     <div className="flex gap-2 mb-8 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100 w-fit">

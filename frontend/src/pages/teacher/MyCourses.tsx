@@ -173,19 +173,15 @@ const MyCourses = () => {
                 </div>
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
-                    <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-                        <div>
-                            <h1 className="text-3xl font-black tracking-tight text-[#2B3674]">My Courses</h1>
-                            <p className="text-slate-500 mt-1 font-medium">Access curriculum materials and manage course-specific exams.</p>
-                        </div>
-
+                    <div className="mb-4 flex justify-end">
                         <div className="flex bg-white/50 backdrop-blur-md p-1.5 rounded-2xl border border-white shadow-sm gap-1">
                             <button
                                 onClick={resetFilters}
-                                className="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                                className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 rounded-xl transition-all flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider shadow-sm active:scale-95"
                                 title="Reset Filters"
                             >
-                                <X size={20} />
+                                <X size={18} />
+                                <span>clear</span>
                             </button>
                         </div>
                     </div>

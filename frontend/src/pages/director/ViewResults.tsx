@@ -268,10 +268,7 @@ const ViewResults = () => {
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
 
-                    <div className="mb-8">
-                        <h1 className="text-3xl font-bold text-[#2B3674]">Exams Results</h1>
-                        <p className="text-slate-500 mt-1">Review student submissions, manual grading, and class performance.</p>
-                    </div>
+
 
                     {loading ? (
                         <div className="flex justify-center py-20">

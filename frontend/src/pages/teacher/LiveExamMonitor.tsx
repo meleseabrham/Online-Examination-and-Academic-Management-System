@@ -250,19 +250,49 @@ const LiveExamMonitor = () => {
                 </div>
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div className="card-gradient-blue p-8 rounded-[40px] text-white shadow-xl flex items-center gap-6 transform hover:scale-[1.02] transition-all">
+                            <div className="bg-white/20 p-4 rounded-3xl backdrop-blur-md">
+                                <Users size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-4xl font-black">{activeStudents.length}</h3>
+                                <p className="text-xs opacity-80 mt-1 uppercase tracking-widest font-black">Students Taking Exams</p>
+                            </div>
+                        </div>
+                        <div className="card-gradient-green p-8 rounded-[40px] text-white shadow-xl flex items-center gap-6 transform hover:scale-[1.02] transition-all">
+                            <div className="bg-white/20 p-4 rounded-3xl backdrop-blur-md">
+                                <Monitor size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-4xl font-black">
+                                    {selectedExamFilter === 'all' ? activeExams.length : 1}
+                                </h3>
+                                <p className="text-xs opacity-80 mt-1 uppercase tracking-widest font-black">Active Exams</p>
+                            </div>
+                        </div>
+                        <div className="card-gradient-orange p-8 rounded-[40px] text-white shadow-xl flex items-center gap-6 transform hover:scale-[1.02] transition-all">
+                            <div className="bg-white/20 p-4 rounded-3xl backdrop-blur-md">
+                                <Zap size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-4xl font-black">
+                                    {completedStudents.length}
+                                </h3>
+                                <p className="text-xs opacity-80 mt-1 uppercase tracking-widest font-black">Submitted Today</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-6">
                         <div>
                             <div className="flex items-center gap-4 mb-2">
-                                <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">Live Exam Monitor</h1>
                                 <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase bg-red-100 text-red-600 px-3 py-1 rounded-full animate-pulse shadow-sm">
                                     <span className="w-2 h-2 bg-red-600 rounded-full animate-ping"></span>
                                     Live
                                 </span>
                             </div>
-                            <p className="text-slate-500 font-medium">
-                                Real-time view of students currently taking your exams.
-                                <span className="text-slate-400 text-xs ml-2">Auto-refreshes every 10s • Last: {lastRefresh.toLocaleTimeString()}</span>
-                            </p>
                         </div>
 
                         {/* Filter Bar */}
@@ -347,41 +377,6 @@ const LiveExamMonitor = () => {
                             >
                                 <AlertCircle size={18} />
                             </button>
-                        </div>
-                    </div>
-
-                    {/* Stats Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                        <div className="card-gradient-blue p-8 rounded-[40px] text-white shadow-xl flex items-center gap-6 transform hover:scale-[1.02] transition-all">
-                            <div className="bg-white/20 p-4 rounded-3xl backdrop-blur-md">
-                                <Users size={24} />
-                            </div>
-                            <div>
-                                <h3 className="text-4xl font-black">{activeStudents.length}</h3>
-                                <p className="text-xs opacity-80 mt-1 uppercase tracking-widest font-black">Students Taking Exams</p>
-                            </div>
-                        </div>
-                        <div className="card-gradient-green p-8 rounded-[40px] text-white shadow-xl flex items-center gap-6 transform hover:scale-[1.02] transition-all">
-                            <div className="bg-white/20 p-4 rounded-3xl backdrop-blur-md">
-                                <Monitor size={24} />
-                            </div>
-                            <div>
-                                <h3 className="text-4xl font-black">
-                                    {selectedExamFilter === 'all' ? activeExams.length : 1}
-                                </h3>
-                                <p className="text-xs opacity-80 mt-1 uppercase tracking-widest font-black">Active Exams</p>
-                            </div>
-                        </div>
-                        <div className="card-gradient-orange p-8 rounded-[40px] text-white shadow-xl flex items-center gap-6 transform hover:scale-[1.02] transition-all">
-                            <div className="bg-white/20 p-4 rounded-3xl backdrop-blur-md">
-                                <Zap size={24} />
-                            </div>
-                            <div>
-                                <h3 className="text-4xl font-black">
-                                    {completedStudents.length}
-                                </h3>
-                                <p className="text-xs opacity-80 mt-1 uppercase tracking-widest font-black">Submitted Today</p>
-                            </div>
                         </div>
                     </div>
 

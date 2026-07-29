@@ -95,10 +95,7 @@ const MyExams = () => {
                 </div>
 
                 <div id="scrollable-body" className="flex-1 overflow-y-auto p-8 pt-2 scroll-smooth">
-                    <div className="mb-8 mt-4">
-                        <h1 className="text-3xl font-black text-[#2B3674]">My Examinations</h1>
-                        <p className="text-slate-500 mt-1 font-medium">View and take active exams assigned to your class.</p>
-                    </div>
+
 
                     {loading ? (
                         <div className="flex justify-center py-20"><Loader size={40} className="animate-spin text-brand-blue" /></div>

@@ -348,16 +348,13 @@ const ManageClasses = () => {
                     {viewMode === 'list' ? (
                         <div className="w-full">
                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-                                <div>
-                                    <h1 className="text-4xl font-black text-[#2B3674] tracking-tight">Class Management</h1>
-                                    <p className="text-slate-500 mt-1 font-medium text-lg">Organize sections and student enrollments.</p>
-                                </div>
+
                                 <button
                                     onClick={() => handleOpenClassModal()}
-                                    className="bg-brand-blue text-white px-10 py-5 rounded-[22px] font-black shadow-2xl shadow-blue-500/30 hover:bg-blue-600 transition-all flex items-center gap-3 active:scale-95 group uppercase tracking-widest text-xs"
+                                    className="bg-brand-blue text-white px-5 py-4 rounded-[12px] font-black shadow-2xl shadow-blue-500/30 hover:bg-blue-600 transition-all flex items-center gap-3 active:scale-95 group uppercase tracking-widest text-xs"
                                 >
                                     <Plus size={22} className="group-hover:rotate-90 transition-transform duration-300" />
-                                    New Class Instance
+                                    Add Class
                                 </button>
                             </div>
 

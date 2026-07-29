@@ -193,17 +193,7 @@ const AdminReports = () => {
                         </div>
 
                         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 relative z-10">
-                            <div>
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em]">Institutional Intelligence Active</span>
-                                </div>
-                                <h1 className="text-3xl font-black text-[#1B2559] tracking-tight mb-1">Academic Reports</h1>
-                                <p className="text-slate-500 font-bold uppercase text-[11px] tracking-[0.2em] flex items-center gap-2">
-                                    <BarChart3 size={14} className="text-brand-blue" />
-                                    Data-Driven Educational Performance & Analysis
-                                </p>
-                            </div>
+
 
                             <div className="flex flex-wrap gap-4" data-html2canvas-ignore="true">
                                 <div className="relative group/filters">

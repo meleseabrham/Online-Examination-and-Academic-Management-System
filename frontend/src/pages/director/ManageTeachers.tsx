@@ -129,10 +129,7 @@ const ManageTeachers = () => {
 
                 <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
                     <div className="flex justify-between items-center mb-8">
-                        <div>
-                            <h1 className="text-3xl font-black text-[#2B3674] tracking-tight">Teacher Management</h1>
-                            <p className="text-slate-500 mt-1 font-medium">View and monitor institutional faculty members.</p>
-                        </div>
+
                         <div className="flex gap-4">
                             <button
                                 onClick={() => navigate('/director/assignments')}
