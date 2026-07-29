@@ -6,7 +6,7 @@ export const getTeacherAssignments = async (req, res) => {
         const request = pool.request();
         let query = `
             SELECT ta.AssignmentId, ta.TeacherId, ta.ClassId, ta.CourseId, ta.AcademicYearId, ta.SemesterId,
-                   u.FullName as TeacherName, u.Email as TeacherEmail,
+                   u.FullName as TeacherName, u.Email as TeacherEmail, u.Title as TeacherTitle,
                    c.GradeName, c.Section,
                    co.CourseName,
                    ay.Name as AcademicYearName,

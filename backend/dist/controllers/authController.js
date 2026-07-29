@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { sql, poolPromise } from '../config/db.js';
+import { logAction } from '../utils/auditLogger.js';
 import { ensureSystemSchema } from './systemController.js';
 export const login = async (req, res) => {
     const { email, password } = req.body;
@@ -36,15 +37,29 @@ export const login = async (req, res) => {
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
-        const token = jwt.sign({ id: user.UserId, email: user.Email, role: user.Role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const secret = process.env.JWT_SECRET || 'super_secret_jwt_key_online_exam_2026';
+        const token = jwt.sign({ id: user.UserId, email: user.Email, role: user.Role }, secret, { expiresIn: '1d' });
+        // Audit Log for Login
+        await logAction({
+            userId: user.UserId,
+            role: user.Role,
+            action: 'LOGIN',
+            tableName: 'Users',
+            recordId: user.UserId,
+            ipAddress: req.ip
+        });
         res.json({
             token,
             user: {
                 id: user.UserId,
                 fullName: user.FullName,
+                firstName: user.FirstName,
+                middleName: user.MiddleName,
+                lastName: user.LastName,
                 email: user.Email,
                 role: user.Role,
-                ProfileImage: user.ProfileImage
+                ProfileImage: user.ProfileImage,
+                title: user.Title
             }
         });
     }
@@ -54,16 +69,20 @@ export const login = async (req, res) => {
     }
 };
 export const register = async (req, res) => {
-    const { fullName, email, password, role } = req.body;
+    const { firstName, middleName, lastName, email, password, role } = req.body;
+    const fullName = `${firstName} ${middleName} ${lastName}`.replace(/\s+/g, ' ').trim();
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const pool = await poolPromise;
         await pool.request()
             .input('fullName', sql.NVarChar, fullName)
+            .input('firstName', sql.NVarChar, firstName)
+            .input('middleName', sql.NVarChar, middleName)
+            .input('lastName', sql.NVarChar, lastName)
             .input('email', sql.NVarChar, email)
             .input('password', sql.NVarChar, hashedPassword)
             .input('role', sql.NVarChar, role)
-            .query('INSERT INTO Users (FullName, Email, Password, Role, Status) VALUES (@fullName, @email, @password, @role, \'Active\')');
+            .query('INSERT INTO Users (FullName, FirstName, MiddleName, LastName, Email, Password, Role, Status) VALUES (@fullName, @firstName, @middleName, @lastName, @email, @password, @role, \'Active\')');
         res.status(201).json({ message: 'User registered successfully' });
     }
     catch (err) {
@@ -80,7 +99,7 @@ export const getProfile = async (req, res) => {
         // Base user info
         const userResult = await pool.request()
             .input('userId', sql.Int, userId)
-            .query('SELECT UserId, FullName, Email, Role, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber FROM Users WHERE UserId = @userId');
+            .query('SELECT UserId, FullName, FirstName, MiddleName, LastName, Email, Role, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Title FROM Users WHERE UserId = @userId');
         if (userResult.recordset.length === 0) {
             console.log(`User ${userId} not found in DB`);
             return res.status(404).json({ message: 'User not found' });
@@ -175,6 +194,16 @@ export const changePassword = async (req, res) => {
             .input('userId', sql.Int, userId)
             .input('password', sql.NVarChar, hashedNewPassword)
             .query('UPDATE Users SET Password = @password WHERE UserId = @userId');
+        // Audit Log
+        await logAction({
+            userId: userId,
+            role: req.user.role,
+            action: 'UPDATE',
+            tableName: 'Users',
+            recordId: userId,
+            newValue: { action: 'Password Change' },
+            ipAddress: req.ip
+        });
         res.json({ message: 'Password updated successfully' });
     }
     catch (err) {

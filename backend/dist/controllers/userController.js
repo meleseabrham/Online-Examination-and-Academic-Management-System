@@ -1,10 +1,11 @@
 import bcrypt from 'bcryptjs';
 import { sql, poolPromise } from '../config/db.js';
+import { logAction } from '../utils/auditLogger.js';
 export const getUsers = async (req, res) => {
     const { role } = req.query;
     try {
         const pool = await poolPromise;
-        let query = 'SELECT UserId, FullName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender, Title FROM Users';
+        let query = 'SELECT UserId, FullName, FirstName, MiddleName, LastName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender, Title FROM Users';
         const request = pool.request();
         if (role) {
             query += ' WHERE Role = @role';
@@ -19,7 +20,8 @@ export const getUsers = async (req, res) => {
     }
 };
 export const createUser = async (req, res) => {
-    const { fullName, email, password, role, gender, title } = req.body;
+    const { firstName, middleName, lastName, email, password, role, gender, title } = req.body;
+    const fullName = `${firstName} ${middleName} ${lastName}`.replace(/\s+/g, ' ').trim();
     let { dateOfBirth } = req.body;
     if (dateOfBirth) {
         const year = parseInt(dateOfBirth.split('-')[0]);
@@ -48,8 +50,11 @@ export const createUser = async (req, res) => {
         }
         const registrationNumber = `${yearPrefix}${newNumber.toString().padStart(5, '0')}`;
         const profileImage = req.file ? req.file.path.replace(/\\/g, '/') : null;
-        await pool.request()
+        const result = await pool.request()
             .input('fullName', sql.NVarChar, fullName)
+            .input('firstName', sql.NVarChar, firstName)
+            .input('middleName', sql.NVarChar, middleName)
+            .input('lastName', sql.NVarChar, lastName)
             .input('email', sql.NVarChar, email)
             .input('password', sql.NVarChar, hashedPassword)
             .input('role', sql.NVarChar, role)
@@ -58,7 +63,18 @@ export const createUser = async (req, res) => {
             .input('profileImage', sql.NVarChar, profileImage)
             .input('regNo', sql.NVarChar, registrationNumber)
             .input('title', sql.NVarChar, title || null)
-            .query('INSERT INTO Users (FullName, Email, Password, Role, Status, DateOfBirth, RegistrationNumber, Gender, ProfileImage, Title) VALUES (@fullName, @email, @password, @role, \'Active\', @dob, @regNo, @gender, @profileImage, @title)');
+            .query('INSERT INTO Users (FullName, FirstName, MiddleName, LastName, Email, Password, Role, Status, DateOfBirth, RegistrationNumber, Gender, ProfileImage, Title) VALUES (@fullName, @firstName, @middleName, @lastName, @email, @password, @role, \'Active\', @dob, @regNo, @gender, @profileImage, @title); SELECT SCOPE_IDENTITY() as UserId;');
+        const newUserId = result.recordset[0].UserId;
+        // Audit Log
+        await logAction({
+            userId: req.user.id,
+            role: req.user.role,
+            action: 'INSERT',
+            tableName: 'Users',
+            recordId: newUserId,
+            newValue: { ...req.body, registrationNumber, profileImage },
+            ipAddress: req.ip
+        });
         res.status(201).json({ message: 'User created successfully', registrationNumber });
     }
     catch (err) {
@@ -68,7 +84,10 @@ export const createUser = async (req, res) => {
 };
 export const updateUser = async (req, res) => {
     const { id } = req.params;
-    const fullName = req.body.fullName || '';
+    const firstName = req.body.firstName || '';
+    const middleName = req.body.middleName || '';
+    const lastName = req.body.lastName || '';
+    const fullName = `${firstName} ${middleName} ${lastName}`.replace(/\s+/g, ' ').trim();
     const email = req.body.email || '';
     const role = req.body.role || 'Student';
     const status = req.body.status || 'Active';
@@ -84,14 +103,22 @@ export const updateUser = async (req, res) => {
     console.log('UPDATING USER:', { id, fullName, email, role, status, dateOfBirth, gender });
     try {
         const pool = await poolPromise;
+        // 1. Fetch Old Data for Audit
+        const oldResult = await pool.request()
+            .input('id', sql.Int, id)
+            .query('SELECT FullName, Email, Role, Status, DateOfBirth, Gender, Title FROM Users WHERE UserId = @id');
+        const oldValue = oldResult.recordset[0];
         const profileImage = req.file ? req.file.path.replace(/\\/g, '/') : null;
-        let query = 'UPDATE Users SET FullName = @fullName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, Title = @title WHERE UserId = @id';
+        let query = 'UPDATE Users SET FullName = @fullName, FirstName = @firstName, MiddleName = @middleName, LastName = @lastName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, Title = @title WHERE UserId = @id';
         if (profileImage) {
-            query = 'UPDATE Users SET FullName = @fullName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, ProfileImage = @profileImage, Title = @title WHERE UserId = @id';
+            query = 'UPDATE Users SET FullName = @fullName, FirstName = @firstName, MiddleName = @middleName, LastName = @lastName, Email = @email, Role = @role, Status = @status, DateOfBirth = @dob, Gender = @gender, ProfileImage = @profileImage, Title = @title WHERE UserId = @id';
         }
         const request = pool.request()
             .input('id', sql.Int, id)
             .input('fullName', sql.NVarChar, fullName)
+            .input('firstName', sql.NVarChar, firstName)
+            .input('middleName', sql.NVarChar, middleName)
+            .input('lastName', sql.NVarChar, lastName)
             .input('email', sql.NVarChar, email)
             .input('role', sql.NVarChar, role)
             .input('status', sql.NVarChar, status)
@@ -102,6 +129,17 @@ export const updateUser = async (req, res) => {
             request.input('profileImage', sql.NVarChar, profileImage);
         }
         await request.query(query);
+        // Audit Log
+        await logAction({
+            userId: req.user.id,
+            role: req.user.role,
+            action: 'UPDATE',
+            tableName: 'Users',
+            recordId: Number(id),
+            oldValue: oldValue,
+            newValue: req.body,
+            ipAddress: req.ip
+        });
         res.json({ message: 'User updated successfully' });
     }
     catch (err) {
@@ -113,9 +151,24 @@ export const deleteUser = async (req, res) => {
     const { id } = req.params;
     try {
         const pool = await poolPromise;
+        // Fetch Old Data for Audit
+        const oldResult = await pool.request()
+            .input('id', sql.Int, id)
+            .query('SELECT FullName, Email, Role FROM Users WHERE UserId = @id');
+        const oldValue = oldResult.recordset[0];
         await pool.request()
             .input('id', sql.Int, id)
             .query('DELETE FROM Users WHERE UserId = @id');
+        // Audit Log
+        await logAction({
+            userId: req.user.id,
+            role: req.user.role,
+            action: 'DELETE',
+            tableName: 'Users',
+            recordId: Number(id),
+            oldValue: oldValue,
+            ipAddress: req.ip
+        });
         res.json({ message: 'User deleted successfully' });
     }
     catch (err) {
@@ -130,7 +183,7 @@ export const getUserProfile = async (req, res) => {
         // 1. Get Basic User Info
         const userRes = await pool.request()
             .input('id', sql.Int, id)
-            .query('SELECT UserId, FullName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender, Title FROM Users WHERE UserId = @id');
+            .query('SELECT UserId, FullName, FirstName, MiddleName, LastName, Email, Role, Status, CreatedAt, ProfileImage, DateOfBirth, RegistrationNumber, Gender, Title FROM Users WHERE UserId = @id');
         if (userRes.recordset.length === 0) {
             return res.status(404).json({ message: 'User not found' });
         }

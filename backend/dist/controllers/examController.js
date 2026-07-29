@@ -1,4 +1,5 @@
 import { sql, poolPromise } from '../config/db.js';
+import { logAction } from '../utils/auditLogger.js';
 let migrationDone = false;
 /** Auto-migrate: add missing columns to Exams table */
 export const ensureSchema = async (pool) => {
@@ -289,6 +290,16 @@ export const createExam = async (req, res) => {
                 `);
         }
         await transaction.commit();
+        // Audit Log
+        await logAction({
+            userId: teacherId,
+            role: req.user.role,
+            action: 'INSERT',
+            tableName: 'Exams',
+            recordId: newExamId,
+            newValue: req.body,
+            ipAddress: req.ip
+        });
         res.status(201).json({ message: 'Exam created successfully', examId: newExamId });
     }
     catch (err) {
@@ -483,6 +494,16 @@ SELECT
     AssessmentId = @assessmentId
                 WHERE ExamId = @id
     `);
+        // Audit Log
+        await logAction({
+            userId: req.user.id,
+            role: req.user.role,
+            action: 'UPDATE',
+            tableName: 'Exams',
+            recordId: Number(id),
+            newValue: req.body,
+            ipAddress: req.ip
+        });
         res.json({ message: 'Exam updated successfully' });
     }
     catch (err) {
@@ -499,6 +520,15 @@ export const deleteExam = async (req, res) => {
         await pool.request()
             .input('id', sql.Int, id)
             .query('DELETE FROM Exams WHERE ExamId = @id');
+        // Audit Log
+        await logAction({
+            userId: req.user.id,
+            role: req.user.role,
+            action: 'DELETE',
+            tableName: 'Exams',
+            recordId: Number(id),
+            ipAddress: req.ip
+        });
         res.json({ message: 'Exam deleted successfully' });
     }
     catch (err) {
@@ -539,6 +569,16 @@ VALUES(@sid, @eid, @aid, 'Assigned', @reason, GETDATE(), @aid)
                 }
             }
             await transaction.commit();
+            // Audit Log
+            await logAction({
+                userId: adminId,
+                role: req.user.role,
+                action: 'APPROVE',
+                tableName: 'StudentExamAssignment',
+                recordId: Number(examId),
+                newValue: { studentIds, makeupReason },
+                ipAddress: req.ip
+            });
             res.json({ message: `Successfully assigned ${studentIds.length} students.` });
         }
         catch (err) {

@@ -1,4 +1,5 @@
 import { sql, poolPromise } from '../config/db.js';
+import { logAction } from '../utils/auditLogger.js';
 /**
  * Step 1: Calculate Weighted Course Totals for all students in a semester.
  * Combines Exams and Assessments.
@@ -84,6 +85,16 @@ export const calculateCourseTotals = async (req, res) => {
                     `);
             }
         }
+        // Audit Log
+        await logAction({
+            userId: req.user.id,
+            role: req.user.role,
+            action: 'UPDATE',
+            tableName: 'StudentCourseResults',
+            recordId: academicYearId,
+            newValue: { academicYearId, semesterId, action: 'Calculate Course Totals' },
+            ipAddress: req.ip
+        });
         res.json({ message: 'Course totals calculated successfully.' });
     }
     catch (err) {
@@ -165,6 +176,16 @@ export const calculateSemesterRankings = async (req, res) => {
             )
             UPDATE sr SET sr.SchoolRank = lr.NewRank FROM SemesterResults sr JOIN SchoolRanked lr ON sr.Id = lr.Id;
         `);
+        // Audit Log
+        await logAction({
+            userId: req.user.id,
+            role: req.user.role,
+            action: 'UPDATE',
+            tableName: 'SemesterResults',
+            recordId: academicYearId,
+            newValue: { academicYearId, semesterId, action: 'Calculate Semester Rankings' },
+            ipAddress: req.ip
+        });
         res.json({ message: 'Semester rankings calculated successfully.' });
     }
     catch (err) {
@@ -224,6 +245,16 @@ export const calculateFinalYearResults = async (req, res) => {
             WITH Ranked AS (SELECT Id, DENSE_RANK() OVER (PARTITION BY SchoolId ORDER BY FinalAverage DESC) as R FROM FinalYearResult WHERE AcademicYearId = @ayId)
             UPDATE f SET SchoolRank = R FROM FinalYearResult f JOIN Ranked r ON f.Id = r.Id;
         `);
+        // Audit Log
+        await logAction({
+            userId: req.user.id,
+            role: req.user.role,
+            action: 'UPDATE',
+            tableName: 'FinalYearResult',
+            recordId: academicYearId,
+            newValue: { academicYearId, action: 'Calculate Final Year Results' },
+            ipAddress: req.ip
+        });
         res.json({ message: 'Final year results and rankings calculated.' });
     }
     catch (err) {

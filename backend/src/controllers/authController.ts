@@ -48,9 +48,10 @@ export const login = async (req: Request, res: Response) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
+        const secret = process.env.JWT_SECRET || 'super_secret_jwt_key_online_exam_2026';
         const token = jwt.sign(
             { id: user.UserId, email: user.Email, role: user.Role },
-            process.env.JWT_SECRET as string,
+            secret,
             { expiresIn: '1d' }
         );
 

@@ -65,8 +65,8 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
     });
 });
 
-app.listen(PORT, async () => {
-    console.log(`Server is running on port ${PORT}`);
+app.listen(Number(PORT), '0.0.0.0', async () => {
+    console.log(`Server is running on http://0.0.0.0:${PORT}`);
 
     // Ensure system schema is ready once on startup
     try {

@@ -1,4 +1,5 @@
 import { sql, poolPromise } from '../config/db.js';
+import { logAction } from '../utils/auditLogger.js';
 // =============================================
 // ASSESSMENT SETTINGS
 // =============================================
@@ -205,7 +206,6 @@ export const getAssessments = async (req, res) => {
                 WHERE ta.TeacherId = @teacherId 
                 AND ta.CourseId = a.CourseId
                 AND (ta.ClassId = a.ClassId OR a.ClassId IS NULL)
-                AND ta.Status = 'Active'
             )`;
             request.input('teacherId', sql.Int, user.id);
         }
@@ -239,7 +239,7 @@ export const createAssessment = async (req, res) => {
                 message: `Total weight would exceed 100%. Current: ${currentWeight}%, Adding: ${weightPercentage}%, Available: ${100 - currentWeight}%`
             });
         }
-        await pool.request()
+        const result = await pool.request()
             .input('courseId', sql.Int, courseId)
             .input('semesterId', sql.Int, semesterId)
             .input('gradeId', sql.Int, gradeId)
@@ -252,8 +252,20 @@ export const createAssessment = async (req, res) => {
             .input('createdBy', sql.Int, user?.id || null)
             .query(`
                 INSERT INTO Assessments (CourseId, SemesterId, GradeId, AcademicYearId, ClassId, Type, Title, TotalMarks, WeightPercentage, CreatedBy)
-                VALUES (@courseId, @semesterId, @gradeId, @ayId, @classId, @type, @title, @totalMarks, @weight, @createdBy)
+                VALUES (@courseId, @semesterId, @gradeId, @ayId, @classId, @type, @title, @totalMarks, @weight, @createdBy);
+                SELECT SCOPE_IDENTITY() as Id;
             `);
+        const newId = result.recordset[0].Id;
+        // Audit Log
+        await logAction({
+            userId: user.id,
+            role: user.role,
+            action: 'INSERT',
+            tableName: 'Assessments',
+            recordId: newId,
+            newValue: req.body,
+            ipAddress: req.ip
+        });
         res.status(201).json({ message: 'Assessment created successfully' });
     }
     catch (err) {
@@ -269,11 +281,12 @@ export const updateAssessment = async (req, res) => {
         // Get current assessment details to find its group
         const currentRes = await pool.request()
             .input('id', sql.Int, id)
-            .query("SELECT CourseId, SemesterId, GradeId FROM Assessments WHERE Id = @id");
+            .query("SELECT CourseId, SemesterId, GradeId, Type, Title, TotalMarks, WeightPercentage FROM Assessments WHERE Id = @id");
         if (currentRes.recordset.length === 0) {
             return res.status(404).json({ message: 'Assessment not found' });
         }
         const { CourseId, SemesterId, GradeId } = currentRes.recordset[0];
+        const oldValue = currentRes.recordset[0];
         // Validate total weight doesn't exceed 100% (excluding this assessment's current weight)
         const weightCheck = await pool.request()
             .input('id', sql.Int, id)
@@ -300,11 +313,38 @@ export const updateAssessment = async (req, res) => {
             .input('totalMarks', sql.Decimal(6, 2), totalMarks || 100)
             .input('weight', sql.Decimal(5, 2), weightPercentage)
             .query(`UPDATE Assessments SET Type = @type, Title = @title, TotalMarks = @totalMarks, WeightPercentage = @weight WHERE Id = @id`);
+        // Audit Log
+        await logAction({
+            userId: req.user.id,
+            role: req.user.role,
+            action: 'UPDATE',
+            tableName: 'Assessments',
+            recordId: Number(id),
+            oldValue: oldValue,
+            newValue: req.body,
+            ipAddress: req.ip
+        });
         res.json({ message: 'Assessment updated successfully' });
     }
     catch (err) {
         console.error('updateAssessment error:', err);
         res.status(500).json({ message: 'Error updating assessment' });
+    }
+};
+export const updateAssessmentRegradePermission = async (req, res) => {
+    const { id } = req.params;
+    const { isRegradeAllowed } = req.body;
+    try {
+        const pool = await poolPromise;
+        await pool.request()
+            .input('id', sql.Int, id)
+            .input('val', sql.Bit, isRegradeAllowed ? 1 : 0)
+            .query('UPDATE Assessments SET IsRegradeAllowed = @val WHERE Id = @id');
+        res.json({ message: 'Regrade permission updated successfully' });
+    }
+    catch (err) {
+        console.error('updateAssessmentRegradePermission error:', err);
+        res.status(500).json({ message: 'Error updating regrade permission' });
     }
 };
 export const deleteAssessment = async (req, res) => {
@@ -317,7 +357,22 @@ export const deleteAssessment = async (req, res) => {
         if (check.recordset[0].cnt > 0) {
             return res.status(400).json({ message: 'Cannot delete assessment with existing scores. Remove scores first.' });
         }
+        // Fetch Old Data for Audit
+        const oldResult = await pool.request()
+            .input('id', sql.Int, id)
+            .query('SELECT Type, Title, CourseId FROM Assessments WHERE Id = @id');
+        const oldValue = oldResult.recordset[0];
         await pool.request().input('id', sql.Int, id).query(`DELETE FROM Assessments WHERE Id = @id`);
+        // Audit Log
+        await logAction({
+            userId: req.user.id,
+            role: req.user.role,
+            action: 'DELETE',
+            tableName: 'Assessments',
+            recordId: Number(id),
+            oldValue: oldValue,
+            ipAddress: req.ip
+        });
         res.json({ message: 'Assessment deleted' });
     }
     catch (err) {
@@ -599,11 +654,19 @@ export const getStudentCourseBreakdown = async (req, res) => {
             teacherFilter = `
                 AND EXISTS (
                     SELECT 1 FROM TeacherAssignments ta
-                    JOIN StudentClasses sc ON sc.ClassId = ta.ClassId
+                    JOIN Classes c ON ta.ClassId = c.ClassId
                     WHERE ta.TeacherId = @teacherId
                     AND ta.CourseId = a.CourseId
-                    AND sc.StudentId = @sid
-                    AND ta.Status = 'Active'
+                    AND ta.AcademicYearId = a.AcademicYearId
+                    AND EXISTS (
+                        SELECT 1 FROM StudentEnrollments se
+                        JOIN Grades g ON se.GradeId = g.Id
+                        JOIN Sections s ON se.SectionId = s.Id
+                        WHERE se.StudentId = @sid 
+                        AND se.AcademicYearId = a.AcademicYearId
+                        AND (c.GradeName = 'Grade ' + CAST(g.GradeNumber AS NVARCHAR) OR c.GradeName = CAST(g.GradeNumber AS NVARCHAR))
+                        AND (ISNULL(c.Section, '') = ISNULL(s.Name, ''))
+                    )
                 )
             `;
         }
@@ -636,7 +699,8 @@ export const getStudentCourseBreakdown = async (req, res) => {
                 WHERE a.SemesterId = @semId
                 AND a.GradeId IN (
                     SELECT se.GradeId FROM StudentEnrollments se 
-                    WHERE se.StudentId = @sid AND se.Status IN ('Active', 'Promoted', 'Transferred')
+                    WHERE se.StudentId = @sid 
+                    AND se.AcademicYearId = a.AcademicYearId
                 )
                 ${teacherFilter}
                 ORDER BY c.CourseName, a.Type
