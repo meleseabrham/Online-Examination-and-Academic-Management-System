@@ -906,11 +906,15 @@ export const getExamReview = async (req: Request, res: Response) => {
                 u.FullName as TeacherName,
                 ay.Name as AcademicYear,
                 sem.Name as SemesterName,
-                se.StartTime as DateTaken
+                se.StartTime as DateTaken,
+                st.FullName as StudentName,
+                st.Email as StudentEmail,
+                st.RegistrationNumber as StudentRegNo
             FROM StudentExams se 
             JOIN Exams e ON se.ExamId = e.ExamId 
             LEFT JOIN Courses c ON e.CourseId = c.CourseId
             LEFT JOIN Users u ON e.TeacherId = u.UserId
+            LEFT JOIN Users st ON se.StudentId = st.UserId
             LEFT JOIN AcademicYears ay ON e.AcademicYearId = ay.Id
             LEFT JOIN Semesters sem ON e.SemesterId = sem.Id
             OUTER APPLY (
@@ -987,7 +991,11 @@ export const getExamReview = async (req: Request, res: Response) => {
                 teacher: data.TeacherName,
                 year: data.AcademicYear,
                 semester: data.SemesterName,
-                dateTaken: data.DateTaken
+                dateTaken: data.DateTaken,
+                studentName: data.StudentName,
+                studentEmail: data.StudentEmail,
+                studentRegNo: data.StudentRegNo,
+                sectionName: data.SectionName
             }
         });
     } catch (err) {
