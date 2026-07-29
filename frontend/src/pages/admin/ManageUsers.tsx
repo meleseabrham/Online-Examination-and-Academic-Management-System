@@ -558,60 +558,64 @@ const ManageUsers = () => {
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
-                            <div>
-                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">First Name</label>
+                        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                <label className="text-[13px] font-black text-slate-500 tracking-widest ml-1">First Name</label>
                                 <input
                                     type="text"
                                     required
                                     placeholder="First Name"
-                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium"
+                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-1 focus:ring-brand-blue outline-none transition-all font-medium"
                                     value={formData.firstName}
                                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                                 />
                             </div>
-                            <div>
-                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Middle Name</label>
+
+                            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                <label className="text-[13px] font-black text-slate-500 tracking-widest ml-1">Middle Name</label>
                                 <input
                                     type="text"
                                     required
                                     placeholder="Middle Name"
-                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium"
+                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-1 focus:ring-brand-blue outline-none transition-all font-medium"
                                     value={formData.middleName}
                                     onChange={(e) => setFormData({ ...formData, middleName: e.target.value })}
                                 />
                             </div>
-                            <div>
-                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Last Name</label>
+
+                            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                <label className="text-[13px] font-black text-slate-500 tracking-widest ml-1">Last Name</label>
                                 <input
                                     type="text"
                                     required
                                     placeholder="Last Name"
-                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium"
+                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-1 focus:ring-brand-blue outline-none transition-all font-medium"
                                     value={formData.lastName}
                                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                 />
                             </div>
-                            <div>
-                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+
+                            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                <label className="text-[13px] font-black text-slate-500 tracking-widest ml-1">Email Address</label>
                                 <input
                                     type="email"
                                     required
                                     placeholder="john@example.com"
-                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium"
+                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-1 focus:ring-brand-blue outline-none transition-all font-medium"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 />
                             </div>
+
                             {!editingUser && (
-                                <div>
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Account Password</label>
+                                <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                    <label className="text-[13px] font-black text-slate-500 tracking-widest ml-1">Password</label>
                                     <div className="relative group">
                                         <input
                                             type={showPassword ? "text" : "password"}
                                             required
                                             placeholder="••••••••"
-                                            className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium pr-12"
+                                            className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-1 focus:ring-brand-blue outline-none transition-all font-medium pr-12"
                                             value={formData.password}
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                         />
@@ -626,10 +630,10 @@ const ManageUsers = () => {
                                 </div>
                             )}
 
-                            <div>
-                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">System Role</label>
+                            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                <label className="text-[13px] font-black text-slate-500 uppercase tracking-widest ml-1">System Role</label>
                                 <select
-                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-bold text-[#2B3674]"
+                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-1 focus:ring-brand-blue outline-none transition-all font-bold text-[#2B3674]"
                                     value={formData.role}
                                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                                 >
@@ -641,22 +645,22 @@ const ManageUsers = () => {
                             </div>
 
                             {formData.role !== 'Student' && (
-                                <div>
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Professional Title</label>
+                                <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                    <label className="text-xs font-black text-slate-500 tracking-widest ml-1">Professional Title</label>
                                     <input
                                         type="text"
                                         placeholder="e.g. Senior Faculty"
-                                        className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium"
+                                        className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-1 focus:ring-brand-blue outline-none transition-all font-medium"
                                         value={formData.title}
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                     />
                                 </div>
                             )}
 
-                            <div>
-                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Gender</label>
+                            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                <label className="text-[13px] font-black text-slate-500 tracking-widest ml-1">Gender</label>
                                 <select
-                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-bold text-[#2B3674]"
+                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-1 focus:ring-brand-blue outline-none transition-all font-bold text-[#2B3674]"
                                     value={formData.gender}
                                     onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                                 >
@@ -666,18 +670,18 @@ const ManageUsers = () => {
                                 </select>
                             </div>
 
-                            <div>
-                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Date of Birth</label>
+                            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                <label className="text-[13px] font-black text-slate-500 tracking-widest ml-1">Date of Birth</label>
                                 <input
                                     type="date"
-                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-medium"
+                                    className="w-full px-5 py-3.5 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-1 focus:ring-brand-blue outline-none transition-all font-medium"
                                     value={formData.dateOfBirth}
                                     onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Profile Photo</label>
+                            <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                <label className="text-[13px] font-black text-slate-500 tracking-widest ml-1">Profile Photo</label>
                                 <div className="flex items-center gap-4">
                                     {editingUser?.ProfileImage && (
                                         <div className="w-14 h-14 rounded-2xl overflow-hidden border border-slate-200 shadow-sm shrink-0">
@@ -692,14 +696,14 @@ const ManageUsers = () => {
                                         <input
                                             type="file"
                                             accept="image/*"
-                                            className="w-full px-5 py-3 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all text-xs font-medium file:mr-4 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-brand-blue/10 file:text-brand-blue hover:file:bg-brand-blue/20 cursor-pointer"
+                                            className="w-full px-5 py-3 rounded-2xl border border-slate-100 bg-slate-50 focus:ring-1 focus:ring-brand-blue outline-none transition-all text-xs font-medium file:mr-4 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-black file:bg-brand-blue/10 file:text-brand-blue hover:file:bg-brand-blue/20 cursor-pointer"
                                             onChange={(e) => setProfileFile(e.target.files ? e.target.files[0] : null)}
                                         />
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="lg:col-span-3 pt-4">
+                            <div className="pt-4">
                                 <button className="w-full bg-brand-blue text-white py-4 rounded-[22px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-blue-500/20 active:scale-[0.98]">
                                     {editingUser ? 'Update Records' : 'Register User'}
                                 </button>

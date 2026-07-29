@@ -439,8 +439,8 @@ const Profile = () => {
                                     )}
 
                                     <form onSubmit={handlePasswordChange} className="space-y-6">
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Current Password</label>
+                                        <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Current Password</label>
                                             <div className="relative group/field">
                                                 <input
                                                     type={showPasswords.current ? "text" : "password"}
@@ -448,7 +448,7 @@ const Profile = () => {
                                                     value={passwordData.currentPassword}
                                                     onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
                                                     className="w-full px-6 py-4 bg-slate-50 border-none rounded-[20px] focus:ring-2 focus:ring-brand-blue/20 outline-none text-sm font-bold transition-all pr-14"
-                                                    placeholder="••••••••"
+                                                    placeholder="Enter your current password"
                                                 />
                                                 <button
                                                     type="button"
@@ -460,46 +460,45 @@ const Profile = () => {
                                             </div>
                                         </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">New Password</label>
-                                                <div className="relative group/field">
-                                                    <input
-                                                        type={showPasswords.new ? "text" : "password"}
-                                                        required
-                                                        value={passwordData.newPassword}
-                                                        onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                                                        className="w-full px-6 py-4 bg-slate-50 border-none rounded-[20px] focus:ring-2 focus:ring-brand-blue/20 outline-none text-sm font-bold transition-all pr-14"
-                                                        placeholder="••••••••"
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })}
-                                                        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-slate-300 hover:text-brand-blue transition-colors rounded-xl hover:bg-white shadow-sm"
-                                                    >
-                                                        {showPasswords.new ? <EyeOff size={18} /> : <Eye size={18} />}
-                                                    </button>
-                                                </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">New Password</label>
+                                            <div className="relative group/field">
+                                                <input
+                                                    type={showPasswords.new ? "text" : "password"}
+                                                    required
+                                                    value={passwordData.newPassword}
+                                                    onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                                                    className="w-full px-6 py-4 bg-slate-50 border-none rounded-[20px] focus:ring-2 focus:ring-brand-blue/20 outline-none text-sm font-bold transition-all pr-14"
+                                                    placeholder="Enter your new password"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })}
+                                                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-slate-300 hover:text-brand-blue transition-colors rounded-xl hover:bg-white shadow-sm"
+                                                >
+                                                    {showPasswords.new ? <EyeOff size={18} /> : <Eye size={18} />}
+                                                </button>
                                             </div>
-                                            <div className="space-y-2">
-                                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4">Confirm New Password</label>
-                                                <div className="relative group/field">
-                                                    <input
-                                                        type={showPasswords.confirm ? "text" : "password"}
-                                                        required
-                                                        value={passwordData.confirmPassword}
-                                                        onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                                                        className="w-full px-6 py-4 bg-slate-50 border-none rounded-[20px] focus:ring-2 focus:ring-brand-blue/20 outline-none text-sm font-bold transition-all pr-14"
-                                                        placeholder="••••••••"
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => setShowPasswords({ ...showPasswords, confirm: !showPasswords.confirm })}
-                                                        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-slate-300 hover:text-brand-blue transition-colors rounded-xl hover:bg-white shadow-sm"
-                                                    >
-                                                        {showPasswords.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
-                                                    </button>
-                                                </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] items-center gap-x-4">
+                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-4">Confirm New Password</label>
+                                            <div className="relative group/field">
+                                                <input
+                                                    type={showPasswords.confirm ? "text" : "password"}
+                                                    required
+                                                    value={passwordData.confirmPassword}
+                                                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                                                    className="w-full px-6 py-4 bg-slate-50 border-none rounded-[20px] focus:ring-2 focus:ring-brand-blue/20 outline-none text-sm font-bold transition-all pr-14"
+                                                    placeholder="Enter your confirm password"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowPasswords({ ...showPasswords, confirm: !showPasswords.confirm })}
+                                                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-slate-300 hover:text-brand-blue transition-colors rounded-xl hover:bg-white shadow-sm"
+                                                >
+                                                    {showPasswords.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                                                </button>
                                             </div>
                                         </div>
 

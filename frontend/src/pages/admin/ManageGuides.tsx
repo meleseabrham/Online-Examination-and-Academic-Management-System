@@ -229,9 +229,7 @@ const ManageGuides = () => {
                     <div className="bg-white w-full max-w-2xl rounded-[30px] shadow-2xl relative z-10 overflow-hidden animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto">
                         <div className="bg-[#F8FAFC] p-6 flex justify-between items-center sticky top-0 z-20">
                             <div>
-                                <span className="text-[9px] font-black text-brand-blue uppercase tracking-widest">
-                                    {editingGuide ? 'Edit Guide' : 'New Guide'}
-                                </span>
+
                                 <h3 className="text-xl font-black text-[#2B3674] tracking-tight">
                                     {editingGuide ? 'Update Guide' : 'Create System Guide'}
                                 </h3>
@@ -242,59 +240,78 @@ const ManageGuides = () => {
                         </div>
 
                         <form onSubmit={handleSubmit} className="p-6 space-y-5">
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase text-[#2B3674]/50 ml-1">Title *</label>
+                            {/* Title */}
+                            <div className="grid grid-cols-[180px_1fr] items-center gap-4">
+                                <label className="text-[13px] font-black text-[#2B3674]/80">
+                                    Title *
+                                </label>
                                 <input
                                     type="text"
                                     required
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     placeholder="e.g., How to Take an Exam"
-                                    className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-[#2B3674] outline-none focus:ring-2 focus:ring-brand-blue"
+                                    className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-[#2B3674] outline-none focus:ring-1 focus:ring-brand-blue"
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase text-[#2B3674]/50 ml-1">Target Audience *</label>
+                            {/* Target Audience */}
+                            <div className="grid grid-cols-[180px_1fr] items-center gap-4">
+                                <label className="text-[13px] font-black text-[#2B3674]/80">
+                                    Target Audience *
+                                </label>
                                 <div className="relative">
                                     <select
                                         value={targetRole}
                                         onChange={(e) => setTargetRole(e.target.value)}
-                                        className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-[#2B3674] outline-none focus:ring-2 focus:ring-brand-blue appearance-none"
+                                        className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-[#2B3674] outline-none focus:ring-1 focus:ring-brand-blue appearance-none"
                                     >
                                         <option value="All">All Users</option>
                                         <option value="Student">Students Only</option>
                                         <option value="Teacher">Teachers Only</option>
                                         <option value="Director">Directors Only</option>
                                     </select>
-                                    <Users size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                                    <Users
+                                        size={14}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                                    />
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase text-[#2B3674]/50 ml-1">Short Description</label>
+                            {/* Short Description */}
+                            <div className="grid grid-cols-[180px_1fr] items-center gap-4">
+                                <label className="text-[13px] font-black text-[#2B3674]/80">
+                                    Short Description
+                                </label>
                                 <input
                                     type="text"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     placeholder="Brief summary of this guide"
-                                    className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-[#2B3674] outline-none focus:ring-2 focus:ring-brand-blue"
+                                    className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-[#2B3674] outline-none focus:ring-1 focus:ring-brand-blue"
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase text-[#2B3674]/50 ml-1">Guide Content</label>
+                            {/* Guide Content */}
+                            <div className="grid grid-cols-[180px_1fr] items-start gap-4">
+                                <label className="text-[13px] font-black text-[#2B3674]/80">
+                                    Guide Content
+                                </label>
                                 <textarea
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
                                     placeholder="Write detailed instructions here..."
                                     rows={6}
-                                    className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-medium text-[#2B3674] outline-none focus:ring-2 focus:ring-brand-blue resize-none"
+                                    className="w-full p-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-medium text-[#2B3674] outline-none focus:ring-1 focus:ring-brand-blue resize-none"
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase text-[#2B3674]/50 ml-1">Attachment (Optional)</label>
+                            {/* Attachment */}
+                            <div className="grid grid-cols-[180px_1fr] items-center gap-4">
+                                <label className="text-[13px] font-black text-[#2B3674]/80">
+                                    Attachment (Optional)
+                                </label>
+
                                 <div className="relative">
                                     <input
                                         type="file"
@@ -302,31 +319,38 @@ const ManageGuides = () => {
                                         className="hidden"
                                         id="guide-file"
                                     />
+
                                     <label
                                         htmlFor="guide-file"
                                         className="flex items-center gap-3 w-full p-3 bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl text-sm font-bold text-slate-400 cursor-pointer hover:border-brand-blue hover:text-brand-blue transition-all"
                                     >
                                         <Upload size={16} />
-                                        {file ? file.name : editingGuide?.FileName ? `Current: ${editingGuide.FileName}` : 'Upload a PDF, DOCX, or image...'}
+                                        {file
+                                            ? file.name
+                                            : editingGuide?.FileName
+                                                ? `Current: ${editingGuide.FileName}`
+                                                : "Upload a PDF, DOCX, or image..."}
                                     </label>
                                 </div>
                             </div>
 
-                            <div className="flex gap-3 pt-4">
+                            {/* Buttons */}
+                            <div className="flex justify-end gap-3 pt-6">
                                 <button
                                     type="button"
                                     onClick={() => setShowForm(false)}
-                                    className="flex-1 py-3 rounded-xl font-bold text-slate-400 hover:text-[#2B3674] hover:bg-slate-50 transition-all text-sm"
+                                    className="px-6 py-3 rounded-xl font-bold text-slate-400 hover:text-[#2B3674] hover:bg-slate-50 transition-all text-sm"
                                 >
                                     Cancel
                                 </button>
+
                                 <button
                                     type="submit"
                                     disabled={saving}
-                                    className="flex-[2] py-3 bg-brand-blue text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-500/20 hover:bg-blue-600 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                                    className="px-8 py-3 bg-brand-blue text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-500/20 hover:bg-blue-600 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
-                                    {saving ? <Loader size={16} className="animate-spin" /> : null}
-                                    {editingGuide ? 'Update Guide' : 'Create Guide'}
+                                    {saving && <Loader size={16} className="animate-spin" />}
+                                    {editingGuide ? "Update Guide" : "Create Guide"}
                                 </button>
                             </div>
                         </form>
