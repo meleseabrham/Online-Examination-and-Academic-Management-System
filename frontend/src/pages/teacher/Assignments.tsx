@@ -606,40 +606,57 @@ const TeacherAssignments = () => {
                                                                             <button onClick={() => setGradingSubmission(null)} className="text-slate-400 hover:text-red-500"><X size={18} /></button>
                                                                         </div>
                                                                         <form onSubmit={handleGrade} className="space-y-4">
-                                                                            <div className="flex gap-4">
-                                                                                <div className="flex-1">
-                                                                                    <label className="block text-[10px] font-black text-slate-400 uppercase mb-2">Score (Max {a.Points})</label>
+                                                                            <div className="space-y-3">
+                                                                                {/* Score */}
+                                                                                <div className="flex items-center gap-4">
+                                                                                    <label className="w-40 text-[10px] font-black text-slate-400 uppercase whitespace-nowrap">
+                                                                                        Score (Max {a.Points})
+                                                                                    </label>
                                                                                     <input
-                                                                                        type="number" step="0.5" max={a.Points}
+                                                                                        type="number"
+                                                                                        step="0.5"
+                                                                                        max={a.Points}
                                                                                         value={gradeForm.score}
                                                                                         onChange={e => setGradeForm({ ...gradeForm, score: e.target.value })}
-                                                                                        className="w-full px-4 py-2 rounded-xl border border-slate-100 outline-none focus:ring-2 focus:ring-brand-blue font-bold text-sm"
-                                                                                        placeholder="0.00" autoFocus
+                                                                                        className="flex-1 px-4 py-2 rounded-xl border border-slate-100 outline-none focus:ring-1 focus:ring-brand-blue font-bold text-sm"
+                                                                                        placeholder="0.00"
+                                                                                        autoFocus
                                                                                     />
                                                                                 </div>
-                                                                                <div className="flex-[2]">
-                                                                                    <label className="block text-[10px] font-black text-slate-400 uppercase mb-2">Feedback</label>
+
+                                                                                {/* Feedback */}
+                                                                                <div className="flex items-center gap-4">
+                                                                                    <label className="w-40 text-[10px] font-black text-slate-400 uppercase whitespace-nowrap">
+                                                                                        Feedback
+                                                                                    </label>
                                                                                     <input
                                                                                         type="text"
                                                                                         value={gradeForm.feedback}
                                                                                         onChange={e => setGradeForm({ ...gradeForm, feedback: e.target.value })}
-                                                                                        className="w-full px-4 py-2 rounded-xl border border-slate-100 outline-none focus:ring-2 focus:ring-brand-blue font-medium text-sm"
+                                                                                        className="flex-1 px-4 py-2 rounded-xl border border-slate-100 outline-none focus:ring-1 focus:ring-brand-blue font-medium text-sm"
                                                                                         placeholder="Good work! Well structured..."
                                                                                     />
                                                                                 </div>
                                                                             </div>
+
                                                                             <div className="flex justify-end gap-2">
                                                                                 <button
-                                                                                    type="button" onClick={() => setGradingSubmission(null)}
+                                                                                    type="button"
+                                                                                    onClick={() => setGradingSubmission(null)}
                                                                                     className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-[#2B3674]"
                                                                                 >
                                                                                     Cancel
                                                                                 </button>
+
                                                                                 <button
                                                                                     type="submit"
                                                                                     className="px-6 py-2 bg-brand-blue text-white rounded-xl text-xs font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-600 transition-all flex items-center gap-2"
                                                                                 >
-                                                                                    {loading ? <Loader size={14} className="animate-spin" /> : <CheckCircle size={14} />}
+                                                                                    {loading ? (
+                                                                                        <Loader size={14} className="animate-spin" />
+                                                                                    ) : (
+                                                                                        <CheckCircle size={14} />
+                                                                                    )}
                                                                                     Submit Grade
                                                                                 </button>
                                                                             </div>
@@ -752,7 +769,7 @@ const TeacherAssignments = () => {
 
                         {/* Stats/Quick Actions */}
                         <div className="space-y-8">
-                            <div className="bg-gradient-to-br from-brand-blue to-indigo-600 p-8 rounded-[30px] text-white shadow-xl relative overflow-hidden">
+                            {/* <div className="bg-gradient-to-br from-brand-blue to-indigo-600 p-8 rounded-[30px] text-white shadow-xl relative overflow-hidden">
                                 <div className="relative z-10">
                                     <h3 className="text-xl font-bold mb-2">Grading Helper</h3>
                                     <p className="text-white/70 text-sm mb-6">Review pending submissions to keep your students updated on their progress.</p>
@@ -767,7 +784,7 @@ const TeacherAssignments = () => {
                                     </button>
                                 </div>
                                 <CheckCircle size={80} className="absolute -right-4 -bottom-4 text-white/10" />
-                            </div>
+                            </div> */}
 
                             <div className="bg-white p-8 rounded-[30px] border border-slate-100 shadow-sm">
                                 <h3 className="font-bold text-[#2B3674] mb-6">Class Performance</h3>

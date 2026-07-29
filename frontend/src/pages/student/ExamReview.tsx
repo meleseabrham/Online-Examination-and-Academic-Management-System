@@ -62,35 +62,48 @@ const ExamReview = () => {
         setIsExporting(true);
         try {
             const element = printRef.current;
-            element.style.display = 'block';
 
-            const canvas = await html2canvas(element, { scale: 1.5, useCORS: true, logging: false });
-            const imgData = canvas.toDataURL('image/jpeg', 0.9);
-            const pdf = new jsPDF('p', 'mm', 'a4', true);
+            const canvas = await html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#F4F6F8',
+                windowWidth: 1200,
+                onclone: (clonedDoc) => {
+                    const clonedEl = clonedDoc.querySelector('[data-print-container="true"]') as HTMLElement;
+                    if (clonedEl) {
+                        clonedEl.style.width = '1100px';
+                        clonedEl.style.margin = '0 auto';
+                    }
+                }
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
 
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
-            const imgProps = pdf.getImageProperties(imgData);
-            const contentHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            const imgWidth = pdfWidth;
+            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-            let heightLeft = contentHeight;
+            let heightLeft = imgHeight;
             let position = 0;
 
-            pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, contentHeight, undefined, 'FAST');
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
             heightLeft -= pdfHeight;
 
             while (heightLeft > 0) {
-                position = heightLeft - contentHeight;
+                position = position - pdfHeight;
                 pdf.addPage();
-                pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, contentHeight, undefined, 'FAST');
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
                 heightLeft -= pdfHeight;
             }
 
-            pdf.save(`${examDetails?.subject || 'Exam'}_Review.pdf`);
+            pdf.save(`${examDetails?.title || 'Exam'}_Review.pdf`);
         } catch (error) {
             console.error('PDF Export failed:', error);
+            window.print();
         } finally {
-            if (printRef.current) printRef.current.style.display = 'none';
             setIsExporting(false);
         }
     };
@@ -291,7 +304,7 @@ const ExamReview = () => {
                             </button>
                         </div>
                     ) : (
-                        <div className="space-y-6">
+                        <div ref={printRef} data-print-container="true" className="space-y-6 bg-[#F4F6F8] p-2 rounded-2xl">
                             {/* 4 Header Stat Cards Grid */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                 {/* Card 1: Student */}
@@ -301,8 +314,8 @@ const ExamReview = () => {
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">STUDENT</p>
-                                        <h4 className="text-sm font-black text-slate-800 truncate">{examDetails?.studentName || user.fullName || 'Student'}</h4>
-                                        <p className="text-xs text-slate-500 truncate mb-1">{examDetails?.studentEmail || user.email || ''}</p>
+                                        <h4 className="text-sm font-black text-slate-800 leading-tight">{examDetails?.studentName || user.fullName || 'Student'}</h4>
+                                        <p className="text-xs text-slate-500 mb-1 leading-tight">{examDetails?.studentEmail || user.email || ''}</p>
                                         <span className="inline-block text-[10px] font-extrabold text-blue-700 uppercase bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
                                             {examDetails?.sectionName || examDetails?.studentRegNo || 'DTC06-TRAINER-02'}
                                         </span>
@@ -316,8 +329,8 @@ const ExamReview = () => {
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">EXAM</p>
-                                        <h4 className="text-sm font-black text-slate-800 truncate">{examDetails?.title || 'Online Assessment'}</h4>
-                                        <p className="text-xs text-purple-700 font-bold truncate mt-1">
+                                        <h4 className="text-sm font-black text-slate-800 leading-tight">{examDetails?.title || 'Online Assessment'}</h4>
+                                        <p className="text-xs text-purple-700 font-bold leading-tight mt-1">
                                             {examDetails?.sectionName || 'DTC06-TRAINER-02'} <span className="text-slate-400 font-normal">· {examDetails?.subject || 'Digital Forensic'}</span>
                                         </p>
                                     </div>
@@ -449,34 +462,6 @@ const ExamReview = () => {
                             </div>
                         </div>
                     )}
-                </div>
-
-                {/* HIDDEN PRINT LAYER FOR PDF GENERATION */}
-                <div ref={printRef} className="absolute left-0 top-0 w-[800px] bg-white text-black p-8 mt-[-9999px] font-sans" style={{ display: 'none', zIndex: -9999 }}>
-                    <div className="text-center mb-6 border-b-2 border-slate-800 pb-4">
-                        <h1 className="text-2xl font-black uppercase mb-1 text-slate-900">{examDetails?.subject || 'Course'} - {examDetails?.title || 'Exam Review'}</h1>
-                        <p className="text-xs text-slate-500">Student: {examDetails?.studentName || user.fullName} | Score: {calculatedScore} / {totalMarks}</p>
-                    </div>
-
-                    <div className="space-y-6">
-                        {questions.map((q, i) => (
-                            <div key={q.QuestionId} className="border-b border-slate-200 pb-4 break-inside-avoid">
-                                <p className="font-bold text-sm mb-2 text-slate-900">{i + 1}. {q.Text} ({q.Points} pts)</p>
-                                {q.Type === 'Multiple Choice' || !q.Type ? (
-                                    <div className="pl-4 space-y-1.5 text-xs">
-                                        {q.Options.map((opt) => {
-                                            const isSelected = q.StudentAnswer?.SelectedOptionId === opt.OptionId;
-                                            return (
-                                                <div key={opt.OptionId} className={`p-2 rounded border ${isSelected && opt.IsCorrect ? 'bg-emerald-50 border-emerald-300 text-emerald-800 font-bold' : isSelected ? 'bg-red-50 border-red-300 text-red-800' : opt.IsCorrect ? 'bg-emerald-50/50 border-emerald-200 text-emerald-700' : 'bg-white border-slate-200 text-slate-700'}`}>
-                                                    {opt.Text} {isSelected ? '(Your Answer)' : ''} {opt.IsCorrect ? '✓ Correct' : ''}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                ) : null}
-                            </div>
-                        ))}
-                    </div>
                 </div>
 
             </main>
