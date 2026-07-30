@@ -251,7 +251,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                                         className={() => cn(
                                                             "flex items-center gap-3 px-4 py-2.5 text-sm font-bold transition-all mx-1 rounded-xl",
                                                             location.pathname + location.search === child.path
-                                                                ? "text-white bg-[#0066FF] shadow-sm"
+                                                                ? "text-white bg-blue-500  shadow-sm"
                                                                 : "text-[#1B2559] hover:bg-slate-50"
                                                         )}
                                                     >
@@ -273,7 +273,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                                 className={() => cn(
                                                     "flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all",
                                                     location.pathname + location.search === child.path
-                                                        ? "text-white bg-[#0066FF] shadow-md shadow-blue-500/20"
+                                                        ? "text-white bg-blue-500  shadow-md shadow-blue-500/20"
                                                         : "text-[#1B2559] hover:bg-slate-100"
                                                 )}
                                             >
@@ -291,7 +291,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
                                 end={link.path === '/admin' || link.path === '/teacher' || link.path === '/student' || link.path === '/director'}
                                 className={({ isActive }: { isActive: boolean }) => cn(
                                     "flex items-center px-3.5 py-3 rounded-xl transition-all duration-300 relative group font-bold text-sm",
-                                    isActive ? "bg-[#0066FF] text-white shadow-md shadow-blue-500/20" : "text-[#1B2559] hover:bg-slate-50",
+                                    isActive ? "bg-blue-500 text-white shadow-md shadow-blue-500/20" : "text-[#1B2559] hover:bg-slate-50",
                                     isCollapsed ? "justify-center" : "justify-between",
                                     (link as any).live && !isActive && "text-green-600"
                                 )}
