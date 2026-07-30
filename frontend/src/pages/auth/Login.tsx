@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, AlertCircle, BookOpen, Eye, EyeOff, Phone, MapPin } from 'lucide-react';
+import { Mail, Lock, AlertCircle, BookOpen, Eye, EyeOff, Phone, MapPin, X } from 'lucide-react';
 import axios from 'axios';
 import GuestHeader from '../../components/GuestHeader';
 import { clsx, type ClassValue } from 'clsx';
@@ -14,8 +14,8 @@ function cn(...inputs: ClassValue[]) {
 }
 
 const loginSchema = z.object({
-    email: z.string().email('pleae enter your email'),
-    password: z.string().min(6, 'Please enter your password'),
+    email: z.string().min(1, 'Please enter your email address').email('Please enter a valid email address'),
+    password: z.string().min(1, 'Please enter your password'),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -23,6 +23,16 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 const Login = () => {
     const navigate = useNavigate();
     const [serverError, setServerError] = useState<string | null>(null);
+
+    // Auto-dismiss top error popup after 5 seconds
+    useEffect(() => {
+        if (serverError) {
+            const timer = setTimeout(() => {
+                setServerError(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [serverError]);
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
@@ -71,12 +81,31 @@ const Login = () => {
             }
         } catch (err: any) {
             console.error('Login error:', err);
-            setServerError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+            const msg = err.response?.data?.message;
+            setServerError(msg || 'Incorrect email and password please try again !');
         }
     };
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-4 py-12">
+        <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-4 py-12 relative">
+            {/* Top Center Error Popup */}
+            {serverError && (
+                <div className="fixed top-[76px] left-1/2 -translate-x-1/2 z-[200] max-w-md w-[90%] sm:w-auto bg-red-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-6 duration-300 border border-red-500">
+                    <div className="flex items-center gap-3">
+                        <AlertCircle className="w-5 h-5 text-white shrink-0" />
+                        <span className="text-sm font-semibold tracking-wide">{serverError}</span>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => setServerError(null)}
+                        className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white shrink-0"
+                        title="Close"
+                    >
+                        <X className="w-4 h-4" />
+                    </button>
+                </div>
+            )}
+
             <GuestHeader />
 
             <div className="w-full max-w-md sm:max-w-lg animate-in fade-in slide-in-from-bottom-6 duration-700">
@@ -125,13 +154,6 @@ const Login = () => {
                 {/* Login Card */}
                 <div className="bg-white p-8 sm:p-10 rounded-[36px] shadow-xl shadow-blue-500/5 border border-slate-100/80 w-full relative">
                     {/* <h2 className="text-2xl font-bold text-[#1B2559] mb-6">Login</h2> */}
-
-                    {serverError && (
-                        <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl flex items-center gap-3 text-sm font-medium animate-in fade-in zoom-in duration-300">
-                            <AlertCircle size={18} />
-                            {serverError}
-                        </div>
-                    )}
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                         <div>

@@ -35,17 +35,17 @@ export const login = async (req: Request, res: Response) => {
         }
 
         if (!user) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(404).json({ message: 'Email does not exist, contact administrator' });
         }
 
         // Status check: Only allow active users to login
         if (user.Status === 'Inactive') {
-            return res.status(403).json({ message: 'Account is deactivated. Please contact administration.' });
+            return res.status(403).json({ message: 'Account is deactivated. Please contact administrator.' });
         }
 
         const isMatch = await bcrypt.compare(password, user.Password);
         if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Incorrect email and password please try again !' });
         }
 
         const secret = process.env.JWT_SECRET || 'super_secret_jwt_key_online_exam_2026';
