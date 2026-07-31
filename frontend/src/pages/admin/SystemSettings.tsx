@@ -254,11 +254,10 @@ const SystemSettings = () => {
         <div className="flex bg-[#F8FAFC] h-screen overflow-hidden relative">
             {/* Top Center Popup Notification */}
             {message && (
-                <div className={`fixed top-[76px] left-1/2 -translate-x-1/2 z-[200] max-w-md w-[90%] sm:w-auto px-5 py-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-6 duration-300 border text-white ${
-                    message.type === 'success'
-                        ? 'bg-emerald-600 border-emerald-500'
-                        : 'bg-red-600 border-red-500'
-                }`}>
+                <div className={`fixed top-[76px] left-1/2 -translate-x-1/2 z-[200] max-w-md w-[90%] sm:w-auto px-5 py-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-6 duration-300 border text-white ${message.type === 'success'
+                    ? 'bg-emerald-600 border-emerald-500'
+                    : 'bg-red-600 border-red-500'
+                    }`}>
                     <div className="flex items-center gap-3">
                         {message.type === 'success' ? (
                             <CheckCircle2 className="w-5 h-5 text-white shrink-0" />
@@ -314,7 +313,7 @@ const SystemSettings = () => {
                                     <div className="px-8 pb-8 animate-in slide-in-from-top-4 duration-300">
                                         <div className="flex flex-col md:flex-row items-center gap-8">
                                             <div className="relative group">
-                                                <div className="w-32 h-32 rounded-[30px] bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden transition-all group-hover:border-brand-blue">
+                                                <div className="w-24 h-24 rounded-[30px] bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden transition-all group-hover:border-brand-blue">
                                                     {logoPreview ? (
                                                         <img src={logoPreview} alt="Preview" className="w-full h-full object-contain" />
                                                     ) : schoolLogo ? (
@@ -333,9 +332,16 @@ const SystemSettings = () => {
                                                                 handleLogoDelete();
                                                             }
                                                         }}
-                                                        className="absolute -top-2 -right-2 w-8 h-8 bg-white text-red-500 rounded-full shadow-lg border border-red-50 flex items-center justify-center hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
+                                                        className="group/delete absolute -top-2 -right-2 w-8 h-8 bg-white text-red-500 rounded-full shadow-lg border border-red-50 flex items-center justify-center hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
                                                     >
                                                         <X size={16} />
+
+                                                        {/* Tooltip */}
+                                                        <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-red-500 px-2 py-1 text-xs font-medium text-white opacity-0 group-hover/delete:opacity-100 transition-opacity duration-200 shadow-md">
+                                                            Delete
+                                                            {/* Arrow */}
+                                                            <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-red-500" />
+                                                        </span>
                                                     </button>
                                                 )}
                                             </div>
@@ -412,9 +418,16 @@ const SystemSettings = () => {
                                                                 handleBgDelete();
                                                             }
                                                         }}
-                                                        className="absolute -top-2 -right-2 w-8 h-8 bg-white text-red-500 rounded-full shadow-lg border border-red-50 flex items-center justify-center hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
+                                                        className="group/delete absolute -top-2 -right-2 w-8 h-8 bg-white text-red-500 rounded-full shadow-lg border border-red-50 flex items-center justify-center hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
                                                     >
                                                         <X size={16} />
+
+                                                        {/* Tooltip */}
+                                                        <span className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-red-500 px-2 py-1 text-xs font-medium text-white opacity-0 group-hover/delete:opacity-100 transition-opacity duration-200 shadow-md">
+                                                            Delete
+                                                            {/* Arrow */}
+                                                            <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-red-500" />
+                                                        </span>
                                                     </button>
                                                 )}
                                             </div>
