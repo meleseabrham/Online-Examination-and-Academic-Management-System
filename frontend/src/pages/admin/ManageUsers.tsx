@@ -59,6 +59,8 @@ const ManageUsers = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
     const [perPageOpen, setPerPageOpen] = useState(false);
+    // Row action menu
+    const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
     const fetchUsers = async () => {
         try {
@@ -411,53 +413,93 @@ const ManageUsers = () => {
                                                 </span>
                                             </td>
                                             <td className="py-6 text-center">
-                                                <span className={`px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 mx-auto w-fit shadow-sm border ${user.Status === 'Active'
-                                                    ? ' text-emerald-600 border-emerald-100'
-                                                    : 'text-rose-600 border-rose-100'
+                                                <span className={`px-4 py-3  text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 mx-auto w-fit   ${user.Status === 'Active'
+                                                    ? ' text-emerald-600 '
+                                                    : 'text-rose-600 '
                                                     }`}>
                                                     <div className={`w-1.5 h-1.5 rounded-full ${user.Status === 'Active' ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
                                                     {user.Status === 'Active' ? 'Authorized' : 'Suspended'}
                                                 </span>
                                             </td>
-                                            <td className="py-6 text-right">
-                                                <div className="flex justify-end gap-2">
+                                            <td className="py-6 text-right pr-4">
+                                                <div className="relative flex justify-end">
+                                                    {/* 3-dot trigger */}
                                                     <button
-                                                        onClick={() => handleShowProfile(user.UserId)}
-                                                        className="flex items-center gap-2 px-3 py-2.5 bg-green-700 text-white hover:bg-green-800 hover:text-white rounded-xl transition-all shadow-sm active:scale-95"
-                                                        title="View Profile"
+                                                        onClick={() => setOpenMenuId(openMenuId === user.UserId ? null : user.UserId)}
+                                                        className="w-9 h-9 flex flex-col items-center justify-center gap-[4px] rounded-xl hover:bg-slate-100 transition-all text-slate-400 hover:text-slate-700 active:scale-90"
+                                                        title="Actions"
                                                     >
-                                                        <Info size={16} />
-                                                        <span className="text-[10px] font-black uppercase tracking-wider">Info</span>
+                                                        <span className="w-1 h-1 bg-current rounded-full" />
+                                                        <span className="w-1 h-1 bg-current rounded-full" />
+                                                        <span className="w-1 h-1 bg-current rounded-full" />
                                                     </button>
-                                                    <button
-                                                        onClick={() => toggleStatus(user)}
-                                                        className={`flex items-center gap-2 px-3 py-2.5 rounded-xl transition-all shadow-sm active:scale-95 border ${user.Status === 'Active'
-                                                            ? 'bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white border-rose-100'
-                                                            : 'bg-emerald-50 text-emerald-500 hover:bg-emerald-500 hover:text-white border-emerald-100'
-                                                            }`}
-                                                        title={user.Status === 'Active' ? 'Suspend Account' : 'Authorize Account'}
-                                                    >
-                                                        {user.Status === 'Active' ? <UserX size={16} /> : <UserCheck size={16} />}
-                                                        <span className="text-[10px] font-black uppercase tracking-wider">
-                                                            {user.Status === 'Active' ? 'Suspend' : 'Authorize'}
-                                                        </span>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleOpenModal(user)}
-                                                        className="flex items-center gap-2 px-3 py-2.5 bg-black text-white hover:bg-gray-600 hover:text-white rounded-xl transition-all shadow-sm active:scale-95"
-                                                        title="Edit User"
-                                                    >
-                                                        <Edit2 size={16} />
-                                                        <span className="text-[10px] font-black uppercase tracking-wider">Edit</span>
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(user.UserId)}
-                                                        className="flex items-center gap-2 px-3 py-2.5 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-all shadow-sm active:scale-95"
-                                                        title="Delete User"
-                                                    >
-                                                        <Trash2 size={16} />
-                                                        <span className="text-[10px] font-black uppercase tracking-wider">Delete</span>
-                                                    </button>
+
+                                                    {/* Dropdown */}
+                                                    {openMenuId === user.UserId && (
+                                                        <>
+                                                            {/* Backdrop */}
+                                                            <div
+                                                                className="fixed inset-0 z-30"
+                                                                onClick={() => setOpenMenuId(null)}
+                                                            />
+                                                            <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-slate-100 rounded-2xl shadow-2xl z-40 overflow-hidden py-1">
+                                                                {/* Info */}
+                                                                <button
+                                                                    onClick={() => { handleShowProfile(user.UserId); setOpenMenuId(null); }}
+                                                                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors group"
+                                                                >
+                                                                    <span className="w-7 h-7 rounded-lg bg-emerald-50 group-hover:bg-emerald-100 flex items-center justify-center shrink-0 transition-colors">
+                                                                        <Info size={14} className="text-emerald-600" />
+                                                                    </span>
+                                                                    View Info
+                                                                </button>
+
+                                                                {/* Suspend / Authorize */}
+                                                                <button
+                                                                    onClick={() => { toggleStatus(user); setOpenMenuId(null); }}
+                                                                    className={`w-full flex items-center gap-3 px-4 py-3 text-left text-sm font-semibold transition-colors group ${user.Status === 'Active'
+                                                                        ? 'text-rose-600 hover:bg-rose-50'
+                                                                        : 'text-emerald-600 hover:bg-emerald-50'
+                                                                        }`}
+                                                                >
+                                                                    <span className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors ${user.Status === 'Active'
+                                                                        ? 'bg-rose-50 group-hover:bg-rose-100'
+                                                                        : 'bg-emerald-50 group-hover:bg-emerald-100'
+                                                                        }`}>
+                                                                        {user.Status === 'Active'
+                                                                            ? <UserX size={14} className="text-rose-500" />
+                                                                            : <UserCheck size={14} className="text-emerald-500" />
+                                                                        }
+                                                                    </span>
+                                                                    {user.Status === 'Active' ? 'Suspend' : 'Authorize'}
+                                                                </button>
+
+                                                                {/* Edit */}
+                                                                <button
+                                                                    onClick={() => { handleOpenModal(user); setOpenMenuId(null); }}
+                                                                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition-colors group"
+                                                                >
+                                                                    <span className="w-7 h-7 rounded-lg bg-slate-50 group-hover:bg-blue-100 flex items-center justify-center shrink-0 transition-colors">
+                                                                        <Edit2 size={14} className="text-blue-600" />
+                                                                    </span>
+                                                                    Update
+                                                                </button>
+
+                                                                <div className="mx-3 my-1 border-t border-slate-100" />
+
+                                                                {/* Delete */}
+                                                                <button
+                                                                    onClick={() => { handleDelete(user.UserId); setOpenMenuId(null); }}
+                                                                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors group"
+                                                                >
+                                                                    <span className="w-7 h-7 rounded-lg bg-red-50 group-hover:bg-red-100 flex items-center justify-center shrink-0 transition-colors">
+                                                                        <Trash2 size={14} className="text-red-500" />
+                                                                    </span>
+                                                                    Delete
+                                                                </button>
+                                                            </div>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </td>
                                         </tr>
@@ -548,11 +590,11 @@ const ManageUsers = () => {
                         <div className="flex justify-between items-center mb-10">
                             <div>
                                 <h2 className="text-3xl font-black text-[#2B3674] tracking-tight">
-                                    {editingUser ? 'Edit User Profile' : 'Register New User'}
+                                    {editingUser ? 'Update User' : 'Register New User'}
                                 </h2>
-                                <p className="text-slate-500 font-medium text-sm mt-1">
+                                {/* <p className="text-slate-500 font-medium text-sm mt-1">
                                     {editingUser ? 'Update the account details below.' : 'Create a new institutional account.'}
-                                </p>
+                                </p> */}
                             </div>
                             <button onClick={handleCloseModal} className="w-12 h-12 rounded-2xl bg-slate-50 text-slate-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center transition-all border border-slate-100">
                                 <X size={24} />
