@@ -776,7 +776,7 @@ const AcademicManagement = () => {
                     {/* Content Panels */}
                     {activeTab === 'years' && (
                         <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-300">
-                            <div className="flex justify-between items-center bg-white p-6 rounded-[30px] shadow-sm border border-slate-100">
+                            <div className="flex justify-between items-center bg-white p-6 rounded-[10px] shadow-sm border border-slate-100">
                                 <div>
                                     <h2 className="text-xl font-bold text-[#2B3674]">Academic Years</h2>
                                     <p className="text-slate-400 text-sm">Define high-level periods.</p>
@@ -790,12 +790,12 @@ const AcademicManagement = () => {
                             </div>
 
                             {showYearForm && (
-                                <div className="bg-white p-8 rounded-[30px] shadow-xl border border-slate-100 animate-in slide-in-from-top-4 duration-300">
+                                <div className="bg-white p-8 rounded-[10px] shadow-xl border border-slate-100 animate-in slide-in-from-top-4 duration-300">
                                     <form onSubmit={handleSubmitYear} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Year Name</label>
                                             <input
-                                                className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-bold text-[#2B3674]"
+                                                className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-bold text-[#2B3674]"
                                                 placeholder="e.g. 2025-2026"
                                                 value={yearForm.name}
                                                 onChange={e => setYearForm({ ...yearForm, name: e.target.value })}
@@ -817,7 +817,7 @@ const AcademicManagement = () => {
                                             <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Start Date</label>
                                             <input
                                                 type="date"
-                                                className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-bold text-[#2B3674]"
+                                                className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-bold text-[#2B3674]"
                                                 value={yearForm.startDate ? yearForm.startDate.substring(0, 10) : ''}
                                                 onChange={e => setYearForm({ ...yearForm, startDate: e.target.value })}
                                                 required
@@ -827,7 +827,7 @@ const AcademicManagement = () => {
                                             <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">End Date</label>
                                             <input
                                                 type="date"
-                                                className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-bold text-[#2B3674]"
+                                                className="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-brand-blue outline-none transition-all font-bold text-[#2B3674]"
                                                 value={yearForm.endDate ? yearForm.endDate.substring(0, 10) : ''}
                                                 onChange={e => setYearForm({ ...yearForm, endDate: e.target.value })}
                                                 required
@@ -843,7 +843,7 @@ const AcademicManagement = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                 {years.map(year => (
-                                    <div key={year.Id} className="bg-white p-6 rounded-[30px] border border-slate-100 shadow-sm hover:shadow-xl transition-all group relative">
+                                    <div key={year.Id} className="bg-white p-6 rounded-[10px] border border-slate-100 shadow-sm hover:shadow-xl transition-all group relative">
                                         <div className="flex justify-between items-start mb-6">
                                             <div className={`p-3 rounded-2xl ${year.IsActive ? 'bg-green-100 text-green-600' : 'bg-slate-100 text-slate-400'}`}>
                                                 <Calendar size={24} />
@@ -1842,7 +1842,7 @@ const AcademicManagement = () => {
 
                     {activeTab === 'backups' && (
                         <div className="max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-300">
-                            <div className="bg-white p-8 rounded-[40px] shadow-sm border border-slate-100 mb-8">
+                            <div className="bg-white p-8 rounded-[10px] shadow-sm border border-slate-100 mb-8">
                                 <div className="flex items-center justify-between mb-8">
                                     <div>
                                         <h2 className="text-2xl font-black text-[#2B3674] tracking-tight mb-1">System Backups</h2>
