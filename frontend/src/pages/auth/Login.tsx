@@ -91,7 +91,7 @@ const Login = () => {
     return (
         <div
             className="min-h-screen flex flex-col items-center justify-center p-4 py-12 relative overflow-hidden"
-            style={!publicSettings.LoginBg ? { backgroundColor: '#F8FAFC' } : {}}
+            style={!publicSettings.LoginBg ? { backgroundColor: '#e2e9e8ff' } : {}}
         >
             {/* Ken Burns animated background image */}
             {publicSettings.LoginBg && (
@@ -138,7 +138,7 @@ const Login = () => {
 
                 {/* Logo & School Header */}
                 <div className="flex items-center justify-center gap-4 mb-8">
-                    <div className="flex-shrink-0">
+                    {/* <div className="flex-shrink-0">
                         {publicSettings.SchoolLogo && !logoError ? (
                             <img
                                 src={getImageUrl(publicSettings.SchoolLogo)!}
@@ -151,7 +151,7 @@ const Login = () => {
                                 <BookOpen size={24} />
                             </div>
                         )}
-                    </div>
+                    </div> */}
                     <h1 className={`text-xl sm:text-2xl font-black tracking-tight ${publicSettings.LoginBg ? 'text-white drop-shadow-lg' : 'text-[#1B2559]'}`}>
                         <span className="sm:hidden text-brand-blue">
                             {publicSettings.SchoolName

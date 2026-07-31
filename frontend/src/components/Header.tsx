@@ -198,7 +198,7 @@ const Header = ({ email, role }: HeaderProps) => {
                                     <span>{getInitials()}</span>
                                 )}
                             </div>
-                            <div className="hidden sm:block px-4 py-2 bg-slate-100/80 hover:bg-slate-100 rounded-2xl text-sm font-bold text-[#2B3674] transition-colors whitespace-nowrap">
+                            <div className="hidden sm:block px-4 py-2  rounded-10px text-sm font-bold text-[#2B3674] transition-colors whitespace-nowrap">
                                 {getUserDisplayName()}
                             </div>
                         </div>
