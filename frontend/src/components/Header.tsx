@@ -205,8 +205,8 @@ const Header = ({ email, role }: HeaderProps) => {
 
                         {isDropdownOpen && (
                             <>
-                                <div className="fixed inset-0 z-40" onClick={() => setIsDropdownOpen(false)}></div>
-                                <div className="absolute right-0 mt-2 w-55 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-50 animate-in fade-in zoom-in-95 duration-150 origin-top-right">
+                                <div className="fixed inset-0 z-[199]" onClick={() => setIsDropdownOpen(false)}></div>
+                                <div className="absolute right-0 mt-2 w-55 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-[200] animate-in fade-in zoom-in-95 duration-150 origin-top-right">
                                     <div className="space-y-0.5">
                                         <Link
                                             to="/profile"
