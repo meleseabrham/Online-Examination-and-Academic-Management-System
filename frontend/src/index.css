@@ -156,3 +156,54 @@ body {
 .animate-notification {
   animation: notification-pulse 2s infinite;
 }
+
+/* ─── Login Page Background Animation (Ken Burns) ─── */
+.your-element {
+  animation: loginbg-kenburns 30s ease-in-out infinite;
+  /* longer duration = slower */
+}
+
+@keyframes loginbg-kenburns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+
+  50% {
+    transform: scale(1.08) translate(-1%, -1%);
+  }
+
+  100% {
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+.login-bg-animated {
+  position: absolute;
+  inset: -5%;
+  /* slightly oversized so zoom never shows edges */
+  width: 110%;
+  height: 110%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  /* Force highest quality image rendering */
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
+  z-index: 0;
+  animation: loginbg-kenburns 22s ease-in-out infinite;
+}
+
+.login-bg-overlay {
+  position: absolute;
+  inset: 0;
+  /* elegant gradient overlay: darker at bottom, lighter at top */
+  background: linear-gradient(160deg,
+      rgba(0, 0, 0, 0.18) 0%,
+      rgba(0, 0, 0, 0.30) 50%,
+      rgba(0, 0, 0, 0.45) 100%);
+  backdrop-filter: blur(0.5px);
+  -webkit-backdrop-filter: blur(0.5px);
+  z-index: 1;
+}

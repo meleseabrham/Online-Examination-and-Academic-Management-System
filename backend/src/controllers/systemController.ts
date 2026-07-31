@@ -60,7 +60,7 @@ export const getPublicSettings = async (req: Request, res: Response) => {
         const result = await pool.request().query(`
             SELECT SettingKey, SettingValue 
             FROM SystemSettings 
-            WHERE SettingKey IN ('SchoolName', 'SystemVersion', 'SupportEmail', 'SchoolLogo', 'SchoolPhone', 'SchoolAddress') 
+            WHERE SettingKey IN ('SchoolName', 'SystemVersion', 'SupportEmail', 'SchoolLogo', 'SchoolPhone', 'SchoolAddress', 'LoginBg', 'MaintenanceMode') 
             AND EntityType IS NULL
         `);
         res.json(result.recordset);
@@ -113,26 +113,63 @@ export const deleteSystemSetting = async (req: Request, res: Response) => {
     }
 };
 
+// Helper: build full HTTP URL from request and a relative path
+const buildUrl = (req: Request, relativePath: string): string => {
+    const protocol = req.protocol || 'http';
+    const rawHost = req.get('host') || 'localhost';
+    const hostname = rawHost.split(':')[0];
+    const port = process.env.PORT || 5000;
+    return `${protocol}://${hostname}:${port}/${relativePath.replace(/^\//, '')}`;
+};
+
+// Helper: extract relative path from a full URL or return as-is
+const toRelativePath = (urlOrPath: string): string => {
+    if (!urlOrPath) return '';
+    try {
+        if (urlOrPath.startsWith('http://') || urlOrPath.startsWith('https://')) {
+            const u = new URL(urlOrPath);
+            return u.pathname.replace(/^\//, '');
+        }
+        return urlOrPath.replace(/^\//, '');
+    } catch {
+        return urlOrPath.replace(/^\//, '');
+    }
+};
+
+const safeDeleteFile = (settingValue: string) => {
+    try {
+        if (!settingValue) return;
+        const oldRel = toRelativePath(settingValue);
+        if (!oldRel) return;
+        const p = path.join(process.cwd(), oldRel);
+        if (fs.existsSync(p)) {
+            fs.unlinkSync(p);
+        }
+    } catch (e) {
+        console.warn('Could not delete physical file from disk:', e);
+    }
+};
+
 export const updateLogo = async (req: Request, res: Response) => {
     try {
         if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
-        const logoUrl = `/uploads/branding/${req.file.filename}`;
+        const relPath = `uploads/branding/${req.file.filename}`;
+        const fullUrl = buildUrl(req, relPath);
         const pool = await poolPromise;
 
-        // Cleanup old logo
+        // Cleanup old logo file safely
         const old = await pool.request().input('k', sql.NVarChar, 'SchoolLogo').query("SELECT SettingValue FROM SystemSettings WHERE SettingKey = @k AND EntityType IS NULL");
         if (old.recordset.length > 0) {
-            const p = path.join(process.cwd(), old.recordset[0].SettingValue);
-            if (fs.existsSync(p)) fs.unlinkSync(p);
+            safeDeleteFile(old.recordset[0].SettingValue);
         }
 
-        await pool.request().input('k', sql.NVarChar, 'SchoolLogo').input('v', sql.NVarChar, logoUrl).query(`
+        await pool.request().input('k', sql.NVarChar, 'SchoolLogo').input('v', sql.NVarChar, fullUrl).query(`
             IF EXISTS (SELECT 1 FROM SystemSettings WHERE SettingKey = @k AND EntityType IS NULL)
                 UPDATE SystemSettings SET SettingValue = @v, UpdatedAt = GETDATE() WHERE SettingKey = @k AND EntityType IS NULL
             ELSE
                 INSERT INTO SystemSettings (SettingKey, SettingValue) VALUES (@k, @v)
         `);
-        res.json({ message: 'Logo updated successfully', url: logoUrl });
+        res.json({ message: 'Logo updated successfully', url: fullUrl });
     } catch (err) { console.error(err); res.status(500).json({ message: 'Error updating logo' }); }
 };
 
@@ -141,12 +178,46 @@ export const deleteLogo = async (req: Request, res: Response) => {
         const pool = await poolPromise;
         const old = await pool.request().input('k', sql.NVarChar, 'SchoolLogo').query("SELECT SettingValue FROM SystemSettings WHERE SettingKey = @k AND EntityType IS NULL");
         if (old.recordset.length > 0) {
-            const p = path.join(process.cwd(), old.recordset[0].SettingValue);
-            if (fs.existsSync(p)) fs.unlinkSync(p);
+            safeDeleteFile(old.recordset[0].SettingValue);
         }
         await pool.request().input('k', sql.NVarChar, 'SchoolLogo').query("DELETE FROM SystemSettings WHERE SettingKey = @k AND EntityType IS NULL");
         res.json({ message: 'Logo removed' });
     } catch (err) { console.error(err); res.status(500).json({ message: 'Error deleting logo' }); }
+};
+
+export const updateLoginBg = async (req: Request, res: Response) => {
+    try {
+        if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+        const relPath = `uploads/branding/${req.file.filename}`;
+        const fullUrl = buildUrl(req, relPath);
+        const pool = await poolPromise;
+
+        // Cleanup old background file safely
+        const old = await pool.request().input('k', sql.NVarChar, 'LoginBg').query("SELECT SettingValue FROM SystemSettings WHERE SettingKey = @k AND EntityType IS NULL");
+        if (old.recordset.length > 0) {
+            safeDeleteFile(old.recordset[0].SettingValue);
+        }
+
+        await pool.request().input('k', sql.NVarChar, 'LoginBg').input('v', sql.NVarChar, fullUrl).query(`
+            IF EXISTS (SELECT 1 FROM SystemSettings WHERE SettingKey = @k AND EntityType IS NULL)
+                UPDATE SystemSettings SET SettingValue = @v, UpdatedAt = GETDATE() WHERE SettingKey = @k AND EntityType IS NULL
+            ELSE
+                INSERT INTO SystemSettings (SettingKey, SettingValue) VALUES (@k, @v)
+        `);
+        res.json({ message: 'Login background updated successfully', url: fullUrl });
+    } catch (err) { console.error(err); res.status(500).json({ message: 'Error updating login background' }); }
+};
+
+export const deleteLoginBg = async (req: Request, res: Response) => {
+    try {
+        const pool = await poolPromise;
+        const old = await pool.request().input('k', sql.NVarChar, 'LoginBg').query("SELECT SettingValue FROM SystemSettings WHERE SettingKey = @k AND EntityType IS NULL");
+        if (old.recordset.length > 0) {
+            safeDeleteFile(old.recordset[0].SettingValue);
+        }
+        await pool.request().input('k', sql.NVarChar, 'LoginBg').query("DELETE FROM SystemSettings WHERE SettingKey = @k AND EntityType IS NULL");
+        res.json({ message: 'Login background removed' });
+    } catch (err) { console.error(err); res.status(500).json({ message: 'Error deleting login background' }); }
 };
 
 export const checkMaintenanceMode = async (req: Request, res: Response, next: NextFunction) => {

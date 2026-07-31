@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import { getImageUrl } from '../utils/imageUrl';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import {
@@ -122,7 +123,7 @@ const Profile = () => {
     }
 
     const avatarUrl = profileData?.user?.ProfileImage
-        ? `http://localhost:5000/${profileData.user.ProfileImage}`
+        ? getImageUrl(profileData.user.ProfileImage)
         : null;
 
     const getInitials = () => {

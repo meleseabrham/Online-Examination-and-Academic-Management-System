@@ -243,20 +243,28 @@ export const changePassword = async (req: Request, res: Response) => {
 };
 export const updateProfileImage = async (req: Request, res: Response) => {
     const userId = (req as any).user.id;
-    const filePath = req.file ? req.file.path.replace(/\\/g, '/') : null;
+    const file = req.file;
 
-    if (!filePath) {
+    if (!file) {
         return res.status(400).json({ message: 'No image uploaded' });
     }
+
+    // Build full HTTP URL so it works from any device on the network
+    const protocol = req.protocol || 'http';
+    const rawHost = req.get('host') || 'localhost';
+    const hostname = rawHost.split(':')[0];
+    const port = process.env.PORT || 5000;
+    const relPath = file.path.replace(/\\/g, '/');
+    const fullUrl = `${protocol}://${hostname}:${port}/${relPath.replace(/^\//, '')}`;
 
     try {
         const pool = await poolPromise;
         await pool.request()
             .input('userId', sql.Int, userId)
-            .input('profileImage', sql.NVarChar, filePath)
+            .input('profileImage', sql.NVarChar, fullUrl)
             .query('UPDATE Users SET ProfileImage = @profileImage WHERE UserId = @userId');
 
-        res.json({ message: 'Profile image updated successfully', profileImage: filePath });
+        res.json({ message: 'Profile image updated successfully', profileImage: fullUrl });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error updating profile image' });

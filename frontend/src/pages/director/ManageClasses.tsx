@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { School, Plus, ChevronRight, Users, Edit2, Trash2, X, UserPlus, ArrowLeft, Mail, Save, ChevronLeft, ChevronDown, MoreHorizontal, Loader } from 'lucide-react';
@@ -617,7 +618,7 @@ const ManageClasses = () => {
                                                                 <div className="relative">
                                                                     <div className="w-10 h-10 rounded-2xl overflow-hidden bg-gradient-to-br from-brand-blue/10 to-brand-blue/5 border-2 border-white shadow-lg">
                                                                         <img
-                                                                            src={s.ProfileImage ? `http://localhost:5000/${s.ProfileImage}` : `https://i.pravatar.cc/150?u=${s.UserId}`}
+                                                                            src={s.ProfileImage ? (getImageUrl(s.ProfileImage) ?? `https://i.pravatar.cc/150`) : `https://i.pravatar.cc/150?u=${s.UserId}`}
                                                                             alt={s.FullName}
                                                                             className="w-full h-full object-cover"
                                                                             onError={(e) => {
@@ -672,7 +673,7 @@ const ManageClasses = () => {
                                                 <div className="relative flex-shrink-0">
                                                     <div className="w-12 h-12 rounded-2xl overflow-hidden bg-gradient-to-br from-brand-blue/10 to-brand-blue/5 border-2 border-white shadow-lg">
                                                         <img
-                                                            src={s.ProfileImage ? `http://localhost:5000/${s.ProfileImage}` : `https://i.pravatar.cc/150?u=${s.UserId}`}
+                                                            src={s.ProfileImage ? (getImageUrl(s.ProfileImage) ?? `https://i.pravatar.cc/150`) : `https://i.pravatar.cc/150?u=${s.UserId}`}
                                                             alt={s.FullName}
                                                             className="w-full h-full object-cover"
                                                             onError={(e) => {

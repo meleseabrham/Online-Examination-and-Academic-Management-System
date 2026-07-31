@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { Radio, Users, Monitor, Loader, Eye, AlertCircle, Timer, Zap, ChevronLeft, ChevronRight, ChevronDown, MoreHorizontal } from 'lucide-react';
@@ -558,7 +559,7 @@ const LiveExamMonitor = () => {
                                                                 <div className="w-8 h-8 rounded-[22px] bg-white shadow-sm border border-slate-100 overflow-hidden flex-none">
                                                                     <img
                                                                         src={student.ProfileImage
-                                                                            ? `http://localhost:5000/${student.ProfileImage}`
+                                                                            ? (getImageUrl(student.ProfileImage) ?? `https://i.pravatar.cc/150`)
                                                                             : `https://ui-avatars.com/api/?name=${encodeURIComponent(student.StudentName)}&background=${isTaking ? '4318FF' : '05CD99'}&color=fff`}
                                                                         alt={student.StudentName}
                                                                         className="w-full h-full object-cover"

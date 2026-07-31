@@ -101,8 +101,37 @@ const brandingStorage = multer.diskStorage({
 export const brandingUpload = multer({
     storage: brandingStorage,
     limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
-    fileFilter: (req, file, cb) => {
+    fileFilter: (req: any, file: any, cb: any) => {
         const allowedTypes = ['.jpg', '.jpeg', '.png', '.svg'];
+        const ext = path.extname(file.originalname).toLowerCase();
+        if (allowedTypes.includes(ext)) {
+            cb(null, true);
+        } else {
+            cb(null, false);
+        }
+    }
+});
+
+// Login Background Storage
+const bgStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const uploadDir = 'uploads/branding';
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'loginbg-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+export const bgUpload = multer({
+    storage: bgStorage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    fileFilter: (req: any, file: any, cb: any) => {
+        const allowedTypes = ['.jpg', '.jpeg', '.png', '.webp'];
         const ext = path.extname(file.originalname).toLowerCase();
         if (allowedTypes.includes(ext)) {
             cb(null, true);

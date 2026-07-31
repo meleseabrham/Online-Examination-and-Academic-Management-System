@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { Search, Trophy, TrendingUp, Users, ChevronRight, ChevronLeft, Loader, MoreHorizontal, ChevronDown, RotateCcw } from 'lucide-react';
@@ -435,7 +436,7 @@ const ViewResults = () => {
                                                             <div className="w-10 h-10 rounded-full bg-slate-100 overflow-hidden">
                                                                 <img
                                                                     src={res.ProfileImage
-                                                                        ? `http://localhost:5000/${res.ProfileImage}`
+                                                                        ? (getImageUrl(res.ProfileImage) ?? `https://i.pravatar.cc/150`)
                                                                         : `https://ui-avatars.com/api/?name=${res.StudentName}&background=random`}
                                                                     alt=""
                                                                     className="w-full h-full object-cover"

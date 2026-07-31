@@ -7,6 +7,7 @@ import {
     ChevronDown, Clock, UserPlus,
     ArrowRightLeft, ClipboardList, Library, Database, Settings, UserCheck, ShieldCheck
 } from 'lucide-react';
+import { getImageUrl } from '../utils/imageUrl';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -33,6 +34,7 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
     });
     const [academicOpen, setAcademicOpen] = useState(false);
     const [publicSettings, setPublicSettings] = useState<any>({});
+    const [logoError, setLogoError] = useState(false);
 
     useEffect(() => {
         const fetchPublicSettings = async () => {
@@ -186,8 +188,13 @@ const Sidebar = ({ role }: { role: 'admin' | 'teacher' | 'student' | 'director' 
 
             <div className={cn("flex items-center gap-3 mb-8 shrink-0", isCollapsed ? "justify-center px-0" : "px-3")}>
                 <div className="w-9 h-9  rounded-xl flex items-center justify-center shrink-0 overflow-hidden ">
-                    {publicSettings.SchoolLogo ? (
-                        <img src={`http://localhost:5000${publicSettings.SchoolLogo}`} alt="L" className="w-full h-full object-cover" />
+                    {publicSettings.SchoolLogo && !logoError ? (
+                        <img
+                            src={getImageUrl(publicSettings.SchoolLogo)!}
+                            alt="Logo"
+                            onError={() => setLogoError(true)}
+                            className="w-full h-full object-cover"
+                        />
                     ) : (
                         <BookOpen size={18} />
                     )}

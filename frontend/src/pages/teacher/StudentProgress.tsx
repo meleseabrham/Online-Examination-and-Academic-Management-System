@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import {
@@ -154,7 +155,7 @@ const StudentProgress = () => {
                                         <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-brand-blue to-indigo-600 flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-blue-500/20 overflow-hidden">
                                             {student.ProfileImage ? (
                                                 <img
-                                                    src={`http://localhost:5000/${student.ProfileImage}`}
+                                                    src={(getImageUrl(student.ProfileImage) ?? `https://i.pravatar.cc/150`)}
                                                     alt={student.FullName}
                                                     className="w-full h-full object-cover"
                                                 />

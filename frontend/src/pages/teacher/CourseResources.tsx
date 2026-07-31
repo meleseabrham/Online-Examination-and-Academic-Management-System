@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import {
@@ -210,7 +211,7 @@ const CourseResources = () => {
                                             {res.FilePath && (
                                                 <>
                                                     <a
-                                                        href={`http://localhost:5000/${res.FilePath}`}
+                                                        href={(getImageUrl(res.FilePath) ?? `#`)}
                                                         target="_blank"
                                                         rel="noreferrer"
                                                         className="p-3 bg-slate-50 text-slate-400 hover:text-brand-blue hover:bg-brand-blue/5 rounded-xl transition-all"
@@ -219,7 +220,7 @@ const CourseResources = () => {
                                                         <Eye size={18} />
                                                     </a>
                                                     <a
-                                                        href={`http://localhost:5000/${res.FilePath}`}
+                                                        href={(getImageUrl(res.FilePath) ?? `#`)}
                                                         download
                                                         className="p-3 bg-brand-blue/5 text-brand-blue rounded-xl hover:bg-brand-blue hover:text-white transition-all shadow-sm"
                                                         title="Download"

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
+import { getImageUrl } from '../../utils/imageUrl';
 import {
     Power, ChevronDown, ChevronUp,
     Upload, Camera, X, Image as ImageIcon,
@@ -36,6 +37,11 @@ const SystemSettings = () => {
     const [schoolLogo, setSchoolLogo] = useState('');
     const [selectedLogoFile, setSelectedLogoFile] = useState<File | null>(null);
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
+
+    // Login Background
+    const [loginBg, setLoginBg] = useState('');
+    const [selectedBgFile, setSelectedBgFile] = useState<File | null>(null);
+    const [bgPreview, setBgPreview] = useState<string | null>(null);
 
     // Accordion state
     const [activeSection, setActiveSection] = useState<string | null>('logo');
@@ -77,6 +83,7 @@ const SystemSettings = () => {
             const sLogo = res.data.find((s: any) => s.SettingKey === 'SchoolLogo')?.SettingValue;
             const sPhone = res.data.find((s: any) => s.SettingKey === 'SchoolPhone')?.SettingValue;
             const sAddress = res.data.find((s: any) => s.SettingKey === 'SchoolAddress')?.SettingValue;
+            const sBg = res.data.find((s: any) => s.SettingKey === 'LoginBg')?.SettingValue;
 
             if (sName) setSchoolName(sName);
             if (sVer) setSystemVersion(sVer);
@@ -84,6 +91,7 @@ const SystemSettings = () => {
             if (sLogo) setSchoolLogo(sLogo);
             if (sPhone) setSchoolPhone(sPhone);
             if (sAddress) setSchoolAddress(sAddress);
+            if (sBg) setLoginBg(sBg);
         } catch (err) {
             console.error('Error fetching settings:', err);
         }
@@ -183,11 +191,93 @@ const SystemSettings = () => {
         }
     };
 
+    const handleBgFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setSelectedBgFile(file);
+        setBgPreview(URL.createObjectURL(file));
+    };
+
+    const handleSaveBg = async () => {
+        if (!selectedBgFile) return;
+        const formData = new FormData();
+        formData.append('loginBg', selectedBgFile);
+        try {
+            setSaving(true);
+            const res = await axios.post('http://localhost:5000/api/admin/system-settings/login-bg', formData, {
+                headers: { ...headers, 'Content-Type': 'multipart/form-data' }
+            });
+            setLoginBg(res.data.url);
+            setSelectedBgFile(null);
+            setBgPreview(null);
+            setMessage({ type: 'success', text: 'Login background saved successfully' });
+            fetchSettings();
+        } catch (err) {
+            console.error(err);
+            setMessage({ type: 'error', text: 'Failed to save background image' });
+        } finally {
+            setSaving(false);
+            setTimeout(() => setMessage(null), 3000);
+        }
+    };
+
+    const handleBgDelete = async () => {
+        if (!window.confirm('Remove login page background image?')) return;
+        try {
+            setSaving(true);
+            await axios.delete('http://localhost:5000/api/admin/system-settings/login-bg', { headers });
+            setLoginBg('');
+            setMessage({ type: 'success', text: 'Background image removed' });
+            fetchSettings();
+        } catch (err) {
+            setMessage({ type: 'error', text: 'Failed to delete background' });
+        } finally {
+            setSaving(false);
+            setTimeout(() => setMessage(null), 3000);
+        }
+    };
+
+
+
+    useEffect(() => {
+        if (message) {
+            const timer = setTimeout(() => {
+                setMessage(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [message]);
 
     const maintenanceMode = settings.find(s => s.SettingKey === 'MaintenanceMode' && !s.EntityType)?.SettingValue === 'true';
 
     return (
-        <div className="flex bg-[#F8FAFC] h-screen overflow-hidden">
+        <div className="flex bg-[#F8FAFC] h-screen overflow-hidden relative">
+            {/* Top Center Popup Notification */}
+            {message && (
+                <div className={`fixed top-[76px] left-1/2 -translate-x-1/2 z-[200] max-w-md w-[90%] sm:w-auto px-5 py-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-6 duration-300 border text-white ${
+                    message.type === 'success'
+                        ? 'bg-emerald-600 border-emerald-500'
+                        : 'bg-red-600 border-red-500'
+                }`}>
+                    <div className="flex items-center gap-3">
+                        {message.type === 'success' ? (
+                            <CheckCircle2 className="w-5 h-5 text-white shrink-0" />
+                        ) : (
+                            <AlertTriangle className="w-5 h-5 text-white shrink-0" />
+                        )}
+                        <span className="text-sm font-semibold tracking-wide">{message.text}</span>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => setMessage(null)}
+                        className="p-1 hover:bg-white/20 rounded-lg transition-colors text-white shrink-0"
+                        title="Close"
+                    >
+                        <X className="w-4 h-4" />
+                    </button>
+                </div>
+            )}
+
             <Sidebar role="admin" />
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
                 <div className="p-2 pb-0 flex-none z-10">
@@ -199,13 +289,6 @@ const SystemSettings = () => {
 
                         {saving && <div className="flex items-center gap-2 text-brand-blue font-bold text-sm"><Info className="animate-pulse" size={16} /> Saving changes...</div>}
                     </div>
-
-                    {message && (
-                        <div className={`mb-6 p-4 rounded-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300 ${message.type === 'success' ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'}`}>
-                            {message.type === 'success' ? <CheckCircle2 size={20} /> : <AlertTriangle size={20} />}
-                            <span className="font-bold">{message.text}</span>
-                        </div>
-                    )}
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Section 1: Core System Control */}
@@ -235,7 +318,7 @@ const SystemSettings = () => {
                                                     {logoPreview ? (
                                                         <img src={logoPreview} alt="Preview" className="w-full h-full object-contain" />
                                                     ) : schoolLogo ? (
-                                                        <img src={`http://localhost:5000${schoolLogo}`} alt="School Logo" className="w-full h-full object-contain" />
+                                                        <img src={getImageUrl(schoolLogo)!} alt="School Logo" className="w-full h-full object-contain" />
                                                     ) : (
                                                         <Camera size={32} className="text-slate-300 group-hover:scale-110 transition-transform" />
                                                     )}
@@ -278,6 +361,85 @@ const SystemSettings = () => {
                                                             className="w-full md:w-fit bg-brand-blue text-white px-10 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-500/20 hover:bg-blue-600 transition-all active:scale-95 animate-in fade-in slide-in-from-top-2"
                                                         >
                                                             Save Institutional Logo
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Login Background Image Section */}
+                            <div className="bg-white rounded-[35px] shadow-sm border border-slate-100 overflow-hidden transition-all">
+                                <button
+                                    onClick={() => toggleSection('loginbg')}
+                                    className="w-full p-8 flex items-center justify-between hover:bg-slate-50 transition-colors"
+                                >
+                                    <div className="flex items-center gap-4 text-left">
+                                        <div className="bg-violet-50 p-4 rounded-2xl text-violet-500">
+                                            <ImageIcon size={24} />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-black text-[#2B3674]">Login Page Background</h2>
+                                            <p className="text-sm text-slate-400 font-medium">Upload a background image for the login page.</p>
+                                        </div>
+                                    </div>
+                                    {activeSection === 'loginbg' ? <ChevronUp size={24} className="text-slate-300" /> : <ChevronDown size={24} className="text-slate-300" />}
+                                </button>
+
+                                {activeSection === 'loginbg' && (
+                                    <div className="px-8 pb-8 animate-in slide-in-from-top-4 duration-300">
+                                        <div className="flex flex-col md:flex-row items-center gap-8">
+                                            {/* Preview */}
+                                            <div className="relative group">
+                                                <div className="w-48 h-32 rounded-[20px] bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center overflow-hidden transition-all group-hover:border-violet-400">
+                                                    {bgPreview ? (
+                                                        <img src={bgPreview} alt="BG Preview" className="w-full h-full object-cover" />
+                                                    ) : loginBg ? (
+                                                        <img src={loginBg} alt="Login Background" className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <Camera size={32} className="text-slate-300 group-hover:scale-110 transition-transform" />
+                                                    )}
+                                                </div>
+                                                {(loginBg || bgPreview) && (
+                                                    <button
+                                                        onClick={() => {
+                                                            if (bgPreview) {
+                                                                setBgPreview(null);
+                                                                setSelectedBgFile(null);
+                                                            } else {
+                                                                handleBgDelete();
+                                                            }
+                                                        }}
+                                                        className="absolute -top-2 -right-2 w-8 h-8 bg-white text-red-500 rounded-full shadow-lg border border-red-50 flex items-center justify-center hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
+                                                    >
+                                                        <X size={16} />
+                                                    </button>
+                                                )}
+                                            </div>
+
+                                            <div className="flex-1 space-y-4 text-center md:text-left">
+                                                <div>
+                                                    <h3 className="font-black text-[#2B3674]">Background Image</h3>
+                                                    <p className="text-xs text-slate-400 mt-1 font-bold">Recommended: Landscape JPG/PNG. Max 5MB. Shown as login page background for all users.</p>
+                                                </div>
+                                                <div className="flex flex-col gap-3">
+                                                    <div className="flex items-center justify-center md:justify-start gap-3">
+                                                        <label className="cursor-pointer bg-slate-100 text-[#2B3674] px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 hover:bg-slate-200 transition-all active:scale-95 border border-slate-200">
+                                                            <Upload size={16} />
+                                                            {loginBg ? 'Change' : 'Upload'}
+                                                            <input type="file" className="hidden" accept="image/jpeg,image/png,image/webp" onChange={handleBgFileSelect} disabled={saving} />
+                                                        </label>
+                                                    </div>
+
+                                                    {selectedBgFile && (
+                                                        <button
+                                                            onClick={handleSaveBg}
+                                                            disabled={saving}
+                                                            className="w-full md:w-fit bg-blue-500 hover:bg-blue-600 text-white px-10 py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all active:scale-95 animate-in fade-in slide-in-from-top-2"
+                                                        >
+                                                            Save Login Background
                                                         </button>
                                                     )}
                                                 </div>

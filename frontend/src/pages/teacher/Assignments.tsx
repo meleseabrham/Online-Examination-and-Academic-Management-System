@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { Upload, FileText, CheckCircle, Loader, Trash2, X, Plus, Minus, Pencil, RotateCcw, Download, ExternalLink, ChevronLeft, ChevronRight, ChevronDown, MoreHorizontal } from 'lucide-react';
@@ -573,7 +574,7 @@ const TeacherAssignments = () => {
                                                                                             <span className="px-3 py-1 bg-orange-50 text-orange-600 text-[10px] font-black rounded-lg uppercase mr-4">Pending</span>
                                                                                         )}
                                                                                         <a
-                                                                                            href={`http://localhost:5000/${sub.SubmissionFilePath}`}
+                                                                                            href={(getImageUrl(sub.SubmissionFilePath) ?? `#`)}
                                                                                             target="_blank" rel="noreferrer"
                                                                                             className="p-2 text-slate-400 hover:text-brand-blue hover:bg-blue-50 rounded-lg transition-all"
                                                                                             title="View Submission"
@@ -676,7 +677,7 @@ const TeacherAssignments = () => {
                                                                     <div>
                                                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Attached File</p>
                                                                         <a
-                                                                            href={`http://localhost:5000/${a.FilePath}`}
+                                                                            href={(getImageUrl(a.FilePath) ?? `#`)}
                                                                             target="_blank" rel="noreferrer"
                                                                             className="inline-flex items-center gap-2 px-4 py-2 bg-brand-blue/5 text-brand-blue rounded-lg font-bold text-xs hover:bg-brand-blue hover:text-white transition-all"
                                                                         >

@@ -8,6 +8,7 @@ import axios from 'axios';
 import GuestHeader from '../../components/GuestHeader';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { getImageUrl } from '../../utils/imageUrl';
 
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -39,6 +40,7 @@ const Login = () => {
     });
 
     const [showPassword, setShowPassword] = useState(false);
+    const [logoError, setLogoError] = useState(false);
 
     const [publicSettings, setPublicSettings] = useState<any>({});
 
@@ -87,7 +89,20 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-4 py-12 relative">
+        <div
+            className="min-h-screen flex flex-col items-center justify-center p-4 py-12 relative overflow-hidden"
+            style={!publicSettings.LoginBg ? { backgroundColor: '#F8FAFC' } : {}}
+        >
+            {/* Ken Burns animated background image */}
+            {publicSettings.LoginBg && (
+                <>
+                    <div
+                        className="login-bg-animated"
+                        style={{ backgroundImage: `url(${getImageUrl(publicSettings.LoginBg)})` }}
+                    />
+                    <div className="login-bg-overlay" />
+                </>
+            )}
             {/* Top Center Error Popup */}
             {serverError && (
                 <div className="fixed top-[76px] left-1/2 -translate-x-1/2 z-[200] max-w-md w-[90%] sm:w-auto bg-red-600 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-6 duration-300 border border-red-500">
@@ -108,23 +123,36 @@ const Login = () => {
 
             <GuestHeader />
 
-            <div className="w-full max-w-md sm:max-w-lg animate-in fade-in slide-in-from-bottom-6 duration-700">
+            <div className="w-full max-w-md sm:max-w-lg animate-in fade-in slide-in-from-bottom-6 duration-700 relative z-10">
+                {/* Maintenance Mode Banner */}
+                {publicSettings.MaintenanceMode === 'true' && (
+                    <div className="mb-6 p-3 sm:p-3.5 px-6 bg-[#FAF0E6]/95 backdrop-blur-md border border-[#E8D0C0] text-[#B83800] rounded-full flex items-center justify-center gap-3 shadow-lg shadow-orange-500/10 animate-in fade-in zoom-in duration-300">
+                        <div className="w-6 h-6 rounded-full border-2 border-[#E65100] text-[#E65100] flex items-center justify-center font-bold text-xs shrink-0">
+                            !
+                        </div>
+                        <span className="text-xs sm:text-sm font-bold tracking-wide text-center">
+                            System is currently under maintenance Please try again later !
+                        </span>
+                    </div>
+                )}
+
                 {/* Logo & School Header */}
-                <div className="text-center mb-8">
-                    <div className="flex justify-center mb-4">
-                        {publicSettings.SchoolLogo ? (
+                <div className="flex items-center justify-center gap-4 mb-8">
+                    <div className="flex-shrink-0">
+                        {publicSettings.SchoolLogo && !logoError ? (
                             <img
-                                src={`http://localhost:5000${publicSettings.SchoolLogo}`}
+                                src={getImageUrl(publicSettings.SchoolLogo)!}
                                 alt="Logo"
-                                className="h-16 w-auto object-contain"
+                                onError={() => setLogoError(true)}
+                                className="h-10 sm:h-10 w-auto object-contain rounded-lg"
                             />
                         ) : (
-                            <div className="w-16 h-16 bg-[#0066FF] rounded-full flex items-center justify-center text-white shadow-lg shadow-blue-500/25">
-                                <BookOpen size={30} />
+                            <div className="w-10 h-10 bg-[#0066FF] rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-500/25">
+                                <BookOpen size={24} />
                             </div>
                         )}
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-black text-[#1B2559] tracking-tight text-center">
+                    <h1 className={`text-xl sm:text-2xl font-black tracking-tight ${publicSettings.LoginBg ? 'text-white drop-shadow-lg' : 'text-[#1B2559]'}`}>
                         <span className="sm:hidden text-brand-blue">
                             {publicSettings.SchoolName
                                 ? publicSettings.SchoolName
@@ -138,7 +166,7 @@ const Login = () => {
                             {publicSettings.SchoolName ? (
                                 <>
                                     {publicSettings.SchoolName.split(' ')[0]}{" "}
-                                    <span >
+                                    <span>
                                         {publicSettings.SchoolName.split(' ').slice(1).join(' ')}
                                     </span>
                                 </>
@@ -152,8 +180,7 @@ const Login = () => {
                 </div>
 
                 {/* Login Card */}
-                <div className="bg-white p-8 sm:p-10 rounded-[36px] shadow-xl shadow-blue-500/5 border border-slate-100/80 w-full relative">
-                    {/* <h2 className="text-2xl font-bold text-[#1B2559] mb-6">Login</h2> */}
+                <div className="bg-gradient-to-br from-blue-50/40 via-orange-50/40 to-blue-50/40 backdrop-blur-xl p-8 sm:p-10 rounded-[20px] shadow-xl shadow-blue-500/10 border border-white/60 w-full relative">                    {/* <h2 className="text-2xl font-bold text-[#1B2559] mb-6">Login</h2> */}
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                         <div>
@@ -167,7 +194,7 @@ const Login = () => {
                                         "w-full pl-11 pr-5 py-3 rounded-2xl transition-all text-[#1B2559] font-medium outline-none border",
                                         errors.email
                                             ? "bg-red-50/50 border-red-500 placeholder:text-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
-                                            : "bg-[#EBF2FE]/60 border-transparent focus:bg-white focus:border-[#0066FF] focus:ring-4 focus:ring-blue-500/10 placeholder:text-slate-400"
+                                            : "bg-white/90 border-transparent focus:bg-white focus:border-[#0066FF] focus:ring-4 focus:ring-blue-500/10 placeholder:text-slate-400"
                                     )}
                                 />
                             </div>
@@ -185,7 +212,7 @@ const Login = () => {
                                         "w-full pl-11 pr-12 py-3 rounded-2xl transition-all text-[#1B2559] font-medium outline-none border",
                                         errors.password
                                             ? "bg-red-50/50 border-red-500 placeholder:text-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
-                                            : "bg-[#EBF2FE]/60 border-transparent focus:bg-white focus:border-[#0066FF] focus:ring-4 focus:ring-blue-500/10 placeholder:text-slate-400"
+                                            : "bg-white/90 border-transparent focus:bg-white focus:border-[#0066FF] focus:ring-4 focus:ring-blue-500/10 placeholder:text-slate-400"
                                     )}
                                 />
                                 <button
@@ -233,10 +260,17 @@ const Login = () => {
                 </div>
 
                 {/* Footer link outside card */}
-                <p className="mt-8 text-slate-400 text-xs font-medium text-center">
-                    Official Exam Portal • <span className="text-[#0066FF]">{publicSettings.SystemVersion || 'v1.0.4'}</span>
-                </p>
+                {/* <p className={`mt-8 text-xs font-medium text-center ${publicSettings.LoginBg ? 'text-white/80 drop-shadow' : 'text-slate-400'}`}>
+                    Official Exam Portal • <span className="text-[#0066FF] font-semibold">{publicSettings.SystemVersion || 'v1.0.4'}</span>
+                </p> */}
             </div>
+
+            {/* Absolute Bottom Copyright */}
+            <footer className="absolute bottom-4 left-0 right-0 z-10 text-center px-4">
+                <p className={`text-xs font-medium ${publicSettings.LoginBg ? 'text-white/90 drop-shadow-md' : 'text-slate-500'}`}>
+                    Copyright © {new Date().getFullYear()} MA. All Rights Reserved.
+                </p>
+            </footer>
         </div>
     );
 };

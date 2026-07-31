@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import {
@@ -433,7 +434,7 @@ const StudentAssignments = () => {
                                                                         <div className="flex flex-wrap gap-3 mt-4">
                                                                             {a.FilePath && (
                                                                                 <a
-                                                                                    href={`http://localhost:5000/${a.FilePath}`}
+                                                                                    href={(getImageUrl(a.FilePath) ?? `#`)}
                                                                                     target="_blank"
                                                                                     rel="noreferrer"
                                                                                     className="inline-flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-brand-blue font-black text-[10px] uppercase tracking-wider hover:bg-brand-blue hover:text-white hover:border-brand-blue transition-all shadow-sm"
@@ -444,7 +445,7 @@ const StudentAssignments = () => {
                                                                             )}
                                                                             {a.SubmissionFilePath && (
                                                                                 <a
-                                                                                    href={`http://localhost:5000/${a.SubmissionFilePath}`}
+                                                                                    href={(getImageUrl(a.SubmissionFilePath) ?? `#`)}
                                                                                     target="_blank"
                                                                                     rel="noreferrer"
                                                                                     className="inline-flex items-center gap-2 px-5 py-3 bg-white border border-slate-200 rounded-2xl text-green-600 font-black text-[10px] uppercase tracking-wider hover:bg-green-500 hover:text-white hover:border-green-500 transition-all shadow-sm"

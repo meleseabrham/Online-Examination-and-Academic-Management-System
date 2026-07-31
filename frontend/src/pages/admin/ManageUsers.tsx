@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { Plus, Edit2, Trash2, Search, UserCheck, UserX, X, ChevronLeft, ChevronRight, ChevronDown, MoreHorizontal, Info, GraduationCap, School, BookOpen, Calendar, Mail, User, Award, History, TrendingUp, Key, RotateCcw, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
@@ -351,7 +352,7 @@ const ManageUsers = () => {
                                                         <div className="w-full h-full bg-white rounded-full overflow-hidden flex items-center justify-center">
                                                             {user.ProfileImage ? (
                                                                 <img
-                                                                    src={`http://localhost:5000/${user.ProfileImage}`}
+                                                                    src={(getImageUrl(user.ProfileImage) ?? `https://i.pravatar.cc/150`)}
                                                                     alt={user.FullName}
                                                                     className="w-full h-full object-cover"
                                                                 />
@@ -543,7 +544,7 @@ const ManageUsers = () => {
             {/* User Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-white w-full max-w-3xl rounded-[40px] p-10 shadow-2xl animate-in zoom-in duration-300 relative">
+                    <div className="bg-white w-full max-w-3xl rounded-[15px] p-10 shadow-2xl animate-in zoom-in duration-300 relative">
                         <div className="flex justify-between items-center mb-10">
                             <div>
                                 <h2 className="text-3xl font-black text-[#2B3674] tracking-tight">
@@ -686,7 +687,7 @@ const ManageUsers = () => {
                                     {editingUser?.ProfileImage && (
                                         <div className="w-14 h-14 rounded-2xl overflow-hidden border border-slate-200 shadow-sm shrink-0">
                                             <img
-                                                src={`http://localhost:5000/${editingUser.ProfileImage}`}
+                                                src={(getImageUrl(editingUser.ProfileImage) ?? `https://i.pravatar.cc/150`)}
                                                 alt="Current Profile"
                                                 className="w-full h-full object-cover"
                                             />
@@ -723,7 +724,7 @@ const ManageUsers = () => {
                                     <div className="w-full h-full bg-white rounded-2xl overflow-hidden shadow-inner flex items-center justify-center">
                                         {selectedUserProfile?.user?.ProfileImage ? (
                                             <img
-                                                src={`http://localhost:5000/${selectedUserProfile.user.ProfileImage}`}
+                                                src={(getImageUrl(selectedUserProfile.user.ProfileImage) ?? `https://i.pravatar.cc/150`)}
                                                 alt={selectedUserProfile.user.FullName}
                                                 className="w-full h-full object-cover"
                                             />

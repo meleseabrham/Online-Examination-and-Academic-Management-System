@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import {
@@ -305,7 +306,7 @@ const ViewModules = () => {
                                             {mod.FilePath && (
                                                 <>
                                                     <a
-                                                        href={`http://localhost:5000/${mod.FilePath}`}
+                                                        href={(getImageUrl(mod.FilePath) ?? `#`)}
                                                         target="_blank"
                                                         rel="noreferrer"
                                                         className="flex-1 flex items-center justify-center gap-2 bg-slate-50 py-4 rounded-2xl text-slate-600 font-black text-xs hover:bg-slate-100 transition-all"
@@ -313,7 +314,7 @@ const ViewModules = () => {
                                                         <Eye size={16} /> Preview
                                                     </a>
                                                     <a
-                                                        href={`http://localhost:5000/${mod.FilePath}`}
+                                                        href={(getImageUrl(mod.FilePath) ?? `#`)}
                                                         download
                                                         className="flex-1 flex items-center justify-center gap-2 bg-brand-blue text-white py-4 rounded-2xl font-black text-xs shadow-xl shadow-blue-500/20 hover:scale-[1.02] transition-all"
                                                     >

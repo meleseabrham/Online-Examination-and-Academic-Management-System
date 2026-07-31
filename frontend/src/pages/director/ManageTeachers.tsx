@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { Search, UserCheck, X, ChevronLeft, ChevronRight, ChevronDown, MoreHorizontal, Info, GraduationCap, School, BookOpen, Calendar, Mail, User, Award, ExternalLink } from 'lucide-react';
@@ -190,7 +191,7 @@ const ManageTeachers = () => {
                                                         <div className="w-full h-full bg-white rounded-full overflow-hidden flex items-center justify-center font-bold text-brand-blue  shadow-inner ">
                                                             {teacher.ProfileImage ? (
                                                                 <img
-                                                                    src={`http://localhost:5000/${teacher.ProfileImage}`}
+                                                                    src={(getImageUrl(teacher.ProfileImage) ?? `https://i.pravatar.cc/150`)}
                                                                     alt={teacher.FullName}
                                                                     className="w-full h-full object-cover"
                                                                 />
@@ -355,7 +356,7 @@ const ManageTeachers = () => {
                                     <div className="w-full h-full bg-white rounded-[28px] overflow-hidden shadow-inner flex items-center justify-center">
                                         {selectedTeacherProfile?.user?.ProfileImage ? (
                                             <img
-                                                src={`http://localhost:5000/${selectedTeacherProfile.user.ProfileImage}`}
+                                                src={(getImageUrl(selectedTeacherProfile.user.ProfileImage) ?? `https://i.pravatar.cc/150`)}
                                                 alt={selectedTeacherProfile.user.FullName}
                                                 className="w-full h-full object-cover"
                                             />

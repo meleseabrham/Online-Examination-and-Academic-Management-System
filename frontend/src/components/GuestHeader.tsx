@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Bell, AlertCircle, Clock, X, Megaphone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getImageUrl } from '../utils/imageUrl';
 
 interface Announcement {
     Title: string;
@@ -54,11 +55,11 @@ const GuestHeader = () => {
     };
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-[100] px-6 py-4 flex justify-between items-center bg-white/50 backdrop-blur-xl border-b border-white/20 shadow-sm">
+        <header className="fixed top-0 left-0 right-0 z-[100] px-6 py-3 flex justify-between items-center bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-sm">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/login')}>
                 <div className="w-10 h-10  rounded-xl flex items-center justify-center  overflow-hidden">
                     {logo ? (
-                        <img src={`http://localhost:5000${logo}`} alt="Logo" className="w-full h-full object-cover" />
+                        <img src={getImageUrl(logo)!} alt="Logo" className="w-full h-full object-cover" />
                     ) : (
                         <span className="text-white font-black text-xl">O</span>
                     )}
@@ -113,7 +114,7 @@ const GuestHeader = () => {
                     {isOpen && (
                         <>
                             <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)}></div>
-                            <div className="absolute right-0 mt-4 w-80 sm:w-96 bg-white rounded-[35px] shadow-2xl border border-slate-50 py-6 z-20 animate-in slide-in-from-top-4 duration-300 origin-top-right overflow-hidden">
+                            <div className="absolute right-0 mt-4 w-80 sm:w-96 bg-white rounded-[15px] shadow-2xl border border-slate-50 py-6 z-20 animate-in slide-in-from-top-4 duration-300 origin-top-right overflow-hidden">
                                 <div className="px-6 pb-4 border-b border-slate-50 flex justify-between items-center">
                                     <h3 className="font-black text-[#1B2559] flex items-center gap-2">
                                         <Megaphone size={18} className="text-brand-blue" />

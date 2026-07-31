@@ -17,7 +17,7 @@ import { getSchools, createSchool, updateSchool, deleteSchool, transferStudent, 
 import { getAssessments, createAssessment, updateAssessment, deleteAssessment, getAssessmentScores, submitScores, getStudentsForAssessment, calculateWeightedSemesterResults, getStudentCourseBreakdown, getAssessmentSettings, updateAssessmentSettings, bulkAssignAssessments, updateAssessmentRegradePermission } from '../controllers/assessmentController.js';
 import { generateTranscript, generateFullYearTranscript } from '../controllers/transcriptController.js';
 import { getModules, createModule, updateModule, deleteModule } from '../controllers/moduleController.js';
-import { getSystemSettings, updateSystemSetting, deleteSystemSetting, updateLogo, deleteLogo, checkMaintenanceMode } from '../controllers/systemController.js';
+import { getSystemSettings, updateSystemSetting, deleteSystemSetting, updateLogo, deleteLogo, updateLoginBg, deleteLoginBg, checkMaintenanceMode } from '../controllers/systemController.js';
 import { authenticateToken, authorizeRoles } from '../middleware/auth.js';
 import { upload, profileUpload } from '../middleware/upload.js';
 
@@ -188,11 +188,13 @@ router.delete('/guides/:id', deleteGuide);
 // =============================================
 // SYSTEM SETTINGS ROUTES (NEW)
 // =============================================
-import { brandingUpload } from '../middleware/upload.js';
+import { brandingUpload, bgUpload } from '../middleware/upload.js';
 router.get('/system-settings', getSystemSettings);
 router.post('/system-settings', updateSystemSetting);
-router.delete('/system-settings/:id', deleteSystemSetting);
 router.post('/system-settings/logo', brandingUpload.single('logo'), updateLogo);
 router.delete('/system-settings/logo', deleteLogo);
+router.post('/system-settings/login-bg', bgUpload.single('loginBg'), updateLoginBg);
+router.delete('/system-settings/login-bg', deleteLoginBg);
+router.delete('/system-settings/:id', deleteSystemSetting);
 
 export default router;

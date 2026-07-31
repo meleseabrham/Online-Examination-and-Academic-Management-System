@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { BookOpen, ChevronLeft, Download, FileText, Search, Loader, ChevronRight } from 'lucide-react';
@@ -96,7 +97,7 @@ const ViewGuides = ({ role }: { role: 'student' | 'teacher' | 'director' }) => {
                                     <div className="mt-8 pt-6 border-t border-slate-100">
                                         <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-3">Attachment</h4>
                                         <a
-                                            href={`http://localhost:5000/${selectedGuide.FilePath}`}
+                                            href={(getImageUrl(selectedGuide.FilePath) ?? `#`)}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="inline-flex items-center gap-3 px-5 py-3 bg-slate-50 border border-slate-100 rounded-xl text-sm font-bold text-[#2B3674] hover:bg-brand-blue hover:text-white hover:border-brand-blue transition-all group"

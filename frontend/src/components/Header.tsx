@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Bell, User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { getImageUrl } from '../utils/imageUrl';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -98,7 +99,7 @@ const Header = ({ email, role }: HeaderProps) => {
     // Get current user from localStorage
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const avatarUrl = user.ProfileImage
-        ? `http://localhost:5000/${user.ProfileImage}`
+        ? getImageUrl(user.ProfileImage)
         : null;
 
     const getUserDisplayName = () => {
