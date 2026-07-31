@@ -341,7 +341,7 @@ const AuditLogs = () => {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <span className="text-xs font-mono font-medium text-slate-500 bg-slate-100 px-2.5 py-1.5 rounded-lg border border-slate-200">{log.ip_address || '127.0.0.1'}</span>
+                                                    <span className="text-xs font-mono font-medium text-slate-500 px-2.5 py-1.5 ">{log.ip_address || '127.0.0.1'}</span>
                                                 </td>
                                                 <td className="px-6 py-4 text-center">
                                                     <button
