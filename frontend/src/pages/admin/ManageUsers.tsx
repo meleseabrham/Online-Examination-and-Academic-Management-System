@@ -300,16 +300,16 @@ const ManageUsers = () => {
                         <div className="flex gap-4">
                             <button
                                 onClick={() => setIsResetModalOpen(true)}
-                                className="bg-black text-white border border-indigo-100 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-gray-600 transition-all flex items-center gap-3 active:scale-95 shadow-sm"
+                                className="bg-black text-white border border-indigo-100 px-6 py-4 rounded-2xl font-black tracking-widest text-[12px] hover:bg-gray-600 transition-all flex items-center gap-3 active:scale-95 shadow-sm"
                             >
-                                <RotateCcw size={18} />
+                                {/* <RotateCcw size={18} /> */}
                                 Reset Account
                             </button>
                             <button
                                 onClick={() => handleOpenModal(null)}
-                                className="bg-brand-blue text-white px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-blue-600 transition-all flex items-center gap-3 active:scale-95 shadow-lg shadow-blue-500/20"
+                                className="bg-brand-blue text-white px-6 py-4 rounded-2xl font-black tracking-widest text-[12px] hover:bg-blue-600 transition-all flex items-center gap-3 active:scale-95 shadow-lg shadow-blue-500/20"
                             >
-                                <Plus size={18} />
+                                {/* <Plus size={18} /> */}
                                 Add New User
                             </button>
                         </div>
@@ -705,8 +705,8 @@ const ManageUsers = () => {
                             </div>
 
                             <div className="pt-4">
-                                <button className="w-full bg-brand-blue text-white py-4 rounded-[22px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-blue-500/20 active:scale-[0.98]">
-                                    {editingUser ? 'Update Records' : 'Register User'}
+                                <button className="w-full bg-brand-blue text-white py-4 rounded-[22px] font-black tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-blue-500/20 active:scale-[0.98]">
+                                    {editingUser ? 'Update ' : 'Register '}
                                 </button>
                             </div>
                         </form>
@@ -716,11 +716,11 @@ const ManageUsers = () => {
             {/* User Profile Modal */}
             {isProfileModalOpen && (
                 <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 animate-in fade-in duration-300">
-                    <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[40px] shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-300 border border-white/20">
+                    <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[15px] shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-300 border border-white/20">
                         {/* Modal Header */}
-                        <div className="p-8 bg-black text-white flex justify-between items-start relative shrink-0">
+                        <div className="p-8 bg-white border-b border-slate-100 flex justify-between items-start relative shrink-0">
                             <div className="flex gap-6 items-center">
-                                <div className="w-24 h-24 rounded-3xl bg-white/20 backdrop-blur-md p-1 border border-white/30 relative group">
+                                <div className="w-24 h-24 rounded-3xl bg-slate-50 p-1 border border-slate-200 relative group shrink-0 shadow-sm">
                                     <div className="w-full h-full bg-white rounded-2xl overflow-hidden shadow-inner flex items-center justify-center">
                                         {selectedUserProfile?.user?.ProfileImage ? (
                                             <img
@@ -734,39 +734,40 @@ const ManageUsers = () => {
                                             </span>
                                         )}
                                     </div>
-                                    <div className={`absolute -bottom-2 -right-2 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border border-white/50 shadow-lg ${selectedUserProfile?.user?.Status === 'Active' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                                    <div className={`absolute -bottom-2 -right-2 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white shadow-md ${selectedUserProfile?.user?.Status === 'Active' ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'
                                         }`}>
                                         {selectedUserProfile?.user?.Status || '...'}
                                     </div>
                                 </div>
-                                <div>
-                                    <h2 className="text-3xl font-black mb-1">{selectedUserProfile?.user?.FullName || 'Loading Profile...'}</h2>
+                                <div className="space-y-1">
+                                    <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-[#2B3674]">{selectedUserProfile?.user?.FullName || 'Loading Profile...'}</h2>
                                     {selectedUserProfile?.user?.Role !== 'Student' && selectedUserProfile?.user?.Title && (
-                                        <div className="flex items-center gap-2 px-3 py-1 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 w-fit mt-2 mb-2">
-                                            <Award size={12} className="text-indigo-300" />
-                                            <p className="text-white/90 font-black uppercase text-[9px] tracking-[0.2em] leading-none">
+                                        <div className="flex items-center gap-2 px-3 py-1 bg-amber-50 rounded-xl border border-amber-200/60 w-fit my-1.5">
+                                            <Award size={13} className="text-amber-600" />
+                                            <p className="text-amber-800 font-black uppercase text-[9px] tracking-[0.2em] leading-none">
                                                 {selectedUserProfile.user.Title}
                                             </p>
                                         </div>
                                     )}
-                                    <div className="flex flex-wrap gap-3 mt-2">
-                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider border border-white/10">
-                                            <User size={12} /> {selectedUserProfile?.user?.Role}
+                                    <div className="flex flex-wrap gap-2 pt-1">
+                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold uppercase tracking-wider border border-blue-100">
+                                            <User size={12} className="text-blue-500" /> {selectedUserProfile?.user?.Role}
                                         </span>
-                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider border border-white/10">
-                                            <Award size={12} /> {selectedUserProfile?.user?.RegistrationNumber || 'N/A'}
+                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider border border-indigo-100">
+                                            <Award size={12} className="text-indigo-500" /> {selectedUserProfile?.user?.RegistrationNumber || 'N/A'}
                                         </span>
-                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider border border-white/10">
-                                            <Calendar size={12} /> Joined {selectedUserProfile?.user?.CreatedAt ? new Date(selectedUserProfile.user.CreatedAt).toLocaleDateString() : '...'}
+                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider border border-emerald-100">
+                                            <Calendar size={12} className="text-emerald-500" /> Joined {selectedUserProfile?.user?.CreatedAt ? new Date(selectedUserProfile.user.CreatedAt).toLocaleDateString() : '...'}
                                         </span>
                                     </div>
                                 </div>
                             </div>
                             <button
                                 onClick={() => setIsProfileModalOpen(false)}
-                                className="w-12 h-12 rounded-2xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all border border-white/10 active:scale-90"
+                                className="w-11 h-11 rounded-2xl bg-slate-50 hover:bg-red-50 text-slate-400 hover:text-red-500 flex items-center justify-center transition-all border border-slate-200 active:scale-90 shrink-0"
+                                title="Close"
                             >
-                                <X size={24} />
+                                <X size={20} />
                             </button>
                         </div>
 
@@ -1023,12 +1024,14 @@ const ManageUsers = () => {
 
                                     {/* Admin/Generic Role Placeholder */}
                                     {selectedUserProfile?.user?.Role === 'Admin' && (
-                                        <div className="bg-white rounded-[32px] p-8 shadow-sm border border-slate-100/50 flex flex-col items-center justify-center text-center">
-                                            <div className="w-16 h-16 rounded-full bg-slate-50 text-slate-300 flex items-center justify-center mb-4">
+                                        <div className="bg-gradient-to-br from-indigo-50/80 via-white to-blue-50/80 rounded-[32px] p-8 shadow-sm border border-indigo-100/60 flex flex-col items-center justify-center text-center group hover:shadow-md transition-all">
+                                            <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 text-indigo-600 flex items-center justify-center mb-4 border border-indigo-200/50 shadow-inner group-hover:scale-105 transition-transform">
                                                 <UserCheck size={32} />
                                             </div>
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Administrative Privileges Active</p>
-                                            <p className="text-xs font-bold text-slate-600 mt-2">Full system access granted for this account.</p>
+                                            <span className="px-3 py-1 rounded-full bg-indigo-100/80 text-indigo-700 text-[10px] font-black uppercase tracking-widest border border-indigo-200/60 mb-2">
+                                                System Administrator
+                                            </span>
+                                            <p className="text-xs font-bold text-slate-600 max-w-[240px]">Full administrative privileges and system access granted for this account.</p>
                                         </div>
                                     )}
                                 </div>
@@ -1050,15 +1053,13 @@ const ManageUsers = () => {
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                            className="bg-white w-full max-w-lg rounded-[40px] p-10 shadow-2xl relative border border-slate-100 overflow-hidden"
+                            className="bg-white w-full max-w-lg rounded-[15px] p-10 shadow-2xl relative border border-slate-100 overflow-hidden"
                         >
                             {!resetSuccess ? (
                                 <>
                                     <div className="flex justify-between items-start mb-8">
                                         <div className="flex gap-4 items-center">
-                                            <div className="w-14 h-14 rounded-2xl bg-gray-100 text-gray-600 flex items-center justify-center shadow-sm">
-                                                <RotateCcw size={28} />
-                                            </div>
+
                                             <div>
                                                 <h2 className="text-2xl font-black text-[#2B3674] tracking-tight">Reset Account</h2>
                                                 {/* <p className="text-slate-500 font-medium text-sm mt-1">Force update credentials for any user account.</p> */}
@@ -1127,7 +1128,7 @@ const ManageUsers = () => {
 
                                         <button
                                             disabled={resetLoading}
-                                            className={`w-full py-4 rounded-[22px] font-black uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3 shadow-xl ${resetLoading
+                                            className={`w-full py-4 rounded-[22px] font-black tracking-[0.2em] transition-all flex items-center justify-center gap-3 shadow-xl ${resetLoading
                                                 ? 'bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200'
                                                 : 'bg-black text-white hover:bg-gray-600 shadow-black/25 active:scale-[0.98]'
                                                 }`}
@@ -1139,7 +1140,7 @@ const ManageUsers = () => {
                                                 </>
                                             ) : (
                                                 <>
-                                                    <RotateCcw size={20} />
+
                                                     Reset
                                                 </>
                                             )}
