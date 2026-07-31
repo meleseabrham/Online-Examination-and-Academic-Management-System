@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
-import { Search, History, ShieldCheck, ChevronLeft, ChevronRight, Filter, Activity, Calendar as CalendarIcon, Info, X, Clock, ChevronDown, MoreHorizontal } from 'lucide-react';
+import { Search, ShieldCheck, ChevronLeft, ChevronRight, Filter, Activity, Calendar as CalendarIcon, Info, X, Clock, ChevronDown, MoreHorizontal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -196,19 +196,7 @@ const AuditLogs = () => {
                     <Header email={email} role={activeRole as any} />
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-2 scroll-smooth">
-                    <div className="flex justify-between items-end mb-10">
-
-                        <div className="flex gap-4">
-                            <button
-                                onClick={fetchLogs}
-                                className="bg-white text-[#2B3674] border border-slate-200 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-50  flex items-center gap-3 active:scale-95 shadow-sm"
-                            >
-                                <History size={18} />
-                                Refresh
-                            </button>
-                        </div>
-                    </div>
+                <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-4 scroll-smooth">
 
                     {/* Filters Section */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -266,24 +254,23 @@ const AuditLogs = () => {
                     </div>
 
                     {/* Table Section */}
-                    <div className="bg-white rounded-[30px] shadow-sm border border-slate-100">
-                        <div className="overflow-x-auto rounded-t-[30px]">
-                            <table className="w-full">
+                    <div className="bg-white rounded-[30px] shadow-sm border border-slate-100 overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse">
                                 <thead>
-                                    <tr className="text-left text-slate-400 text-xs uppercase tracking-widest font-bold border-b border-slate-100">
-                                        <th className="p-6">Timestamp</th>
-                                        <th className="p-6">User / Actor</th>
-                                        <th className="p-6">Action</th>
-                                        <th className="p-6">Target Engine</th>
-                                        {/* <th className="p-6">ID</th> */}
-                                        <th className="p-6">IP Source</th>
-                                        <th className="p-6 text-center">ACTION</th>
+                                    <tr className="bg-slate-50 border-b-2 border-slate-100">
+                                        <th className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Timestamp</th>
+                                        <th className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">User / Actor</th>
+                                        <th className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Action</th>
+                                        <th className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">Target Engine</th>
+                                        <th className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-400">IP Source</th>
+                                        <th className="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Detail</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {loading ? (
                                         <tr>
-                                            <td colSpan={7} className="p-20 text-center">
+                                            <td colSpan={6} className="p-20 text-center">
                                                 <div className="flex flex-col items-center gap-4">
                                                     <div className="w-12 h-12 border-4 border-brand-blue/20 border-t-brand-blue rounded-full animate-spin" />
                                                     <p className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.2em]">Synchronizing Ledger Records...</p>
@@ -292,7 +279,7 @@ const AuditLogs = () => {
                                         </tr>
                                     ) : paginatedLogs.length === 0 ? (
                                         <tr>
-                                            <td colSpan={7} className="p-20 text-center">
+                                            <td colSpan={6} className="p-20 text-center">
                                                 <div className="flex flex-col items-center gap-4">
                                                     <Info className="text-slate-200" size={60} />
                                                     <p className="text-slate-400 font-bold uppercase text-xs tracking-widest">No matching activities found in the ledger.</p>
@@ -300,31 +287,40 @@ const AuditLogs = () => {
                                             </td>
                                         </tr>
                                     ) : (
-                                        paginatedLogs.map((log) => (
+                                        paginatedLogs.map((log, index) => (
                                             <tr
                                                 key={log.id}
-                                                className="group hover:bg-slate-50/80 transition-all border-b border-slate-50 last:border-0"
+                                                className={cn(
+                                                    "group transition-colors duration-150 border-b border-slate-100 last:border-0",
+                                                    index % 2 === 0 ? "bg-white hover:bg-blue-50/40" : "bg-slate-50/60 hover:bg-blue-50/40"
+                                                )}
                                             >
-                                                <td className="p-6">
+                                                <td className="px-6 py-4">
                                                     <div className="flex flex-col">
                                                         <span className="text-sm font-black text-[#2B3674]">
                                                             {new Date(log.created_at).toLocaleDateString()}
                                                         </span>
-                                                        <span className="text-[10px] text-slate-400 font-bold flex items-center gap-1">
+                                                        <span className="text-[10px] text-slate-400 font-bold flex items-center gap-1 mt-0.5">
                                                             <Clock size={10} />
                                                             {new Date(log.created_at).toLocaleTimeString()}
                                                         </span>
                                                     </div>
                                                 </td>
-                                                <td className="p-6">
+                                                <td className="px-6 py-4">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 font-black text-sm transition-transform group-hover:scale-110">
+                                                        <div className={cn(
+                                                            "w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm shrink-0",
+                                                            log.role === 'Admin' ? 'bg-red-100 text-red-600' :
+                                                                log.role === 'Director' ? 'bg-indigo-100 text-indigo-600' :
+                                                                    log.role === 'Teacher' ? 'bg-emerald-100 text-emerald-600' :
+                                                                        'bg-slate-100 text-slate-500'
+                                                        )}>
                                                             {log.FullName?.[0] || 'S'}
                                                         </div>
-                                                        <div className="flex flex-col shrink-0">
-                                                            <span className="text-sm font-bold text-[#2B3674] leading-none mb-1">{log.FullName}</span>
-                                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
-                                                                <div className={`w-1.5 h-1.5 rounded-full ${log.role === 'Admin' ? 'bg-red-500' :
+                                                        <div className="flex flex-col min-w-0">
+                                                            <span className="text-sm font-bold text-[#2B3674] leading-none truncate">{log.FullName}</span>
+                                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1 mt-0.5">
+                                                                <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${log.role === 'Admin' ? 'bg-red-500' :
                                                                     log.role === 'Director' ? 'bg-indigo-500' :
                                                                         log.role === 'Teacher' ? 'bg-emerald-500' : 'bg-slate-400'
                                                                     }`} />
@@ -333,34 +329,31 @@ const AuditLogs = () => {
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="p-6">
-                                                    <span className={`px-4 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest border shadow-sm ${getActionColor(log.action)}`}>
+                                                <td className="px-6 py-4">
+                                                    <span className={`inline-flex px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border ${getActionColor(log.action)}`}>
                                                         {log.action}
                                                     </span>
                                                 </td>
-                                                <td className="p-6">
+                                                <td className="px-6 py-4">
                                                     <div className="flex items-center gap-2">
-                                                        <div className="w-2 h-2 rounded-full bg-slate-300" />
+                                                        <div className="w-2 h-2 rounded-full bg-slate-300 shrink-0" />
                                                         <span className="text-sm font-bold text-slate-600 font-mono">{log.table_name}</span>
                                                     </div>
                                                 </td>
-                                                {/* <td className="p-6">
-                                                    <span className="text-xs font-mono font-bold text-slate-400">#{log.record_id || 'N/A'}</span>
-                                                </td> */}
-                                                <td className="p-6">
-                                                    <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-md">{log.ip_address || '127.0.0.1'}</span>
+                                                <td className="px-6 py-4">
+                                                    <span className="text-xs font-mono font-medium text-slate-500 bg-slate-100 px-2.5 py-1.5 rounded-lg border border-slate-200">{log.ip_address || '127.0.0.1'}</span>
                                                 </td>
-                                                <td className="p-6 text-center">
+                                                <td className="px-6 py-4 text-center">
                                                     <button
                                                         onClick={() => setSelectedLog(log)}
                                                         className={cn(
-                                                            "inline-flex items-center gap-2 px-4 py-2 rounded-2xl font-medium text-sm transition-all active:scale-95",
+                                                            "inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-xs transition-all active:scale-95",
                                                             selectedLog?.id === log.id
                                                                 ? "bg-[#3B82F6] text-white shadow-md shadow-blue-500/20"
-                                                                : "bg-[#F0F5FF] text-[#3B82F6] hover:bg-[#3B82F6] hover:text-white"
+                                                                : "bg-blue-50 text-[#3B82F6] border border-blue-100 hover:bg-blue-100 hover:border-transparent"
                                                         )}
                                                     >
-                                                        <Eye size={18} />
+                                                        <Eye size={14} />
                                                         <span>View</span>
                                                     </button>
                                                 </td>
@@ -375,7 +368,7 @@ const AuditLogs = () => {
                         <div className="p-6 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center bg-slate-50/30 gap-6 rounded-b-[30px]">
                             <div className="flex flex-col">
                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">
-                                    Displaying <span className="text-[#2B3674]">{paginatedLogs.length}</span> of <span className="text-[#2B3674]">{filteredLogs.length}</span> security events
+                                    <span className="text-[#2B3674]">{paginatedLogs.length}</span> of <span className="text-[#2B3674]">{filteredLogs.length}</span>
                                 </p>
                                 <div className="h-1 bg-slate-200 rounded-full w-32 overflow-hidden">
                                     <div
@@ -443,7 +436,7 @@ const AuditLogs = () => {
                                                 onClick={() => setShowPerPageDropdown(false)}
                                             />
                                             <div
-                                                className="absolute top-full mt-2 right-0 w-32 bg-white border border-slate-100 rounded-2xl shadow-2xl z-50 overflow-hidden"
+                                                className="absolute bottom-full mb-2 right-0 w-32 bg-white border border-slate-100 rounded-2xl shadow-2xl z-50 overflow-hidden"
                                             >
                                                 {[10, 15, 20, 25, 50, 100].map((option) => (
                                                     <button
