@@ -137,7 +137,7 @@ const AdminDashboard = () => {
                                         <div className="flex flex-col md:flex-row items-center gap-8 py-6">
                                             {/* Total Card */}
                                             <div className="relative">
-                                                <div className="w-32 h-32 rounded-[40px] bg-brand-blue/5 flex flex-col items-center justify-center border border-brand-blue/10 shadow-inner">
+                                                <div className="w-24 h-24 rounded-[15px] bg-brand-blue/5 flex flex-col items-center justify-center border border-brand-blue/10 shadow-inner">
                                                     <span className="text-5xl font-black text-brand-blue tracking-tighter">
                                                         {recentUsers.length}
                                                     </span>
@@ -150,7 +150,7 @@ const AdminDashboard = () => {
 
                                             {/* Student Card */}
                                             <div className="relative">
-                                                <div className="w-32 h-32 rounded-[40px] bg-emerald-50 flex flex-col items-center justify-center border border-emerald-100 shadow-inner">
+                                                <div className="w-24 h-24 rounded-[15px] bg-emerald-50 flex flex-col items-center justify-center border border-emerald-100 shadow-inner">
                                                     <span className="text-5xl font-black text-emerald-600 tracking-tighter">
                                                         {recentUsers.filter(u => u.role === 'Student').length}
                                                     </span>

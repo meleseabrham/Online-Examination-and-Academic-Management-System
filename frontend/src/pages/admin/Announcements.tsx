@@ -311,7 +311,7 @@ const AdminAnnouncements = () => {
             {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-white w-full max-w-md rounded-[30px] p-8 shadow-2xl animate-in zoom-in duration-300">
+                    <div className="bg-white w-full max-w-2xl rounded-[15px] p-8 shadow-2xl animate-in zoom-in duration-300">
                         <div className="flex justify-between items-center mb-8">
                             <h2 className="text-2xl font-bold text-[#2B3674]">{editingAnnouncement ? 'Edit Announcement' : 'New Announcement'}</h2>
                             <button onClick={handleCloseModal} className="text-slate-400 hover:text-slate-600">
@@ -323,7 +323,7 @@ const AdminAnnouncements = () => {
                                 <label className="block text-sm font-bold text-[#2B3674] mb-2">Title</label>
                                 <input
                                     type="text" required placeholder="Announcement Title"
-                                    className="w-full px-5 py-3 rounded-xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all"
+                                    className="w-full px-5 py-3 rounded-xl border border-slate-100 bg-slate-200 focus:ring-1 focus:ring-brand-blue outline-none transition-all"
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                 />
@@ -332,7 +332,7 @@ const AdminAnnouncements = () => {
                                 <div>
                                     <label className="block text-sm font-bold text-[#2B3674] mb-2">Target Audience</label>
                                     <select
-                                        className="w-full px-5 py-3 rounded-xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all cursor-pointer"
+                                        className="w-full px-5 py-3 rounded-xl border border-slate-100 bg-slate-200 focus:ring-1 focus:ring-brand-blue outline-none transition-all cursor-pointer"
                                         value={formData.targetRole}
                                         onChange={(e) => setFormData({ ...formData, targetRole: e.target.value })}
                                     >
@@ -344,7 +344,7 @@ const AdminAnnouncements = () => {
                                 <div>
                                     <label className="block text-sm font-bold text-[#2B3674] mb-2">Assign to Class</label>
                                     <select
-                                        className="w-full px-5 py-3 rounded-xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all cursor-pointer text-xs"
+                                        className="w-full px-5 py-4 rounded-xl border border-slate-100 bg-slate-200 focus:ring-1 focus:ring-brand-blue outline-none transition-all cursor-pointer text-xs"
                                         value={formData.classId}
                                         onChange={(e) => setFormData({ ...formData, classId: e.target.value })}
                                     >
@@ -360,7 +360,7 @@ const AdminAnnouncements = () => {
                                     <label className="block text-sm font-bold text-[#2B3674] mb-2">Deadline</label>
                                     <input
                                         type="date"
-                                        className="w-full px-5 py-3 rounded-xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all"
+                                        className="w-full px-5 py-3 rounded-xl border border-slate-100 bg-slate-200 focus:ring-1 focus:ring-brand-blue outline-none transition-all"
                                         value={formData.deadline}
                                         onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
                                     />
@@ -370,7 +370,7 @@ const AdminAnnouncements = () => {
                                 <label className="block text-sm font-bold text-[#2B3674] mb-2">Content</label>
                                 <textarea
                                     rows={4} required placeholder="Write your announcement here..."
-                                    className="w-full px-5 py-3 rounded-xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-brand-blue outline-none transition-all resize-none"
+                                    className="w-full px-5 py-3 rounded-xl border border-slate-100 bg-slate-200 focus:ring-1 focus:ring-brand-blue outline-none transition-all resize-none"
                                     value={formData.content}
                                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                                 />

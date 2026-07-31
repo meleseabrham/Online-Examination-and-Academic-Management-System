@@ -472,57 +472,58 @@ const AuditLogs = () => {
                     className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
                 >
                     <div
-                        className="bg-white w-full max-w-4xl rounded-[40px] shadow-2xl overflow-hidden border border-white/20 flex flex-col max-h-[90vh]"
+                        className="bg-white w-full max-w-4xl rounded-[15px] shadow-2xl overflow-hidden border border-white/20 flex flex-col max-h-[90vh]"
                     >
-                        <div className="p-8 bg-black text-white flex justify-between items-center">
+                        <div className="p-4 bg-white border-b border-slate-100 flex justify-between items-center">
                             <div className="flex items-center gap-4">
-                                <div className={`p-3 rounded-2xl bg-white/10 border border-white/20 ${getActionColor(selectedLog.action)} bg-opacity-10`}>
-                                    <Activity size={24} />
+                                <div className={`p-3 rounded-2xl border ${getActionColor(selectedLog.action)}`}>
+                                    <Activity size={14} />
                                 </div>
                                 <div>
-                                    <h2 className="text-2xl font-black tracking-tight">{selectedLog.action} Action Detail</h2>
-                                    <p className="text-white/50 text-[10px] font-bold uppercase tracking-[0.2em]">Log #EID-{selectedLog.id} • {selectedLog.table_name}</p>
+                                    <h2 className="text-2xl font-black tracking-tight text-[#2B3674]">{selectedLog.action} Action Detail</h2>
+                                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em]">Log #EID-{selectedLog.id} • {selectedLog.table_name}</p>
                                 </div>
                             </div>
                             <button
                                 onClick={() => setSelectedLog(null)}
-                                className="w-12 h-12 rounded-2xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all"
+                                className="w-11 h-11 rounded-2xl bg-slate-50 hover:bg-red-50 text-slate-400 hover:text-red-500 flex items-center justify-center transition-all border border-slate-200 active:scale-90"
+                                title="Close"
                             >
-                                <X size={24} />
+                                <X size={20} />
                             </button>
                         </div>
 
-                        <div className="p-10 space-y-8 bg-[#F8FAFC] flex-1 overflow-y-auto custom-scrollbar">
+                        <div className="p-5 space-y-8 bg-[#F8FAFC] flex-1 overflow-y-auto custom-scrollbar">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-[400px]">
                                 <DataRenderer data={selectedLog.old_value} title="Original State" type="old" />
                                 <DataRenderer data={selectedLog.new_value} title="New State" type="new" />
                             </div>
 
-                            <div className="bg-white p-6 rounded-3xl shadow-sm flex justify-between items-center">
+                            <div className="bg-white p-3 rounded-3xl shadow-sm flex justify-between items-center">
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black">
                                         {selectedLog.FullName?.[0] || 'S'}
                                     </div>
                                     <div>
-                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Executor Identity</p>
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Executed By</p>
                                         <p className="text-sm font-black text-[#2B3674]">{selectedLog.FullName} (<span className="italic font-bold">{selectedLog.Email}</span>)</p>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Execution Source</p>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Source Ip</p>
                                     <p className="text-sm font-black text-[#2B3674] font-mono">{selectedLog.ip_address || '127.0.0.1'}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="p-8 bg-slate-50 flex justify-end">
+                        {/* <div className="p-8 bg-slate-50 flex justify-end">
                             <button
                                 onClick={() => setSelectedLog(null)}
                                 className="px-8 py-3 bg-black text-white rounded-2xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all shadow-lg"
                             >
                                 Cancel
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             )}

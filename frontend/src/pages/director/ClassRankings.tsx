@@ -616,7 +616,7 @@ const ClassRankings = () => {
                                         </p>
                                     </div>
                                 </div>
-
+                                {/* 
                                 <div className="bg-white rounded-[45px] p-6 shadow-sm border border-slate-100 group">
                                     <h3 className="text-xl font-black text-[#2B3674] mb-5 flex items-center gap-3">
                                         <BookOpen className="text-brand-blue" />
@@ -639,7 +639,7 @@ const ClassRankings = () => {
                                             </div>
                                         ))}
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     )}
