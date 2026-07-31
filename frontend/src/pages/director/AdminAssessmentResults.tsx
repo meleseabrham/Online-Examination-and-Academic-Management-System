@@ -232,7 +232,7 @@ const AdminAssessmentResults = () => {
                                         <p className="text-slate-400 font-medium text-sm">This student has no assessment records for the selected semester.</p>
                                     </div>
                                 ) : (
-                                    <div className="bg-white rounded-[20px] shadow-sm overflow-hidden border border-slate-100">
+                                    <div className="bg-white rounded-[10px] shadow-sm overflow-hidden border border-slate-100">
                                         <div className="overflow-x-auto">
                                             <table className="w-full min-w-max">
                                                 <thead>

@@ -355,10 +355,16 @@ const ClassRankings = () => {
                                 </div>
                             )}
 
-                            <div className="md:col-span-full lg:col-span-1 space-y-2">
-                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Search</label>
-                                <div className="relative">
-                                    <SearchIcon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <div className="md:col-span-full lg:col-span-1 flex items-center gap-4">
+                                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">
+                                    Search
+                                </label>
+
+                                <div className="relative flex-1">
+                                    <SearchIcon
+                                        size={16}
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                                    />
                                     <input
                                         type="text"
                                         placeholder="Student name..."
@@ -395,7 +401,7 @@ const ClassRankings = () => {
                                 {podiumRankings.map((student, idx) => {
                                     const rank = getRankValue(student);
                                     return (
-                                        <div key={student.StudentId} className={`relative overflow-hidden p-6 rounded-[30px] border-2 shadow-2xl transition-all hover:scale-[1.02] cursor-default bg-white ${idx === 0 ? 'border-amber-200 shadow-amber-500/10' :
+                                        <div key={student.StudentId} className={`relative overflow-hidden p-4 rounded-[15px] border-2 shadow-2xl transition-all hover:scale-[1.01] cursor-default bg-white ${idx === 0 ? 'border-amber-200 shadow-amber-500/10' :
                                             idx === 1 ? 'border-slate-200 shadow-slate-500/5' :
                                                 'border-orange-100 shadow-orange-500/5'
                                             }`}>
@@ -404,7 +410,7 @@ const ClassRankings = () => {
                                             </div>
 
                                             <div className="flex items-center gap-4 mb-5 relative z-10">
-                                                <div className={`w-12 h-12 rounded-[16px] flex items-center justify-center shadow-lg ${idx === 0 ? 'bg-amber-400 text-white' :
+                                                <div className={`w-10 h-10 rounded-[10px] flex items-center justify-center shadow-lg ${idx === 0 ? 'bg-amber-400 text-white' :
                                                     idx === 1 ? 'bg-slate-400 text-white' :
                                                         'bg-orange-400 text-white'
                                                     }`}>
@@ -437,7 +443,7 @@ const ClassRankings = () => {
                                                         <School size={12} />
                                                         <span className="text-[9px] font-black uppercase tracking-wider">G{student.GradeNumber} — {student.SectionName}</span>
                                                     </div>
-                                                    <p className="text-[8px] font-black text-slate-300 uppercase">Snapshot Logged</p>
+                                                    {/* <p className="text-[8px] font-black text-slate-300 uppercase">Snapshot Logged</p> */}
                                                 </div>
                                             </div>
                                         </div>
@@ -460,7 +466,7 @@ const ClassRankings = () => {
                                         {paginatedRankings.map((student) => {
                                             const rank = getRankValue(student);
                                             return (
-                                                <div key={student.StudentId} className="group flex items-center justify-between p-5 rounded-3xl bg-white border border-slate-50 hover:border-brand-blue hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300">
+                                                <div key={student.StudentId} className="group flex items-center justify-between p-5 rounded-xl bg-white border border-slate-50 hover:border-brand-blue hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300">
                                                     <div className="flex items-center gap-6">
                                                         <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center shadow-sm transition-transform group-hover:scale-110 ${getRankColor(rank)}`}>
                                                             {getRankIcon(rank)}
@@ -566,16 +572,10 @@ const ClassRankings = () => {
 
                             {/* Legend / Metrics */}
                             <div className="xl:col-span-4 space-y-8">
-                                <div className="bg-[#111C44] rounded-3xl p-6 text-white 
-                shadow-xl shadow-blue-900/30 
-                relative overflow-hidden group">
+                                <div className="bg-white rounded-xl p-6 text-black relative overflow-hidden group">
 
                                     {/* Background Effect */}
-                                    <div className="absolute top-0 right-0 w-32 h-32 
-                    bg-white/5 rounded-full 
-                    -mr-16 -mt-16 
-                    group-hover:scale-125 
-                    transition-transform duration-700" />
+                                    {/* <div className="absolute top-0 right-0 w-32 h-32 bg-gray-700 rounded-full -mr-16 -mt-16 group-hover:scale-125 transition-transform duration-700" /> */}
 
                                     {/* Header */}
                                     <h3 className="text-lg font-bold mb-5 flex items-center gap-2">
@@ -597,7 +597,7 @@ const ClassRankings = () => {
                                                     <div className={`w-2.5 h-2.5 rounded-full ${stat.color}`} />
                                                     <div>
                                                         <h5 className="text-xs font-semibold">{stat.label}</h5>
-                                                        <p className="text-[10px] text-white/50">{stat.range}</p>
+                                                        <p className="text-[10px] text-gray-700">{stat.range}</p>
                                                     </div>
                                                 </div>
 
@@ -611,7 +611,7 @@ const ClassRankings = () => {
 
                                     {/* Small Footer Quote (Compact) */}
                                     <div className="mt-6 pt-4 border-t border-white/10">
-                                        <p className="text-[11px] text-white/60 italic">
+                                        <p className="text-[11px] text-gray-700 italic">
                                             True potential is measured by progress.
                                         </p>
                                     </div>

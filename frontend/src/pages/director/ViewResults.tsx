@@ -4,7 +4,7 @@ import axios from 'axios';
 import { getImageUrl } from '../../utils/imageUrl';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
-import { Search, Trophy, TrendingUp, Users, ChevronRight, ChevronLeft, Loader, MoreHorizontal, ChevronDown, RotateCcw } from 'lucide-react';
+import { Search, Trophy, TrendingUp, Users, ChevronRight, ChevronLeft, Loader, MoreHorizontal, ChevronDown, RotateCcw, X } from 'lucide-react';
 
 interface Submission {
     AttemptId: number;
@@ -397,10 +397,10 @@ const ViewResults = () => {
                                 <div className="mt-4 flex justify-end">
                                     <button
                                         onClick={resetFilters}
-                                        className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-400 hover:text-brand-blue hover:bg-brand-blue/5 rounded-xl transition-all"
+                                        className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-600 bg-red-50 hover:bg-red-100 hover:text-red-700 rounded-xl transition-all"
                                     >
-                                        <RotateCcw size={14} />
-                                        Reset Filters
+                                        <X size={14} />
+                                        Clear
                                     </button>
                                 </div>
                             </div>
@@ -413,7 +413,7 @@ const ViewResults = () => {
                                         <input
                                             type="text"
                                             placeholder="Search by student or exam..."
-                                            className="w-full pl-12 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-brand-blue outline-none transition-all"
+                                            className="w-full pl-12 pr-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 focus:ring-1 focus:ring-brand-blue outline-none transition-all"
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
                                         />
@@ -613,9 +613,9 @@ const ViewResults = () => {
                                     <div className="relative">
                                         <button
                                             onClick={() => setIsRowsPerPageOpen(!isRowsPerPageOpen)}
-                                            className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-100 text-sm font-bold text-[#2B3674] hover:border-brand-blue transition-all"
+                                            className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-100 text-sm font-bold text-[#2B3674] hover:border-brand-blue transition-all"
                                         >
-                                            {itemsPerPage} / per page
+                                            {itemsPerPage} / page
                                             <ChevronDown size={16} className={`text-slate-400 transition-transform ${isRowsPerPageOpen ? 'rotate-180' : ''}`} />
                                         </button>
 
@@ -625,7 +625,7 @@ const ViewResults = () => {
                                                     className="fixed inset-0 z-20"
                                                     onClick={() => setIsRowsPerPageOpen(false)}
                                                 ></div>
-                                                <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-2xl shadow-2xl border border-slate-100 py-2 z-30 animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
+                                                <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-2xl border border-slate-100 py-2 z-30 animate-in fade-in slide-in-from-top-2 duration-200 overflow-hidden">
                                                     {[5, 10, 20, 50, 100].map((size) => (
                                                         <button
                                                             key={size}
@@ -639,7 +639,7 @@ const ViewResults = () => {
                                                                 : 'text-slate-600 hover:bg-slate-50'
                                                                 }`}
                                                         >
-                                                            {size} / per page
+                                                            {size} / page
                                                         </button>
                                                     ))}
                                                 </div>
