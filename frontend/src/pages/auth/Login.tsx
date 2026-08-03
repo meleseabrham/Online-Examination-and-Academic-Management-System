@@ -40,6 +40,7 @@ const Login = () => {
     });
 
     const [showPassword, setShowPassword] = useState(false);
+    const [showForgotModal, setShowForgotModal] = useState(false);
     const [logoError, setLogoError] = useState(false);
 
     const [publicSettings, setPublicSettings] = useState<any>({});
@@ -224,12 +225,21 @@ const Login = () => {
                                 </button>
                             </div>
                             {errors.password && <p className="text-red-500 text-xs mt-1.5 font-medium pl-2">{errors.password.message}</p>}
+                            <div className="flex justify-end mt-6">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowForgotModal(true)}
+                                    className="text-[#0066FF] hover:text-blue-700 text-xs sm:text-sm font-bold transition-colors tracking-wide"
+                                >
+                                    Forgot Password ?
+                                </button>
+                            </div>
                         </div>
 
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-[#1877F2] text-white py-3.5 rounded-2xl font-bold text-base shadow-lg shadow-blue-500/25 hover:bg-blue-600 transition-all active:scale-95 disabled:opacity-50 mt-2 flex items-center justify-center"
+                            className="w-full bg-[#1877F2] text-white py-3.5 rounded-2xl font-bold text-base shadow-lg shadow-blue-500/25 hover:bg-blue-500 transition-all active:scale-95 disabled:opacity-50 mt-2 flex items-center justify-center"
                         >
                             {isSubmitting ? (
                                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -271,6 +281,49 @@ const Login = () => {
                     Copyright © {new Date().getFullYear()} MA. All Rights Reserved.
                 </p>
             </footer>
+
+            {/* Forgot Password Modal */}
+            {showForgotModal && (
+                <div className="fixed inset-0 z-[300] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+                    <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative animate-in zoom-in-95 duration-200 border border-slate-100">
+                        <button
+                            type="button"
+                            onClick={() => setShowForgotModal(false)}
+                            className="absolute right-5 top-5 p-1.5 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+                        >
+                            <X size={20} />
+                        </button>
+
+                        <div className="text-center space-y-3">
+                            {/* <div className="w-12 h-12 bg-blue-50 text-[#0066FF] rounded-2xl flex items-center justify-center mx-auto mb-2">
+                                <Lock size={24} />
+                            </div> */}
+                            <h3 className="text-xl font-black text-[#1B2559]">Forgot Password?</h3>
+                            <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
+                                Please contact your school system administrator to reset your account password, or send an email directly to our support team.
+                            </p>
+                        </div>
+
+                        <div className="mt-6 space-y-3">
+                            <a
+                                href={`mailto:${publicSettings.SupportEmail || 'support@examsystem.com'}?subject=Password%20Reset%20Request`}
+                                className="w-full bg-[#1877F2] text-white py-3 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/20 hover:bg-blue-600 transition-all flex items-center justify-center gap-2"
+                            >
+                                <Mail size={16} />
+                                Email Support ({publicSettings.SupportEmail || 'support@examsystem.com'})
+                            </a>
+
+                            <button
+                                type="button"
+                                onClick={() => setShowForgotModal(false)}
+                                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-bold text-sm transition-colors"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
